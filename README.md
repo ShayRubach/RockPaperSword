@@ -44,6 +44,6 @@ Here are some screen shots from an actuall gameplay:
 ![battle](https://user-images.githubusercontent.com/21342315/40283341-f08ef784-5c7c-11e8-9278-eaa652f22523.png)
 
 <br><br>
-***Temporary Menu & Settings Screens:***
+***Temporary Menu & Settings Screens:*** <br><br>
 ![menu](https://user-images.githubusercontent.com/21342315/40750712-759705e6-6468-11e8-9ecc-f71f3fb65143.png) ![settings](https://user-images.githubusercontent.com/21342315/40750733-81e286ae-6468-11e8-9e2b-7c0769a62d5e.png)
 
