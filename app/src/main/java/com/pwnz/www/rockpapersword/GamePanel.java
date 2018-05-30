@@ -4,25 +4,38 @@ import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Canvas;
+import android.graphics.Color;
+import android.graphics.Paint;
+import android.graphics.Rect;
 import android.os.Build;
 import android.support.annotation.RequiresApi;
 import android.view.SurfaceHolder;
 import android.view.SurfaceView;
 
+import com.pwnz.www.rockpapersword.model.Tile;
+
 public class GamePanel extends SurfaceView implements Runnable {
-    //private static ArrayList<NyanCat> cats = new ArrayList<>();
+
     private boolean canPlay = false;
+    private boolean isInMenuScreen = true;
+
     private Thread mPlayThread = null;
-    private Canvas canvas;
+    private Canvas mCanvas;
     private SurfaceHolder surfaceHolder;
-    private Bitmap mTtpBitmap, mTtsBitmap, mLogoCatBitmap, bg;
-    public boolean isInMenuScreen = true;
+    private Bitmap mTtpBitmap, bg;
+    private final int COLUMNS = 7;
+    private final int ROWS = 6;
+    private static Tile[][] tilesMatrix = null;
+    private int cHeight, cWidth;
+
 
     public GamePanel(Context context) {
         super(context);
+        bg = BitmapFactory.decodeResource(getResources(), R.drawable.chartest);
+        tilesMatrix = new Tile[COLUMNS][ROWS];
         initPositions();
         surfaceHolder = getHolder();
-        //bg = BitmapFactory.decodeResource(getResources(), R.drawable.bright_tile);
+
 
     }
 
@@ -45,62 +58,59 @@ public class GamePanel extends SurfaceView implements Runnable {
                 continue;
             }
 
-            canvas = surfaceHolder.lockCanvas();
-            //canvas.drawBitmap(bg,0,0,null);
+            mCanvas = surfaceHolder.lockCanvas();
+
+            //mCanvas.drawBitmap(bg, null, new Rect(0,0,cWidth,cHeight),null);
+
+            cHeight = mCanvas.getHeight();
+            cWidth = mCanvas.getWidth();
 
             if(isInMenuScreen){
                 //todo: convert dpToPxl for x-platform responsive look
-                drawPlayButton(canvas);
-                drawGameTitle(canvas);
+                drawPlayButton(mCanvas);
+                drawGameTitle(mCanvas);
             }
             else {
                 //todo: play logic goes here
 
-                drawInstructions(canvas);
+                drawInstructions(mCanvas);
                 drawTiles();
                 displayAllSoldiers();
             }
-            surfaceHolder.unlockCanvasAndPost(canvas);
+            surfaceHolder.unlockCanvasAndPost(mCanvas);
         }
     }
 
+
     private void drawTiles() {
-        final int HORIZONTAL_TILES_COUNT = 7;
-        final int VERTICAL_TILES_COUNT = 6;
-
-        //Bitmap[][] tilesMatrix = new Bitmap[HORIZONTAL_TILES_COUNT][VERTICAL_TILES_COUNT];
-        Bitmap[] tilesMatrix = new Bitmap[HORIZONTAL_TILES_COUNT];
-        Bitmap[] tilesMatrix2 = new Bitmap[HORIZONTAL_TILES_COUNT];
 
 
-        BitmapFactory.Options option = new BitmapFactory.Options();
-        option.inJustDecodeBounds = true;
-        BitmapFactory.decodeResource(getResources(), R.drawable.dark_tile, option);
+        System.out.println("================================= W="+cWidth + "         H="+ cHeight);
 
-        int tileHeight = option.outHeight;
-        int tileWidth = option.outWidth;
+        final int divisor = 10;
+        final int wDivisor = 7;
 
-        for (int i = 0; i+1 < HORIZONTAL_TILES_COUNT ; i+=2) {
-                tilesMatrix[i] = BitmapFactory.decodeResource(getResources(), R.drawable.dark_tile);
-                tilesMatrix[i+1] = BitmapFactory.decodeResource(getResources(), R.drawable.bright_tile);
 
-                tilesMatrix2[i] = BitmapFactory.decodeResource(getResources(), R.drawable.bright_tile);
-                tilesMatrix2[i+1] = BitmapFactory.decodeResource(getResources(), R.drawable.dark_tile);
-        }
-        tilesMatrix[HORIZONTAL_TILES_COUNT-1] = BitmapFactory.decodeResource(getResources(), R.drawable.dark_tile);
-        tilesMatrix2[HORIZONTAL_TILES_COUNT-1] = BitmapFactory.decodeResource(getResources(), R.drawable.bright_tile);
+        Paint brushBlack = new Paint();
+        brushBlack.setColor(Color.GRAY);
+        brushBlack.setStyle(Paint.Style.FILL);
 
-        int j = 0;
-        while(j != VERTICAL_TILES_COUNT){
-            for (int i = 0; i < tilesMatrix.length ; i++) {
-                canvas.drawBitmap(tilesMatrix[i], i*tileWidth, j*tileHeight, null);
+        Paint brushGreen = new Paint();
+        brushGreen .setColor(Color.GREEN);
+        brushGreen .setStyle(Paint.Style.FILL);
+
+        Paint brushes[] = new Paint[2];
+        brushes[0] = brushBlack;
+        brushes[1] = brushGreen;
+
+        for (int j = 0, i = 0  ; i < wDivisor ; i++) {
+            mCanvas.drawRect(new Rect(cWidth/divisor*i ,cHeight/divisor*i,cWidth/divisor*(i+1),cHeight/divisor   *(i+1)), brushes[j]);
+            if(j==0){
+                j=1;
             }
-
-            j++;
-            for (int i = 0; i < tilesMatrix.length ; i++) {
-                canvas.drawBitmap(tilesMatrix2[i], i*tileWidth, j*tileHeight, null);
+            else{
+                j=0;
             }
-            j++;
         }
     }
 
@@ -151,7 +161,7 @@ public class GamePanel extends SurfaceView implements Runnable {
     private void drawPlayButton(Canvas canvas) {
 
 //        mTtpBitmap = BitmapFactory.decodeResource(getResources(), R.drawable.tap_to_play);
-//        canvas.drawBitmap(mTtpBitmap, canvas.getWidth() / 4,  ttpYPos, null);
+//        mCanvas.drawBitmap(mTtpBitmap, mCanvas.getWidth() / 4,  ttpYPos, null);
 //
 //        BitmapFactory.Options option = new BitmapFactory.Options();
 //        option.inJustDecodeBounds = true;
@@ -175,7 +185,7 @@ public class GamePanel extends SurfaceView implements Runnable {
 
     private void drawGameTitle(Canvas canvas){
 //        gameTitle = BitmapFactory.decodeResource(getResources(), R.drawable.arc_title);
-//        canvas.drawBitmap(gameTitle, canvas.getWidth() / 4,  GAME_TITLE_Y, null);
+//        mCanvas.drawBitmap(gameTitle, mCanvas.getWidth() / 4,  GAME_TITLE_Y, null);
     }
 
     public boolean isValidPosition(int x, int y){
@@ -197,4 +207,11 @@ public class GamePanel extends SurfaceView implements Runnable {
         return (int)(dps * getResources().getDisplayMetrics().density + 0.5f);
     }
 
+    public boolean isInMenuScreen() {
+        return isInMenuScreen;
+    }
+
+    public void setInMenuScreen(boolean inMenuScreen) {
+        isInMenuScreen = inMenuScreen;
+    }
 }

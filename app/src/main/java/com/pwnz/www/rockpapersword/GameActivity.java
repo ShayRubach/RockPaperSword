@@ -5,7 +5,7 @@ import android.os.Bundle;
 import android.view.MotionEvent;
 import android.widget.Toast;
 
-public class MainActivity extends AppCompatActivity {
+public class GameActivity extends AppCompatActivity {
 
     private GamePanel mGamePanel;
 
@@ -15,8 +15,6 @@ public class MainActivity extends AppCompatActivity {
 
         mGamePanel = new GamePanel(this);
         setContentView(mGamePanel);
-
-        //todo: moving from side to side
     }
 
     @Override
@@ -35,14 +33,10 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private void handleClickEvent(MotionEvent event) {
-        if(mGamePanel.isInMenuScreen){
-            //Toast.makeText(this,"Let's Go!",Toast.LENGTH_LONG).show();
-            mGamePanel.isInMenuScreen = false;
+        if(mGamePanel.isInMenuScreen() ){
+            mGamePanel.setInMenuScreen(false);
         }
-        else {
-            //listen to game clicks.
-
-        }
+        //more code goes here later
     }
 
     @Override
