@@ -8,13 +8,18 @@ import android.widget.Toast;
 
 public class SettingsActivity extends AppCompatActivity {
 
+    private static final float MAX_VOLUME = 100f;
     private SeekBar mBgMusic, mSfx;
     private ImageView bgVolumeLogo, sfxVolumeLogo;
+    private float sfxGeneralVolume = 0;
+
+
     private final int DEFAULT_VOLUME_VALUE = 50;
     private final int MUTE = 0;
     private static final String MUTE_MSG = "Muted";
     private final int mMuteLogo = android.R.drawable.ic_lock_silent_mode;
     private final int mUnmuteLogo = android.R.drawable.ic_lock_silent_mode_off;
+    private final int sfxVol = R.raw.blop;
 
 
     @Override
@@ -33,8 +38,8 @@ public class SettingsActivity extends AppCompatActivity {
         mBgMusic.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
             @Override
             public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
-                float output = progress / 100f;
-                MainMenuActivity.getmMusicPlayer().getMediaPlayer().setVolume(output, output);
+                float output = progress / MAX_VOLUME;
+                MainMenuActivity.getMusicPlayer().getMediaPlayer().setVolume(output, output);
 
                 if(progress == MUTE){
                     mute(bgVolumeLogo);
@@ -53,9 +58,9 @@ public class SettingsActivity extends AppCompatActivity {
         mSfx.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
             @Override
             public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
-                float output = progress / 100f;
-                //MainMenuActivity.getmSoundEffects().getSoundPool().setVolume(output, output);
-                MainMenuActivity.getmSoundEffects().play(R.raw.blop);
+                sfxGeneralVolume = progress / MAX_VOLUME;
+
+                MainMenuActivity.getSoundEffects().play(sfxVol, sfxGeneralVolume, sfxGeneralVolume);
 
                 if(progress == MUTE){
                     mute(sfxVolumeLogo);
@@ -63,6 +68,7 @@ public class SettingsActivity extends AppCompatActivity {
                 else {
                     unMute(sfxVolumeLogo);
                 }
+
             }
 
             @Override

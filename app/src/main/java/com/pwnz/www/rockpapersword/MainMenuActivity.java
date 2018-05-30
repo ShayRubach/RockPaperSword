@@ -26,9 +26,9 @@ public class MainMenuActivity extends AppCompatActivity {
 
         AsyncHandler.post(mMusicPlayer);
 
-//        if (mSoundEffects == null) {
-//            mSoundEffects = new MySFxRunnable(this);
-//        }
+        if (mSoundEffects == null) {
+            mSoundEffects = new MySFxRunnable(this);
+        }
     }
 
     @Override
@@ -45,11 +45,11 @@ public class MainMenuActivity extends AppCompatActivity {
         startActivity(new Intent(MainMenuActivity.this, GameActivity.class));
     }
 
-    public static MyMusicRunnable getmMusicPlayer() {
+    public static MyMusicRunnable getMusicPlayer() {
         return mMusicPlayer;
     }
 
-    public static MySFxRunnable getmSoundEffects() {
+    public static MySFxRunnable getSoundEffects() {
         return mSoundEffects;
     }
 }

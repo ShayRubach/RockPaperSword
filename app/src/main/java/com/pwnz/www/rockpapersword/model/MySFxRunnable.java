@@ -55,11 +55,11 @@ public class MySFxRunnable implements Runnable {
 
     }
 
-    public void play(int soundKey) {
+    public void play(int soundKey, float leftVol, float rightVol ) {
         if (soundPool == null || !prepared) {
             return;
         }
-        soundPool.play(soundsMap.get(soundKey), 1.0f, 1.0f, 1, 0, 1.0f);
+        soundPool.play(soundsMap.get(soundKey), leftVol, rightVol, 1, 0, 1.0f);
     }
 
     public SoundPool getSoundPool() {
