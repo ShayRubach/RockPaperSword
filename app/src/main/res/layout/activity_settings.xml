@@ -5,7 +5,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@android:color/holo_orange_light"
-    tools:context=".model.SettingsActivity">
+    tools:context=".SettingsActivity">
 
     <TextView
         android:id="@+id/tv_sound_title"
@@ -70,7 +70,7 @@
         app:layout_constraintHorizontal_bias="0.512"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/img_sound_on_or_off"
-        app:layout_constraintVertical_bias="0.204"
+        app:layout_constraintVertical_bias="0.22"
         app:srcCompat="@android:drawable/ic_lock_silent_mode_off" />
 
     <TextView
