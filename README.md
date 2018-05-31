@@ -5,6 +5,10 @@ Rock Paper Sword
 
 This is a simple Rock Paper Scissors remake for the ICQ version (with a twist!).
 
+### Contributers
+[Shay Rubach](https://github.com/ShayRubach)<br>
+[IdanLazimi](https://github.com/idanlazimi)<br>
+
 ### Disclaimer 
 (c) All graphics were developed by myself with PhotoshopCS6. The project will be soon available for download.
 
