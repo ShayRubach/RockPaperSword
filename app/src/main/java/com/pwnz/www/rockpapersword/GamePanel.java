@@ -23,8 +23,6 @@ public class GamePanel extends SurfaceView implements Runnable {
     private Canvas mCanvas;
     private SurfaceHolder mSurfaceHolder;
     private Bitmap mTtpBitmap, bg;
-    private final int COLUMNS = 7;
-    private final int ROWS = 6;
     private static Tile[][] tilesMatrix = null;
     private int mCanvasH, mCanvasW;
 
@@ -40,12 +38,6 @@ public class GamePanel extends SurfaceView implements Runnable {
 
     private void initPositions() {
     }
-
-    @Override
-    protected void onDraw(Canvas canvas) {
-        super.onDraw(canvas);
-    }
-
 
     @RequiresApi(api = Build.VERSION_CODES.LOLLIPOP)
     @Override
@@ -65,9 +57,7 @@ public class GamePanel extends SurfaceView implements Runnable {
             mCanvasW = mCanvas.getWidth();
 
             if(isInMenuScreen){
-                //todo: convert dpToPxl for x-platform responsive look
-                drawPlayButton(mCanvas);
-                drawGameTitle(mCanvas);
+
             }
             else {
                 //todo: play logic goes here
@@ -156,62 +146,6 @@ public class GamePanel extends SurfaceView implements Runnable {
         mPlayThread.start();
 
     }
-
-
-    public void addSoldierAt(int x, int y) {
-//        if(cats.size() < MAX_CATS_ON_SCREEN){
-//            //draw a cat
-//            cats.add(new NyanCat(BitmapFactory.decodeResource(getResources(), R.drawable.nyan_cat_left), x, y));
-//        }
-//        else {
-//            cats.clear();
-//        }
-    }
-
-    private void drawPlayButton(Canvas canvas) {
-
-//        mTtpBitmap = BitmapFactory.decodeResource(getResources(), R.drawable.tap_to_play);
-//        mCanvas.drawBitmap(mTtpBitmap, mCanvas.getWidth() / 4,  ttpYPos, null);
-//
-//        BitmapFactory.Options option = new BitmapFactory.Options();
-//        option.inJustDecodeBounds = true;
-//        BitmapFactory.decodeResource(getResources(), R.drawable.tap_to_play, option);
-//        ttpHeight = toPxs(option.outHeight);
-//        ttpWidth = toPxs(option.outWidth);
-//
-//        if(ttpYPos <= TTP_Y - MAX_MOVEMENT_EFFECT){
-//            goingUp = false;
-//        }
-//        if(ttpYPos >= TTP_Y + MAX_MOVEMENT_EFFECT){
-//            goingUp = true;
-//        }
-//        if(goingUp){
-//            ttpYPos -= ttpYDir;
-//        }
-//        if(!goingUp){
-//            ttpYPos += ttpYDir;
-//        }
-    }
-
-    private void drawGameTitle(Canvas canvas){
-//        gameTitle = BitmapFactory.decodeResource(getResources(), R.drawable.arc_title);
-//        mCanvas.drawBitmap(gameTitle, mCanvas.getWidth() / 4,  GAME_TITLE_Y, null);
-    }
-
-    public boolean isValidPosition(int x, int y){
-
-        boolean isValid = true;
-//        if(x > bigNyanPosX && x < bigNyanPosX + bigNyanWidth){
-//            //x is invalid
-//            isValid = false;
-//        }
-//        if(y > bigNyanPosY && y < bigNyanPosY + bigNyanHeight){
-//            //y is invalid
-//            isValid = false;
-//        }
-        return isValid;
-    }
-
 
     private int toPxs(int dps){
         return (int)(dps * getResources().getDisplayMetrics().density + 0.5f);

@@ -6,17 +6,29 @@ import android.view.MotionEvent;
 import android.widget.Toast;
 
 import com.pwnz.www.rockpapersword.GamePanel;
+import com.pwnz.www.rockpapersword.controller.GameManager;
+import com.pwnz.www.rockpapersword.model.Board;
 
 public class GameActivity extends AppCompatActivity {
 
+    private final int COLUMNS = 7;
+    private final int ROWS = 6;
+
+    private Board mBoard;
     private GamePanel mGamePanel;
+    private GameManager mManager;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
+        mBoard = new Board(COLUMNS, ROWS);
         mGamePanel = new GamePanel(this);
+        mManager = new GameManager(mBoard);
         setContentView(mGamePanel);
+
+        //force no splash screen before staring a game
+        mGamePanel.setInMenuScreen(false);
     }
 
     @Override

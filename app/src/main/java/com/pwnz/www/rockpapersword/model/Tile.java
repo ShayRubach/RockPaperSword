@@ -1,37 +1,50 @@
 package com.pwnz.www.rockpapersword.model;
 
+import android.graphics.Color;
+import android.graphics.Rect;
+
 public class Tile {
 
-    private int mLeft, mTop, mRight, mBottom;
-    private int mWidth, mHeight;
+    private Rect rect;
+    private int color;
+    private int width, height;
     private boolean isOccupied = false;
+
 
     public Tile(){}
 
-    public Tile(int top, int left, int right, int btm) {
-        this.mLeft = top;
-        this.mTop = left;
-        this.mRight = right;
-        this.mBottom = btm;
+    public Tile(int left, int right, int top, int bottom, int r, int g, int b) {
+        color = Color.rgb(r,g,b);
+        rect = new Rect(left, top, right, bottom);
+        setOccupied(false);
 
-        mWidth = mRight - mLeft;
-        mHeight = mBottom - mTop;
+        //these values would be unchanged
+        width = right-left;
+        height = bottom-top;
+
     }
 
-
-    public int getLeft() {
-        return mLeft;
+    public Rect getRect() {
+        return rect;
     }
 
-    public int getTop() {
-        return mTop;
+    public void setRect(Rect rect) {
+        this.rect = rect;
     }
 
-    public int getRight() {
-        return mRight;
+    public int getColor() {
+        return color;
     }
 
-    public int getBottom() {
-        return mBottom;
+    public void setColor(int color) {
+        this.color = color;
+    }
+
+    public boolean isOccupied() {
+        return isOccupied;
+    }
+
+    public void setOccupied(boolean occupied) {
+        isOccupied = occupied;
     }
 }
