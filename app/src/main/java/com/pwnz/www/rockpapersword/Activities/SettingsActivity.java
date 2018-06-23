@@ -1,10 +1,12 @@
-package com.pwnz.www.rockpapersword;
+package com.pwnz.www.rockpapersword.Activities;
 
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.widget.ImageView;
 import android.widget.SeekBar;
 import android.widget.Toast;
+
+import com.pwnz.www.rockpapersword.R;
 
 public class SettingsActivity extends AppCompatActivity {
 

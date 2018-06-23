@@ -1,11 +1,11 @@
-package com.pwnz.www.rockpapersword;
+package com.pwnz.www.rockpapersword.Activities;
 
 import android.content.Intent;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.View;
 
-import com.pwnz.www.rockpapersword.model.AsyncHandler;
+import com.pwnz.www.rockpapersword.R;
 import com.pwnz.www.rockpapersword.model.MyMusicRunnable;
 import com.pwnz.www.rockpapersword.model.MySFxRunnable;
 
@@ -24,7 +24,8 @@ public class MainMenuActivity extends AppCompatActivity {
             mMusicPlayer = new MyMusicRunnable(this);
         }
 
-        AsyncHandler.post(mMusicPlayer);
+        //TODO: UNCOMMENT THIS, its just a workaround for instantly mute when app comes up, its annoying during development
+        //AsyncHandler.post(mMusicPlayer);
 
         if (mSoundEffects == null) {
             mSoundEffects = new MySFxRunnable(this);

@@ -1,39 +1,37 @@
 package com.pwnz.www.rockpapersword.model;
 
-import android.graphics.Rect;
-
 public class Tile {
 
-    private int topLeftX;
-    private int topLeftY;
-    private int btmRightX;
-    private int btmRightY;
-
+    private int mLeft, mTop, mRight, mBottom;
+    private int mWidth, mHeight;
+    private boolean isOccupied = false;
 
     public Tile(){}
 
-    public Tile(int topLeftX, int topLeftY, int btmRightX, int btmRightY) {
-        this.topLeftX = topLeftX;
-        this.topLeftY = topLeftY;
-        this.btmRightX = btmRightX;
-        this.btmRightY = btmRightY;
+    public Tile(int top, int left, int right, int btm) {
+        this.mLeft = top;
+        this.mTop = left;
+        this.mRight = right;
+        this.mBottom = btm;
 
+        mWidth = mRight - mLeft;
+        mHeight = mBottom - mTop;
     }
 
 
-    public int getTopLeftX() {
-        return topLeftX;
+    public int getLeft() {
+        return mLeft;
     }
 
-    public int getTopLeftY() {
-        return topLeftY;
+    public int getTop() {
+        return mTop;
     }
 
-    public int getBtmRightX() {
-        return btmRightX;
+    public int getRight() {
+        return mRight;
     }
 
-    public int getBtmRightY() {
-        return btmRightY;
+    public int getBottom() {
+        return mBottom;
     }
 }

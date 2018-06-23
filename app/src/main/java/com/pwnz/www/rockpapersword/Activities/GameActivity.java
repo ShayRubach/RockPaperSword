@@ -1,9 +1,11 @@
-package com.pwnz.www.rockpapersword;
+package com.pwnz.www.rockpapersword.Activities;
 
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.MotionEvent;
 import android.widget.Toast;
+
+import com.pwnz.www.rockpapersword.GamePanel;
 
 public class GameActivity extends AppCompatActivity {
 
