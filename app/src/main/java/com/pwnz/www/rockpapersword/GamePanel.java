@@ -12,13 +12,14 @@ import android.support.annotation.RequiresApi;
 import android.view.SurfaceHolder;
 import android.view.SurfaceView;
 
+import com.pwnz.www.rockpapersword.controller.GameManager;
 import com.pwnz.www.rockpapersword.model.Tile;
 
 public class GamePanel extends SurfaceView implements Runnable {
 
     private boolean canPlay = false;
     private boolean isInMenuScreen = true;
-
+    private GameManager manager;
     private Thread mPlayThread = null;
     private Canvas mCanvas;
     private SurfaceHolder mSurfaceHolder;
@@ -30,13 +31,8 @@ public class GamePanel extends SurfaceView implements Runnable {
     public GamePanel(Context context) {
         super(context);
         bg = BitmapFactory.decodeResource(getResources(), R.drawable.chartest);
-        initPositions();
         mSurfaceHolder = getHolder();
 
-
-    }
-
-    private void initPositions() {
     }
 
     @RequiresApi(api = Build.VERSION_CODES.LOLLIPOP)
@@ -70,8 +66,22 @@ public class GamePanel extends SurfaceView implements Runnable {
         }
     }
 
-
     private void drawTiles() {
+
+        Paint brush = new Paint();
+        brush.setStyle(Paint.Style.FILL);
+
+        for(Tile[] row : manager.getBoard().getTiles()){
+            for(Tile tile : row){
+                brush.setColor(tile.getColor());
+                if(tile.getRect() != null)
+                    mCanvas.drawRect(tile.getRect(), brush);
+            }
+        }
+    }
+
+    //TODO: remove this
+    private void drawTiles2() {
 
         final int gapTop = 2;
         final int gapBtm = 2;
@@ -157,5 +167,9 @@ public class GamePanel extends SurfaceView implements Runnable {
 
     public void setInMenuScreen(boolean inMenuScreen) {
         isInMenuScreen = inMenuScreen;
+    }
+
+    public void setManager(GameManager manager) {
+        this.manager = manager;
     }
 }

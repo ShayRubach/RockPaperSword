@@ -42,14 +42,6 @@ public class Soldier {
         this.mSoldierBitmap = bitmap;
     }
 
-    public Rect getmRectPosition() {
-        return mRectPosition;
-    }
-
-    public void setmRectPosition(Rect mRectPosition) {
-        this.mRectPosition = mRectPosition;
-    }
-
     public Rect getRectPosition() {
         return mRectPosition;
     }

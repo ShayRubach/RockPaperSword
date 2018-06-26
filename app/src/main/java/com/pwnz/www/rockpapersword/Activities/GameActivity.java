@@ -1,10 +1,11 @@
 package com.pwnz.www.rockpapersword.Activities;
 
+import android.graphics.Color;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.util.DisplayMetrics;
 import android.view.MotionEvent;
-import android.widget.Toast;
-
+import android.view.View;
 import com.pwnz.www.rockpapersword.GamePanel;
 import com.pwnz.www.rockpapersword.controller.GameManager;
 import com.pwnz.www.rockpapersword.model.Board;
@@ -13,6 +14,10 @@ public class GameActivity extends AppCompatActivity {
 
     private final int COLUMNS = 7;
     private final int ROWS = 6;
+    private int brightColor = Color.rgb(249, 184, 72);
+    private int darkColor = Color.rgb(242, 227, 201);
+
+    private Integer canvasW, canvasH;
 
     private Board mBoard;
     private GamePanel mGamePanel;
@@ -22,13 +27,27 @@ public class GameActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        mBoard = new Board(COLUMNS, ROWS);
+        //hide the top status bar
+        View decorView = getWindow().getDecorView();
+        int uiOptions = View.SYSTEM_UI_FLAG_FULLSCREEN;
+        decorView.setSystemUiVisibility(uiOptions);
+
+        // this will give us the canvas dimensions info before even drawing
+        // and enable us to prepare the ground and objects for drawing on game loop with no
+        // need for calculations inside our game loop - better performance.
+        DisplayMetrics displayMetrics = new DisplayMetrics();
+        getWindowManager().getDefaultDisplay().getMetrics(displayMetrics);
+        canvasH = displayMetrics.heightPixels;
+        canvasW  = displayMetrics.widthPixels;
+
+        mBoard = new Board(COLUMNS, ROWS, canvasW, canvasH, brightColor, darkColor);
         mGamePanel = new GamePanel(this);
-        mManager = new GameManager(mBoard);
+        mManager = new GameManager(mBoard, mGamePanel);
         setContentView(mGamePanel);
 
-        //force no splash screen before staring a game
+        //force no-black-screen before staring a game
         mGamePanel.setInMenuScreen(false);
+
     }
 
     @Override
