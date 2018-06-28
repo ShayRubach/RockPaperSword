@@ -1,8 +1,6 @@
 package com.pwnz.www.rockpapersword.model;
 
-import android.content.res.Resources;
 import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
 import android.graphics.Rect;
 
 import com.pwnz.www.rockpapersword.R;
@@ -14,19 +12,19 @@ public class Soldier {
     private static ArrayList<SoldierType> soldierTypes = initSoldierTypesList();
     private static int pickedTypesCount = 0;
 
-    private Bitmap mSoldierBitmap;
-    private Rect mRectPosition;
+    private Bitmap soldierBitmap;
+    private Rect rectPosition;
     private boolean isVisible;
-    private SoldierType mSoldierType;
+    private SoldierType soldierType;
     private int animationSprite;
 
     public Soldier() {}
 
     public Soldier(Bitmap mSoldierBitmap, Rect mRectPosition, boolean isVisible, SoldierType mSoldierType) {
-        this.mSoldierBitmap = mSoldierBitmap;
-        this.mRectPosition = mRectPosition;
+        this.soldierBitmap = mSoldierBitmap;
+        this.rectPosition = mRectPosition;
         this.isVisible = isVisible;
-        this.mSoldierType = mSoldierType;
+        this.soldierType = mSoldierType;
     }
 
     private static ArrayList<SoldierType> initSoldierTypesList(){
@@ -49,9 +47,9 @@ public class Soldier {
     @Override
     public String toString() {
         return "\n\nSoldier { "+ "\n" +
-                "\tRectPosition = " + mRectPosition + "\n" +
+                "\tRectPosition = " + rectPosition + "\n" +
                 "\tisVisible = " + isVisible + "\n" +
-                "\tSoldierType = " + mSoldierType + "\n" +
+                "\tSoldierType = " + soldierType + "\n" +
                 '}';
     }
 
@@ -65,27 +63,27 @@ public class Soldier {
     }
 
     public SoldierType getSoldierType() {
-        return mSoldierType;
+        return soldierType;
     }
 
     public void setSoldierType(SoldierType soldierType) {
-        this.mSoldierType= soldierType;
+        this.soldierType = soldierType;
     }
 
     public Bitmap getSoldierBitmap() {
-        return mSoldierBitmap;
+        return soldierBitmap;
     }
 
     public void setSoldierBitmap(Bitmap bitmap) {
-        this.mSoldierBitmap = bitmap;
+        this.soldierBitmap = bitmap;
     }
 
     public Rect getRectPosition() {
-        return mRectPosition;
+        return rectPosition;
     }
 
     public void setRectPosition(Rect rectPosition) {
-        this.mRectPosition = rectPosition;
+        this.rectPosition = rectPosition;
     }
 
     public boolean isVisible() {
