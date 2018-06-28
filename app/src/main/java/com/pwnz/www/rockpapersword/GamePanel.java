@@ -56,11 +56,8 @@ public class GamePanel extends SurfaceView implements Runnable {
 
             }
             else {
-                //todo: play logic goes here
-
-                drawInstructions(mCanvas);
                 drawTiles();
-                displayAllSoldiers();
+                drawSoldiers();
             }
             mSurfaceHolder.unlockCanvasAndPost(mCanvas);
         }
@@ -129,7 +126,7 @@ public class GamePanel extends SurfaceView implements Runnable {
 
     }
 
-    private void displayAllSoldiers() {
+    private void drawSoldiers() {
 
     }
 

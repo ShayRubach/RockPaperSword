@@ -7,8 +7,8 @@ import java.util.ArrayList;
 public class Board {
 
     Tile[][] tiles;
-    ArrayList<Soldier> soldierTeamA;
-    ArrayList<Soldier> soldierTeamB;
+    ArrayList<Soldier> soldierTeamA = new ArrayList<>();
+    ArrayList<Soldier> soldierTeamB = new ArrayList<>();
     int cols, rows;
     int canvasW, canvasH;
     int brightColor, darkColor;
@@ -19,16 +19,27 @@ public class Board {
         this.canvasW = canvasW;
         this.canvasH = canvasH;
         allocateTiles();
-        soldierTeamA = new ArrayList<>(cols*2);
-        soldierTeamB = new ArrayList<>(cols*2);
+        allocateSoldierTeam(soldierTeamA, cols*2);
+        allocateSoldierTeam(soldierTeamB, cols*2);
         setBrightColor(brightColor);
         setDarkColor(darkColor);
     }
 
+    private void allocateSoldierTeam(ArrayList<Soldier> soldierTeam, int size) {
+
+        for (int j = 0; j < size; j++) {
+            soldierTeam.add(new Soldier());
+        }
+    }
+
     private void allocateTiles() {
         tiles = new Tile[cols][rows];
+
+        System.out.println("cols="+cols+"\trows="+rows);
+
         for (int i = 0; i < cols ; i++) {
             for (int j = 0; j < rows  ; j++) {
+                System.out.println("[i][j] = [" + i + "][" + j+ "]");
                 tiles[i][j] = new Tile();
             }
         }
@@ -90,9 +101,8 @@ public class Board {
         int boardPadding = boardPaddingFactor * tileH;
 
         initTiles(boardPadding, tileW, tileH);
-
-        //initSoldiers(soldierTeamA, 0);
-        //initSoldiers(soldierTeamB, 4);
+        initSoldiers(soldierTeamA, 0);
+        initSoldiers(soldierTeamB, 4);
     }
 
     private void initTiles(int boardPadding, int tileW, int tileH) {
@@ -115,12 +125,31 @@ public class Board {
     }
 
     private void initSoldiers(ArrayList<Soldier> soldiersTeam, int SOLDIERS_START_ROW) {
-        for (int i = 0, k = 0, j = SOLDIERS_START_ROW; i < soldiersTeam.size() ; i++, k++) {
+
+        for (int i = 0, j = 0, k = SOLDIERS_START_ROW; i < soldiersTeam.size() ; i++, k++) {
+
+            //todo: set the types of the soldiers here by game rules.
+            //todo: 3 Stones, 3 Swordmasters, 3 Peppers, 1 random(between 3 regulars), 1 Shieldon, 1 Sir Lasso, 1 Ashes, 1 King
+
+            soldiersTeam.get(i).setSoldierType(pickAvailableSoldierType());
+            soldiersTeam.get(i).setSoldierAnimationSpriteByType();
             soldiersTeam.get(i).setVisible(true);
-            soldiersTeam.get(i).setRectPosition(tiles[j][k % cols].getRect());
-            if(i == (soldiersTeam.size()-1) / 2){
+            soldiersTeam.get(i).setRectPosition(tiles[k % cols][j].getRect());
+            System.out.println("");
+            System.out.println(i + "\t" + soldiersTeam.get(i));
+            //System.out.println("[k%cols][j] = ["+k%cols+"]["+j+"]");
+
+            //stop over the the next tile row
+            if(i == (soldiersTeam.size()-1) / 2)
                 ++j;
-            }
         }
+
+//        for (Soldier s : soldiersTeam)
+//            System.out.println(s);
+
+    }
+
+    private SoldierType pickAvailableSoldierType() {
+        return Soldier.pickAvailableSoldierType();
     }
 }

@@ -14,8 +14,8 @@ public class GameActivity extends AppCompatActivity {
 
     private final int COLUMNS = 7;
     private final int ROWS = 6;
-    private int brightColor = Color.rgb(249, 184, 72);
-    private int darkColor = Color.rgb(242, 227, 201);
+    private int brightColor = Color.rgb(189, 135, 50);
+    private int darkColor = Color.rgb(143, 102, 38);
 
     private Integer canvasW, canvasH;
 

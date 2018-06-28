@@ -9,3 +9,5 @@ public enum SoldierType {
     SHIELDON,
     ASHES
 }
+
+
