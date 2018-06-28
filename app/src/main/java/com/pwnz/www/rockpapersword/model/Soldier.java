@@ -19,6 +19,7 @@ public class Soldier {
     private SoldierType soldierType;
     private int nonHighlightedSpriteSource, highlightedSpriteSource;
     private int animationSprite;
+    private int team;
 
 
     public Soldier() {}
@@ -54,6 +55,14 @@ public class Soldier {
                 "\tisVisible = " + isVisible + "\n" +
                 "\tSoldierType = " + soldierType + "\n" +
                 '}';
+    }
+
+    public int getTeam() {
+        return team;
+    }
+
+    public void setTeam(int team) {
+        this.team = team;
     }
 
     public int getNonHighlightedSpriteSource() {
@@ -115,42 +124,61 @@ public class Soldier {
 
         switch (getSoldierType()){
             case STONE:
-                setNonHighlightedSpriteSource(R.drawable.attack_1);
-                setHighlightedSpriteSource(R.drawable.attack_1_highlighted);
-                setAnimationSprite(getNonHighlightedSpriteSource());
+                if(getTeam() == Board.TEAM_A)
+                    setOnAITeam();
+                else
+                    setOnPlayerTeam(R.drawable.attack_1, R.drawable.attack_1_highlighted);
                 break;
             case SWORDMASTER:
-                setNonHighlightedSpriteSource(R.drawable.attack_1);
-                setHighlightedSpriteSource(R.drawable.attack_1_highlighted);
-                setAnimationSprite(getNonHighlightedSpriteSource());
+                if(getTeam() == Board.TEAM_A)
+                    setOnAITeam();
+                else
+                    setOnPlayerTeam(R.drawable.attack_1, R.drawable.attack_1_highlighted);
                 break;
             case PEPPER:
-                setNonHighlightedSpriteSource(R.drawable.attack_1);
-                setHighlightedSpriteSource(R.drawable.attack_1_highlighted);
-                setAnimationSprite(getNonHighlightedSpriteSource());
+                if(getTeam() == Board.TEAM_A)
+                    setOnAITeam();
+                else
+                    setOnPlayerTeam(R.drawable.attack_1, R.drawable.attack_1_highlighted);
                 break;
             case ASHES:
-                setNonHighlightedSpriteSource(R.drawable.attack_1);
-                setHighlightedSpriteSource(R.drawable.attack_1_highlighted);
-                setAnimationSprite(getNonHighlightedSpriteSource());
+                if(getTeam() == Board.TEAM_A)
+                    setOnAITeam();
+                else
+                    setOnPlayerTeam(R.drawable.attack_1, R.drawable.attack_1_highlighted);
                 break;
             case KING:
-                setNonHighlightedSpriteSource(R.drawable.attack_1);
-                setHighlightedSpriteSource(R.drawable.attack_1_highlighted);
-                setAnimationSprite(getNonHighlightedSpriteSource());
+                if(getTeam() == Board.TEAM_A)
+                    setOnAITeam();
+                else
+                    setOnPlayerTeam(R.drawable.attack_1, R.drawable.attack_1_highlighted);
                 break;
             case SHIELDON:
-                setNonHighlightedSpriteSource(R.drawable.attack_1);
-                setHighlightedSpriteSource(R.drawable.attack_1_highlighted);
-                setAnimationSprite(getNonHighlightedSpriteSource());
+                if(getTeam() == Board.TEAM_A)
+                    setOnAITeam();
+                else
+                    setOnPlayerTeam(R.drawable.attack_1, R.drawable.attack_1_highlighted);
                 break;
             case LASSO:
-                setNonHighlightedSpriteSource(R.drawable.attack_1);
-                setHighlightedSpriteSource(R.drawable.attack_1_highlighted);
-                setAnimationSprite(getNonHighlightedSpriteSource());
+                if(getTeam() == Board.TEAM_A)
+                    setOnAITeam();
+                else
+                    setOnPlayerTeam(R.drawable.attack_1, R.drawable.attack_1_highlighted);
                 break;
         }
 
+    }
+
+    private void setOnAITeam() {
+        setNonHighlightedSpriteSource(R.drawable.attack_1_ai);
+        //setHighlightedSpriteSource(R.drawable.attack_1_ai);
+        setAnimationSprite(getNonHighlightedSpriteSource());
+    }
+
+    private void setOnPlayerTeam(int sprite, int highlightedSprite) {
+        setNonHighlightedSpriteSource(sprite);
+        setHighlightedSpriteSource(highlightedSprite);
+        setAnimationSprite(getNonHighlightedSpriteSource());
     }
 
     public void setNonHighlightedSpriteSource(int nonHighlightedSpriteSource) {

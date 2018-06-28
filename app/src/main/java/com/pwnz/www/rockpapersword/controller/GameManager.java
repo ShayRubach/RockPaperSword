@@ -18,6 +18,7 @@ public class GameManager {
     private final int HEIGHT_DIV = 10;
     private final int WIDTH_DIV  = 7;
     private Soldier focusedSoldier = null;
+    private Soldier AISoldier = null;
     private boolean hasFocusedSoldier = false;
     private int teamTurn;
     public int canvasW, canvasH;
@@ -77,10 +78,12 @@ public class GameManager {
             }
         }
 
+        //todo: implement match logic
+        //seekForMatch();
     }
 
     private void playAsAI() {
-        Soldier AISoldier = board.getRandomSoldier();
+        AISoldier = board.getRandomSoldier();
         Tile tile = board.getTraversalTile();
         moveSoldier(AISoldier, tile);
         clearHighlights();

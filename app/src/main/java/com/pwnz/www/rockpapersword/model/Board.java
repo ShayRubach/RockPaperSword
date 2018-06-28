@@ -16,6 +16,8 @@ public class Board {
     int canvasW, canvasH;
     int tileW, tileH;
     int brightColor, darkColor;
+    public static final int TEAM_A = 0;
+    public static final int TEAM_B = 1;
 
     public static final int MAX_PATH_ARROWS = 4;
 
@@ -104,8 +106,8 @@ public class Board {
         int boardPadding = boardPaddingFactor * tileH;
 
         initTiles(boardPadding, tileW, tileH);
-        initSoldiers(soldierTeamA, 0);
-        initSoldiers(soldierTeamB, 4);
+        initSoldiers(soldierTeamA, TEAM_A, 0);
+        initSoldiers(soldierTeamB, TEAM_B, 4);
     }
 
     private void initTiles(int boardPadding, int tileW, int tileH) {
@@ -127,13 +129,14 @@ public class Board {
         }
     }
 
-    private void initSoldiers(ArrayList<Soldier> soldiersTeam, int SOLDIERS_START_ROW) {
+    private void initSoldiers(ArrayList<Soldier> soldiersTeam, int team, int SOLDIERS_START_ROW) {
 
         for (int i = 0, j = SOLDIERS_START_ROW, k = 0; i < soldiersTeam.size() ; i++, k++) {
 
             //todo: set the types of the soldiers here by game rules.
             //todo: 3 Stones, 3 Swordmasters, 3 Peppers, 1 random(between 3 regulars), 1 Shieldon, 1 Sir Lasso, 1 Ashes, 1 King
 
+            soldiersTeam.get(i).setTeam(team);
             soldiersTeam.get(i).setSoldierType(pickAvailableSoldierType());
             soldiersTeam.get(i).setSoldierAnimationSpriteByType();
             soldiersTeam.get(i).setVisible(true);
@@ -144,8 +147,6 @@ public class Board {
             if(i == (soldiersTeam.size()-1) / 2)
                 ++j;
         }
-
-
     }
 
     private SoldierType pickAvailableSoldierType() {
