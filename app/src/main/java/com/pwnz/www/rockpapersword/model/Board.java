@@ -126,7 +126,7 @@ public class Board {
 
     private void initSoldiers(ArrayList<Soldier> soldiersTeam, int SOLDIERS_START_ROW) {
 
-        for (int i = 0, j = 0, k = SOLDIERS_START_ROW; i < soldiersTeam.size() ; i++, k++) {
+        for (int i = 0, j = SOLDIERS_START_ROW, k = 0; i < soldiersTeam.size() ; i++, k++) {
 
             //todo: set the types of the soldiers here by game rules.
             //todo: 3 Stones, 3 Swordmasters, 3 Peppers, 1 random(between 3 regulars), 1 Shieldon, 1 Sir Lasso, 1 Ashes, 1 King
@@ -144,8 +144,6 @@ public class Board {
                 ++j;
         }
 
-//        for (Soldier s : soldiersTeam)
-//            System.out.println(s);
 
     }
 

@@ -55,6 +55,10 @@ public class Soldier {
                 '}';
     }
 
+    public int getAnimationSprite() {
+        return animationSprite;
+    }
+
     private static void allocateType(int i, SoldierType type) {
         while(i-- != 0)
             soldierTypes.add(type);

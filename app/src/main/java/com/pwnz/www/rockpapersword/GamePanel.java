@@ -13,7 +13,10 @@ import android.view.SurfaceHolder;
 import android.view.SurfaceView;
 
 import com.pwnz.www.rockpapersword.controller.GameManager;
+import com.pwnz.www.rockpapersword.model.Soldier;
 import com.pwnz.www.rockpapersword.model.Tile;
+
+import java.util.ArrayList;
 
 public class GamePanel extends SurfaceView implements Runnable {
 
@@ -127,7 +130,19 @@ public class GamePanel extends SurfaceView implements Runnable {
     }
 
     private void drawSoldiers() {
+        drawSoldiersTeam(manager.getBoard().getSoldierTeamA());
+        drawSoldiersTeam(manager.getBoard().getSoldierTeamB());
+    }
 
+    private void drawSoldiersTeam(ArrayList<Soldier> soldierTeam) {
+
+        for(Soldier soldier: soldierTeam){
+            if(soldier != null){
+                //todo: move this to an earlier stage. (taking the advantage we got a context here and setting the bitmap)
+                soldier.setSoldierBitmap(BitmapFactory.decodeResource(getResources(), soldier.getAnimationSprite()));
+                mCanvas.drawBitmap(soldier.getSoldierBitmap(), null, soldier.getRectPosition(), null);
+            }
+        }
     }
 
     public void pause(){
