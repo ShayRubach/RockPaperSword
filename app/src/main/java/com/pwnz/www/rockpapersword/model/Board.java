@@ -182,6 +182,7 @@ public class Board {
         Tile tile = null;
         Integer[] xyPos = new Integer[2];
         rectPositionToTileIndex(focusedSoldier.getRectPosition(), xyPos);
+        pathArrows.clear();
 
         //is left neighbor exist and unoccupied?
         if(xyPos[0]-1 > -1 )

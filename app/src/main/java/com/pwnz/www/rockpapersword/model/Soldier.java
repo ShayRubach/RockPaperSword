@@ -15,8 +15,11 @@ public class Soldier {
     private Bitmap soldierBitmap;
     private Rect rectPosition;
     private boolean isVisible;
+    private boolean isHighlighted = false;
     private SoldierType soldierType;
-    private int animationSprite, highlightedAnimationSprite;
+    private int nonHighlightedSpriteSource, highlightedSpriteSource;
+    private int animationSprite;
+
 
     public Soldier() {}
 
@@ -53,8 +56,8 @@ public class Soldier {
                 '}';
     }
 
-    public int getAnimationSprite() {
-        return animationSprite;
+    public int getNonHighlightedSpriteSource() {
+        return nonHighlightedSpriteSource;
     }
 
     private static void allocateType(int i, SoldierType type) {
@@ -110,51 +113,73 @@ public class Soldier {
 
         switch (getSoldierType()){
             case STONE:
-                setAnimationSprite(R.drawable.attack_1);
-                setHighlightedAnimationSprite(R.drawable.attack_1_highlighted);
+                setNonHighlightedSpriteSource(R.drawable.attack_1);
+                setHighlightedSpriteSource(R.drawable.attack_1_highlighted);
+                setAnimationSprite(getNonHighlightedSpriteSource());
                 break;
             case SWORDMASTER:
-                setAnimationSprite(R.drawable.attack_1);
-                setHighlightedAnimationSprite(R.drawable.attack_1_highlighted);
+                setNonHighlightedSpriteSource(R.drawable.attack_1);
+                setHighlightedSpriteSource(R.drawable.attack_1_highlighted);
+                setAnimationSprite(getNonHighlightedSpriteSource());
                 break;
             case PEPPER:
-                setAnimationSprite(R.drawable.attack_1);
-                setHighlightedAnimationSprite(R.drawable.attack_1_highlighted);
+                setNonHighlightedSpriteSource(R.drawable.attack_1);
+                setHighlightedSpriteSource(R.drawable.attack_1_highlighted);
+                setAnimationSprite(getNonHighlightedSpriteSource());
                 break;
             case ASHES:
-                setAnimationSprite(R.drawable.attack_1);
-                setHighlightedAnimationSprite(R.drawable.attack_1_highlighted);
+                setNonHighlightedSpriteSource(R.drawable.attack_1);
+                setHighlightedSpriteSource(R.drawable.attack_1_highlighted);
+                setAnimationSprite(getNonHighlightedSpriteSource());
                 break;
             case KING:
-                setAnimationSprite(R.drawable.attack_1);
-                setHighlightedAnimationSprite(R.drawable.attack_1_highlighted);
+                setNonHighlightedSpriteSource(R.drawable.attack_1);
+                setHighlightedSpriteSource(R.drawable.attack_1_highlighted);
+                setAnimationSprite(getNonHighlightedSpriteSource());
                 break;
             case SHIELDON:
-                setAnimationSprite(R.drawable.attack_1);
-                setHighlightedAnimationSprite(R.drawable.attack_1_highlighted);
+                setNonHighlightedSpriteSource(R.drawable.attack_1);
+                setHighlightedSpriteSource(R.drawable.attack_1_highlighted);
+                setAnimationSprite(getNonHighlightedSpriteSource());
                 break;
             case LASSO:
-                setAnimationSprite(R.drawable.attack_1);
-                setHighlightedAnimationSprite(R.drawable.attack_1_highlighted);
+                setNonHighlightedSpriteSource(R.drawable.attack_1);
+                setHighlightedSpriteSource(R.drawable.attack_1_highlighted);
+                setAnimationSprite(getNonHighlightedSpriteSource());
                 break;
         }
 
+    }
+
+    public void setNonHighlightedSpriteSource(int nonHighlightedSpriteSource) {
+        this.nonHighlightedSpriteSource = nonHighlightedSpriteSource;
+    }
+
+    public void setHighlightedSpriteSource(int highlightedSpriteSource) {
+        this.highlightedSpriteSource = highlightedSpriteSource;
     }
 
     public void setAnimationSprite(int animationSprite) {
         this.animationSprite = animationSprite;
     }
 
-    public int getHighlightedAnimationSprite() {
-        return highlightedAnimationSprite;
-    }
-
-    public void setHighlightedAnimationSprite(int highlightedAnimationSprite) {
-        this.highlightedAnimationSprite = highlightedAnimationSprite;
+    public int getAnimationSprite() {
+        return animationSprite;
     }
 
     public void highlight() {
         //todo: change the sprite to highlighted sprite?????????
-        setAnimationSprite(highlightedAnimationSprite);
+        setAnimationSprite(highlightedSpriteSource);
+        isHighlighted = true;
+    }
+
+    public void removeHighlight() {
+        //todo: change the sprite to highlighted sprite?????????
+        setAnimationSprite(nonHighlightedSpriteSource);
+        isHighlighted = false;
+    }
+
+    public boolean isHighlighted() {
+        return isHighlighted;
     }
 }
