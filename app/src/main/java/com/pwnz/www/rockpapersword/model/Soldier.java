@@ -16,7 +16,7 @@ public class Soldier {
     private Rect rectPosition;
     private boolean isVisible;
     private SoldierType soldierType;
-    private int animationSprite;
+    private int animationSprite, highlightedAnimationSprite;
 
     public Soldier() {}
 
@@ -108,27 +108,34 @@ public class Soldier {
     public void setSoldierAnimationSpriteByType() {
         //todo: change the animation sprite for each individual case
 
-        switch (this.getSoldierType()){
+        switch (getSoldierType()){
             case STONE:
-                this.setAnimationSprite(R.drawable.attack_1);
+                setAnimationSprite(R.drawable.attack_1);
+                setHighlightedAnimationSprite(R.drawable.attack_1_highlighted);
                 break;
             case SWORDMASTER:
-                this.setAnimationSprite(R.drawable.attack_1);
+                setAnimationSprite(R.drawable.attack_1);
+                setHighlightedAnimationSprite(R.drawable.attack_1_highlighted);
                 break;
             case PEPPER:
-                this.setAnimationSprite(R.drawable.attack_1);
+                setAnimationSprite(R.drawable.attack_1);
+                setHighlightedAnimationSprite(R.drawable.attack_1_highlighted);
                 break;
             case ASHES:
-                this.setAnimationSprite(R.drawable.attack_1);
+                setAnimationSprite(R.drawable.attack_1);
+                setHighlightedAnimationSprite(R.drawable.attack_1_highlighted);
                 break;
             case KING:
-                this.setAnimationSprite(R.drawable.attack_1);
+                setAnimationSprite(R.drawable.attack_1);
+                setHighlightedAnimationSprite(R.drawable.attack_1_highlighted);
                 break;
             case SHIELDON:
-                this.setAnimationSprite(R.drawable.attack_1);
+                setAnimationSprite(R.drawable.attack_1);
+                setHighlightedAnimationSprite(R.drawable.attack_1_highlighted);
                 break;
             case LASSO:
-                this.setAnimationSprite(R.drawable.attack_1);
+                setAnimationSprite(R.drawable.attack_1);
+                setHighlightedAnimationSprite(R.drawable.attack_1_highlighted);
                 break;
         }
 
@@ -136,5 +143,18 @@ public class Soldier {
 
     public void setAnimationSprite(int animationSprite) {
         this.animationSprite = animationSprite;
+    }
+
+    public int getHighlightedAnimationSprite() {
+        return highlightedAnimationSprite;
+    }
+
+    public void setHighlightedAnimationSprite(int highlightedAnimationSprite) {
+        this.highlightedAnimationSprite = highlightedAnimationSprite;
+    }
+
+    public void highlight() {
+        //todo: change the sprite to highlighted sprite?????????
+        setAnimationSprite(highlightedAnimationSprite);
     }
 }

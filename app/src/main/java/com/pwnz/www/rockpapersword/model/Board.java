@@ -1,6 +1,7 @@
 package com.pwnz.www.rockpapersword.model;
 
 import android.graphics.Rect;
+import android.util.Pair;
 
 import java.util.ArrayList;
 
@@ -9,9 +10,14 @@ public class Board {
     Tile[][] tiles;
     ArrayList<Soldier> soldierTeamA = new ArrayList<>();
     ArrayList<Soldier> soldierTeamB = new ArrayList<>();
+    ArrayList<Pair<Tile, SoldierMovement>> pathArrows = new ArrayList<>();
+
     int cols, rows;
     int canvasW, canvasH;
+    int tileW, tileH;
     int brightColor, darkColor;
+
+    public static final int MAX_PATH_ARROWS = 4;
 
     public Board(int cols, int rows, int canvasW, int canvasH, int brightColor, int darkColor) {
         this.cols = cols;
@@ -35,11 +41,8 @@ public class Board {
     private void allocateTiles() {
         tiles = new Tile[cols][rows];
 
-        System.out.println("cols="+cols+"\trows="+rows);
-
         for (int i = 0; i < cols ; i++) {
             for (int j = 0; j < rows  ; j++) {
-                System.out.println("[i][j] = [" + i + "][" + j+ "]");
                 tiles[i][j] = new Tile();
             }
         }
@@ -93,8 +96,8 @@ public class Board {
     //boardPadding is the gap of top and bottom screen where the board shouldn't be drawn.
     //H and W Divisors are actually rows and cols count. we treat our screen as a grid.
     public void initBoard(int boardPaddingFactor, int hDivisor, int wDivisor){
-        int tileW = canvasW / wDivisor;
-        int tileH = canvasH / hDivisor;
+        tileW = canvasW / wDivisor;
+        tileH = canvasH / hDivisor;
 
 
         //this will give us a clean pad from the top of the screen which the board will not be drawn at
@@ -135,9 +138,7 @@ public class Board {
             soldiersTeam.get(i).setSoldierAnimationSpriteByType();
             soldiersTeam.get(i).setVisible(true);
             soldiersTeam.get(i).setRectPosition(tiles[k % cols][j].getRect());
-            System.out.println("");
-            System.out.println(i + "\t" + soldiersTeam.get(i));
-            //System.out.println("[k%cols][j] = ["+k%cols+"]["+j+"]");
+            tiles[k % cols][j].setOccupied(true);
 
             //stop over the the next tile row
             if(i == (soldiersTeam.size()-1) / 2)
@@ -149,5 +150,89 @@ public class Board {
 
     private SoldierType pickAvailableSoldierType() {
         return Soldier.pickAvailableSoldierType();
+    }
+
+    public Soldier getClickedSoldier(float x, float y) {
+        //find clicked soldier on self team
+        for (Soldier soldier : soldierTeamB){
+            if(isInInside(soldier.getRectPosition(), x,y) == true)
+                return soldier;
+        }
+
+        return null;
+    }
+
+    private boolean isInInside(Rect rectPosition, float x, float y) {
+        if(rectPosition.left <= x && rectPosition.right >= x){
+            if(rectPosition.top <= y && rectPosition.bottom >= y){
+                return true;
+            }
+        }
+        return false;
+    }
+
+    public void displaySoldierPath(Soldier focusedSoldier) {
+        ArrayList<Pair<Tile, SoldierMovement>> surroundingTiles = new ArrayList<>();
+        highlightPathArrows(surroundingTiles, focusedSoldier);
+        focusedSoldier.highlight();
+        highlightPath(surroundingTiles);
+
+    }
+
+    private void highlightPath(ArrayList<Pair<Tile, SoldierMovement>> surroundingTiles) {
+        pathArrows = surroundingTiles;
+    }
+
+
+
+    private void highlightPathArrows(ArrayList<Pair<Tile, SoldierMovement>> surroundingTiles, Soldier focusedSoldier) {
+        Tile tile = null;
+        Integer[] xyPos = new Integer[2];
+        rectPositionToTileIndex(focusedSoldier.getRectPosition(), xyPos);
+
+        //is left neighbor exist and unoccupied?
+        if(xyPos[0]-1 > -1 )
+            addNeighbor(surroundingTiles, tile, xyPos[0]-1, xyPos[1], SoldierMovement.MOVE_LEFT );
+        //is right neighbor exist and unoccupied?
+        if(xyPos[0]+1 < cols )
+            addNeighbor(surroundingTiles, tile, xyPos[0]+1, xyPos[1], SoldierMovement.MOVE_RIGHT );
+        //is top neighbor exist and unoccupied?
+        if(xyPos[1]-1 > -1 )
+            addNeighbor(surroundingTiles, tile, xyPos[0], xyPos[1]-1, SoldierMovement.MOVE_UP );
+        //is bottom neighbor exist and unoccupied?
+        if(xyPos[1]+1 < rows )
+            addNeighbor(surroundingTiles, tile, xyPos[0], xyPos[1]+1, SoldierMovement.MOVE_DOWN );
+    }
+
+    private void addNeighbor(ArrayList<Pair<Tile, SoldierMovement>> surroundingTiles, Tile tile, Integer x, Integer y, SoldierMovement move){
+        tile = getTiles()[x][y];
+        if(tile.isOccupied() == false){
+            surroundingTiles.add(new Pair<>(tile, move));
+        }
+    }
+
+    private void rectPositionToTileIndex(Rect rect, Integer[] pos) {
+        for (int i = 0; i < cols ; i++) {
+            for (int j = 0; j < rows  ; j++) {
+                if(getTiles()[i][j].getRect() == rect){
+                    pos[0] = i;
+                    pos[1] = j;
+                    return;
+                }
+            }
+        }
+    }
+
+
+    public void getMoveDirection(Soldier focusedSoldier, float x, float y) {
+
+    }
+
+    public ArrayList<Pair<Tile, SoldierMovement>> getPathArrows() {
+        return pathArrows;
+    }
+
+    public int getMaxPathArrows() {
+        return MAX_PATH_ARROWS;
     }
 }

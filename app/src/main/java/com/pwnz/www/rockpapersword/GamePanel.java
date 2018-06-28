@@ -14,6 +14,7 @@ import android.view.SurfaceView;
 
 import com.pwnz.www.rockpapersword.controller.GameManager;
 import com.pwnz.www.rockpapersword.model.Soldier;
+import com.pwnz.www.rockpapersword.model.SoldierMovement;
 import com.pwnz.www.rockpapersword.model.Tile;
 
 import java.util.ArrayList;
@@ -49,9 +50,6 @@ public class GamePanel extends SurfaceView implements Runnable {
             }
 
             mCanvas = mSurfaceHolder.lockCanvas();
-
-            //mCanvas.drawBitmap(bg, null, new Rect(0,0,mCanvasW,mCanvasH),null);
-
             mCanvasH = mCanvas.getHeight();
             mCanvasW = mCanvas.getWidth();
 
@@ -61,8 +59,28 @@ public class GamePanel extends SurfaceView implements Runnable {
             else {
                 drawTiles();
                 drawSoldiers();
+                drawPathArrows();
             }
             mSurfaceHolder.unlockCanvasAndPost(mCanvas);
+        }
+    }
+
+    private void drawPathArrows() {
+        Bitmap bm = null;
+
+        for (int i = 0; i < manager.getBoard().getPathArrows().size() ; i++) {
+            if(manager.getBoard().getPathArrows().get(i) != null) {
+                if (manager.getBoard().getPathArrows().get(i).second == SoldierMovement.MOVE_LEFT)
+                    bm = BitmapFactory.decodeResource(getResources(), R.drawable.arrow_left);
+                else if (manager.getBoard().getPathArrows().get(i).second == SoldierMovement.MOVE_RIGHT)
+                    bm = BitmapFactory.decodeResource(getResources(), R.drawable.arrow_right);
+                else if (manager.getBoard().getPathArrows().get(i).second == SoldierMovement.MOVE_UP)
+                    bm = BitmapFactory.decodeResource(getResources(), R.drawable.arrow_up);
+                else if (manager.getBoard().getPathArrows().get(i).second == SoldierMovement.MOVE_DOWN)
+                    bm = BitmapFactory.decodeResource(getResources(), R.drawable.arrow_down);
+
+                mCanvas.drawBitmap(bm, null, manager.getBoard().getPathArrows().get(i).first.getRect() ,null);
+            }
         }
     }
 

@@ -56,7 +56,8 @@ public class GameActivity extends AppCompatActivity {
         //ignore double actions (UP & DOWN)
         switch (event.getAction()){
             case MotionEvent.ACTION_UP:
-                handleClickEvent(event);
+
+                mManager.onTouchEvent(event);
                 break;
             default:
                 break;
@@ -70,6 +71,8 @@ public class GameActivity extends AppCompatActivity {
             mGamePanel.setInMenuScreen(false);
         }
         //more code goes here later
+        System.out.println("_______");
+        System.out.println("{x,y} = {" + event.getX() + "," + event.getY() + "}");
     }
 
     @Override
