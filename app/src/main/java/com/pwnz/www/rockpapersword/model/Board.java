@@ -204,7 +204,7 @@ public class Board {
         }
     }
 
-    private void rectPositionToTileIndex(Rect rect, Integer[] pos) {
+    public void rectPositionToTileIndex(Rect rect, Integer[] pos) {
         for (int i = 0; i < cols ; i++) {
             for (int j = 0; j < rows  ; j++) {
                 if(getTiles()[i][j].getRect() == rect){

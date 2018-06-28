@@ -61,7 +61,14 @@ public class GameManager {
     }
 
     private void moveSoldier(Soldier focusedSoldier, Tile tile) {
+
+        //clear old tile
+        Integer[] xyPos = new Integer[2];
+        getBoard().rectPositionToTileIndex(focusedSoldier.getRectPosition(), xyPos );
+        getBoard().getTiles()[xyPos[0]][xyPos[1]].setOccupied(false);
+
         focusedSoldier.setRectPosition(tile.getRect());
+
     }
 
     private void clearHighlights() {
