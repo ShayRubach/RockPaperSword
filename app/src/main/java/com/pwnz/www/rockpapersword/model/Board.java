@@ -173,35 +173,28 @@ public class Board {
 
     public void displaySoldierPath(Soldier focusedSoldier) {
         ArrayList<Pair<Tile, SoldierMovement>> surroundingTiles = new ArrayList<>();
-        highlightPathArrows(surroundingTiles, focusedSoldier);
+        highlightPathArrows(focusedSoldier);
         focusedSoldier.highlight();
-        highlightPath(surroundingTiles);
-
-    }
-
-    private void highlightPath(ArrayList<Pair<Tile, SoldierMovement>> surroundingTiles) {
-        pathArrows = surroundingTiles;
     }
 
 
-
-    private void highlightPathArrows(ArrayList<Pair<Tile, SoldierMovement>> surroundingTiles, Soldier focusedSoldier) {
+    private void highlightPathArrows(Soldier focusedSoldier) {
         Tile tile = null;
         Integer[] xyPos = new Integer[2];
         rectPositionToTileIndex(focusedSoldier.getRectPosition(), xyPos);
 
         //is left neighbor exist and unoccupied?
         if(xyPos[0]-1 > -1 )
-            addNeighbor(surroundingTiles, tile, xyPos[0]-1, xyPos[1], SoldierMovement.MOVE_LEFT );
+            addNeighbor(pathArrows, tile, xyPos[0]-1, xyPos[1], SoldierMovement.MOVE_LEFT );
         //is right neighbor exist and unoccupied?
         if(xyPos[0]+1 < cols )
-            addNeighbor(surroundingTiles, tile, xyPos[0]+1, xyPos[1], SoldierMovement.MOVE_RIGHT );
+            addNeighbor(pathArrows, tile, xyPos[0]+1, xyPos[1], SoldierMovement.MOVE_RIGHT );
         //is top neighbor exist and unoccupied?
         if(xyPos[1]-1 > -1 )
-            addNeighbor(surroundingTiles, tile, xyPos[0], xyPos[1]-1, SoldierMovement.MOVE_UP );
+            addNeighbor(pathArrows, tile, xyPos[0], xyPos[1]-1, SoldierMovement.MOVE_UP );
         //is bottom neighbor exist and unoccupied?
         if(xyPos[1]+1 < rows )
-            addNeighbor(surroundingTiles, tile, xyPos[0], xyPos[1]+1, SoldierMovement.MOVE_DOWN );
+            addNeighbor(pathArrows, tile, xyPos[0], xyPos[1]+1, SoldierMovement.MOVE_DOWN );
     }
 
     private void addNeighbor(ArrayList<Pair<Tile, SoldierMovement>> surroundingTiles, Tile tile, Integer x, Integer y, SoldierMovement move){
