@@ -11,12 +11,17 @@ import com.pwnz.www.rockpapersword.model.Tile;
 
 public class GameManager {
 
+    public static final int TEAM_A_TURN = 0;
+    public static final int TEAM_B_TURN = 1;
+
     private final int SCREEN_BOARD_PADDING_FACTOR = 2;
     private final int HEIGHT_DIV = 10;
     private final int WIDTH_DIV  = 7;
     private Soldier focusedSoldier = null;
     private boolean hasFocusedSoldier = false;
+    private int teamTurn;
     public int canvasW, canvasH;
+
 
 
     private Board board;
@@ -29,6 +34,11 @@ public class GameManager {
         this.canvasW = board.getCanvasW();
         this.panel.setManager(this);
         initBoard();
+        randTeamTurn();
+    }
+
+    private void randTeamTurn() {
+        teamTurn = (int )(Math.random() * 1 + 0);
     }
 
     public Board getBoard() {
@@ -43,7 +53,14 @@ public class GameManager {
         float x = event.getX();
         float y = event.getY();
 
-        if(board.getClickedSoldier(x,y) != null) {
+        //A.I:
+        if(teamTurn == TEAM_A_TURN){
+            clearHighlights();
+            playAsAI();
+            teamTurn = TEAM_B_TURN;
+        }
+        //USER:
+        else if(board.getClickedSoldier(x,y) != null) {
             focusedSoldier = board.getClickedSoldier(x, y);
             clearHighlights();
             hasFocusedSoldier = true;
@@ -56,10 +73,20 @@ public class GameManager {
                 moveSoldier(focusedSoldier, newTile);
                 clearHighlights();
                 hasFocusedSoldier = false;
+                teamTurn = TEAM_A_TURN;
             }
         }
 
     }
+
+    private void playAsAI() {
+        Soldier AISoldier = board.getRandomSoldier();
+        Tile tile = board.getTraversalTile();
+        moveSoldier(AISoldier, tile);
+        clearHighlights();
+        hasFocusedSoldier = false;
+    }
+
 
     private void moveSoldier(Soldier focusedSoldier, Tile tile) {
         clearTileByRectPos(focusedSoldier.getRectPosition());

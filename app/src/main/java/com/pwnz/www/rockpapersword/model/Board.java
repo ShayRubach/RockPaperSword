@@ -233,4 +233,25 @@ public class Board {
     public int getMaxPathArrows() {
         return MAX_PATH_ARROWS;
     }
+
+
+    public Soldier getRandomSoldier() {
+        Soldier AISoldier = null;
+        int randIdx;
+        do {
+            randIdx = (int )(Math.random() * soldierTeamA.size() - 1 + 0);
+            AISoldier = soldierTeamA.get(randIdx);
+            highlightPathArrows(AISoldier);
+            if(pathArrows.isEmpty())
+                AISoldier = null;
+
+        }while(AISoldier == null);
+
+        return AISoldier;
+    }
+
+    public Tile getTraversalTile() {
+        int randIdx = (int )(Math.random() * pathArrows.size()-1 + 0);
+        return pathArrows.get(randIdx).first;
+    }
 }
