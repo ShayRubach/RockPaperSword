@@ -155,14 +155,14 @@ public class Board {
     public Soldier getClickedSoldier(float x, float y) {
         //find clicked soldier on self team
         for (Soldier soldier : soldierTeamB){
-            if(isInInside(soldier.getRectPosition(), x,y) == true)
+            if(isInside(soldier.getRectPosition(), x,y) == true)
                 return soldier;
         }
 
         return null;
     }
 
-    private boolean isInInside(Rect rectPosition, float x, float y) {
+    private boolean isInside(Rect rectPosition, float x, float y) {
         if(rectPosition.left <= x && rectPosition.right >= x){
             if(rectPosition.top <= y && rectPosition.bottom >= y){
                 return true;
@@ -182,7 +182,6 @@ public class Board {
         Tile tile = null;
         Integer[] xyPos = new Integer[2];
         rectPositionToTileIndex(focusedSoldier.getRectPosition(), xyPos);
-        pathArrows.clear();
 
         //is left neighbor exist and unoccupied?
         if(xyPos[0]-1 > -1 )
@@ -218,8 +217,13 @@ public class Board {
     }
 
 
-    public void getMoveDirection(Soldier focusedSoldier, float x, float y) {
-
+    public Tile getTileAt(float x, float y) {
+        for(Pair<Tile, SoldierMovement> pair : pathArrows){
+            if(isInside(pair.first.getRect(), x, y) == true){
+                return pair.first;
+            }
+        }
+        return null;
     }
 
     public ArrayList<Pair<Tile, SoldierMovement>> getPathArrows() {

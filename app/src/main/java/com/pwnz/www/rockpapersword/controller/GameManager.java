@@ -5,6 +5,8 @@ import android.view.MotionEvent;
 import com.pwnz.www.rockpapersword.GamePanel;
 import com.pwnz.www.rockpapersword.model.Board;
 import com.pwnz.www.rockpapersword.model.Soldier;
+import com.pwnz.www.rockpapersword.model.SoldierMovement;
+import com.pwnz.www.rockpapersword.model.Tile;
 
 public class GameManager {
 
@@ -40,41 +42,31 @@ public class GameManager {
         float x = event.getX();
         float y = event.getY();
 
-        focusedSoldier = board.getClickedSoldier(x,y);
-        if(focusedSoldier != null){
+        if(board.getClickedSoldier(x,y) != null) {
+            focusedSoldier = board.getClickedSoldier(x, y);
             clearHighlights();
             hasFocusedSoldier = true;
             board.displaySoldierPath(focusedSoldier);
         }
-        else{
-            board.getMoveDirection(focusedSoldier, x, y);
+        else if(hasFocusedSoldier == true){
+            Tile newTile = board.getTileAt(x, y);
+
+            if(newTile != null){
+                moveSoldier(focusedSoldier, newTile);
+                clearHighlights();
+                hasFocusedSoldier = false;
+            }
         }
-
-//        //focus on a new soldier
-//        if(hasFocusedSoldier == false){
-//            focusedSoldier = board.getClickedSoldier(x,y);
-//            if(focusedSoldier != null){
-//                hasFocusedSoldier = true;
-//                board.displaySoldierPath(focusedSoldier);
-//            }
-//        }
-//        else{
-//            //check if focused soldier has been swapped
-//            focusedSoldier = board.getClickedSoldier(x,y);
-//
-//            //user it attempting to move the soldier
-//        }
-//
-//        focusedSoldier = board.getClickedSoldier(x,y);
-//        if(focusedSoldier != null){
-//            board.displaySoldierPath(focusedSoldier);
-//        }
-
-
 
     }
 
+    private void moveSoldier(Soldier focusedSoldier, Tile tile) {
+        focusedSoldier.setRectPosition(tile.getRect());
+    }
+
     private void clearHighlights() {
+        board.getPathArrows().clear();
+
         for(Soldier s : getBoard().getSoldierTeamB()){
             if(s.isHighlighted() == true)
                 s.removeHighlight();

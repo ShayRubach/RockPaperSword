@@ -86,6 +86,8 @@ public class Soldier {
     }
 
     public void setRectPosition(Rect rectPosition) {
+        if(this == null)
+            System.out.println("________________________________________________________");
         this.rectPosition = rectPosition;
     }
 
@@ -168,13 +170,11 @@ public class Soldier {
     }
 
     public void highlight() {
-        //todo: change the sprite to highlighted sprite?????????
         setAnimationSprite(highlightedSpriteSource);
         isHighlighted = true;
     }
 
     public void removeHighlight() {
-        //todo: change the sprite to highlighted sprite?????????
         setAnimationSprite(nonHighlightedSpriteSource);
         isHighlighted = false;
     }
