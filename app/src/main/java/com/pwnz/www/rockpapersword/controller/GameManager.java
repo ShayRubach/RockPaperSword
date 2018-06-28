@@ -1,5 +1,6 @@
 package com.pwnz.www.rockpapersword.controller;
 
+import android.graphics.Rect;
 import android.view.MotionEvent;
 
 import com.pwnz.www.rockpapersword.GamePanel;
@@ -61,14 +62,16 @@ public class GameManager {
     }
 
     private void moveSoldier(Soldier focusedSoldier, Tile tile) {
-
-        //clear old tile
-        Integer[] xyPos = new Integer[2];
-        getBoard().rectPositionToTileIndex(focusedSoldier.getRectPosition(), xyPos );
-        getBoard().getTiles()[xyPos[0]][xyPos[1]].setOccupied(false);
-
+        clearTileByRectPos(focusedSoldier.getRectPosition());
         focusedSoldier.setRectPosition(tile.getRect());
 
+    }
+
+    private void clearTileByRectPos(Rect rectPosition) {
+        //clear old tile
+        Integer[] xyPos = new Integer[2];
+        getBoard().rectPositionToTileIndex(rectPosition, xyPos );
+        getBoard().getTiles()[xyPos[0]][xyPos[1]].setOccupied(false);
     }
 
     private void clearHighlights() {
