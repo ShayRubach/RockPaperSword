@@ -9,6 +9,7 @@ public class Tile {
     private int color;
     private int width, height;
     private boolean isOccupied = false;
+    private Soldier currSoldier = null;
 
 
     public Tile(){}
@@ -22,6 +23,14 @@ public class Tile {
         width = right-left;
         height = bottom-top;
 
+    }
+
+    public Soldier getCurrSoldier() {
+        return currSoldier;
+    }
+
+    public void setCurrSoldier(Soldier currSoldier) {
+        this.currSoldier = currSoldier;
     }
 
     public Rect getRect() {

@@ -158,7 +158,7 @@ public class GamePanel extends SurfaceView implements Runnable {
             if(soldier != null){
                 //todo: move this to an earlier stage. (taking the advantage we got a context here and setting the bitmap)
                 soldier.setSoldierBitmap(BitmapFactory.decodeResource(getResources(), soldier.getAnimationSprite()));
-                mCanvas.drawBitmap(soldier.getSoldierBitmap(), null, soldier.getRectPosition(), null);
+                mCanvas.drawBitmap(soldier.getSoldierBitmap(), null, soldier.getTile().getRect(), null);
             }
         }
     }

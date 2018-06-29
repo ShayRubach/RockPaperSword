@@ -13,7 +13,7 @@ public class Soldier {
     private static int pickedTypesCount = 0;
 
     private Bitmap soldierBitmap;
-    private Rect rectPosition;
+    private Tile tile;
     private boolean isVisible;
     private boolean isHighlighted = false;
     private SoldierType soldierType;
@@ -24,9 +24,9 @@ public class Soldier {
 
     public Soldier() {}
 
-    public Soldier(Bitmap mSoldierBitmap, Rect mRectPosition, boolean isVisible, SoldierType mSoldierType) {
+    public Soldier(Bitmap mSoldierBitmap, Tile tile, boolean isVisible, SoldierType mSoldierType) {
         this.soldierBitmap = mSoldierBitmap;
-        this.rectPosition = mRectPosition;
+        this.tile= tile;
         this.isVisible = isVisible;
         this.soldierType = mSoldierType;
     }
@@ -51,10 +51,18 @@ public class Soldier {
     @Override
     public String toString() {
         return "\n\nSoldier { "+ "\n" +
-                "\tRectPosition = " + rectPosition + "\n" +
+                "\tTile = " + tile+ "\n" +
                 "\tisVisible = " + isVisible + "\n" +
                 "\tSoldierType = " + soldierType + "\n" +
                 '}';
+    }
+
+    public Tile getTile() {
+        return tile;
+    }
+
+    public void setTile(Tile tile) {
+        this.tile = tile;
     }
 
     public int getTeam() {
@@ -88,16 +96,6 @@ public class Soldier {
 
     public void setSoldierBitmap(Bitmap bitmap) {
         this.soldierBitmap = bitmap;
-    }
-
-    public Rect getRectPosition() {
-        return rectPosition;
-    }
-
-    public void setRectPosition(Rect rectPosition) {
-        if(this == null)
-            System.out.println("________________________________________________________");
-        this.rectPosition = rectPosition;
     }
 
     public boolean isVisible() {

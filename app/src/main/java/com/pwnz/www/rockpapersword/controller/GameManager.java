@@ -19,6 +19,7 @@ public class GameManager {
     private final int WIDTH_DIV  = 7;
     private Soldier focusedSoldier = null;
     private Soldier AISoldier = null;
+    private Soldier potentialInitiator = null;
     private boolean hasFocusedSoldier = false;
     private int teamTurn;
     public int canvasW, canvasH;
@@ -53,14 +54,14 @@ public class GameManager {
     public void onTouchEvent(MotionEvent event){
         float x = event.getX();
         float y = event.getY();
-        Soldier potentialInitiator = null;
 
         //A.I:
         if(teamTurn == TEAM_A_TURN){
             clearHighlights();
             playAsAI();
-            teamTurn = TEAM_B_TURN;
+            System.out.println("____POTENTIAL____, AISoldier="+AISoldier);
             potentialInitiator = AISoldier;
+            teamTurn = TEAM_B_TURN;
         }
         //USER:
         else if(board.getClickedSoldier(x,y) != null) {
@@ -69,19 +70,19 @@ public class GameManager {
             hasFocusedSoldier = true;
             board.displaySoldierPath(focusedSoldier);
         }
-        else if(hasFocusedSoldier == true){
+        else if(hasFocusedSoldier){
             Tile newTile = board.getTileAt(x, y);
 
             if(newTile != null){
                 moveSoldier(focusedSoldier, newTile);
+                System.out.println("__POTENTIAL__, focusedSoldier="+focusedSoldier);
+                potentialInitiator = focusedSoldier;
                 clearHighlights();
                 hasFocusedSoldier = false;
                 teamTurn = TEAM_A_TURN;
-                potentialInitiator = focusedSoldier;
             }
         }
 
-        //todo: implement match logic
         lookForPotentialMatch(potentialInitiator);
     }
 
@@ -90,13 +91,77 @@ public class GameManager {
         Soldier opponent;
         RPSMatchResult matchResult;
 
-        opponent = board.getFirstSurroundingOpponent(AISoldier);
-        if(opponent != null)
-            matchResult = match(AISoldier, opponent);
+        System.out.println("lookForPotentialMatch: called, ");
 
+        if(potentialInitiator == null)
+            return;
+
+        opponent = board.getFirstSurroundingOpponent(potentialInitiator);
+        System.out.println("getFirstSurroundingOpponent: Done, ");
+        System.out.println("lookForPotentialMatch: opponent="+opponent);
+
+        if(opponent != null) {
+            matchResult = match(potentialInitiator, opponent);
+            System.out.println("MATCH RESULT: " + matchResult);
+        }
     }
 
     private RPSMatchResult match(Soldier aiSoldier, Soldier opponent) {
+        switch (aiSoldier.getSoldierType()){
+            case STONE:
+                switch (opponent.getSoldierType()){
+                    case KING:          return RPSMatchResult.TEAM_A_WINS_THE_GAME;
+                    case ASHES:         return RPSMatchResult.REVEAL_TEAM_A;
+                    case STONE:         return RPSMatchResult.TIE;
+                    case SWORDMASTER:   return RPSMatchResult.TEAM_A_WON_THE_MATCH;
+                    case PEPPER:        return RPSMatchResult.TEAM_B_WON_THE_MATCH;
+                    case SHIELDON:      return RPSMatchResult.BOTH_ELIMINATED;
+                }
+                break;
+            case PEPPER:
+                switch (opponent.getSoldierType()){
+                    case KING:          return RPSMatchResult.TEAM_A_WINS_THE_GAME;
+                    case ASHES:         return RPSMatchResult.REVEAL_TEAM_A;
+                    case STONE:         return RPSMatchResult.TEAM_A_WON_THE_MATCH;
+                    case PEPPER:        return RPSMatchResult.TIE;
+                    case SWORDMASTER:   return RPSMatchResult.TEAM_B_WON_THE_MATCH;
+                    case SHIELDON:      return RPSMatchResult.BOTH_ELIMINATED;
+                }
+                break;
+            case SWORDMASTER:
+                switch (opponent.getSoldierType()){
+                    case KING:          return RPSMatchResult.TEAM_A_WINS_THE_GAME;
+                    case ASHES:         return RPSMatchResult.REVEAL_TEAM_A;
+                    case PEPPER:        return RPSMatchResult.TEAM_A_WON_THE_MATCH;
+                    case SWORDMASTER:   return RPSMatchResult.TIE;
+                    case STONE:         return RPSMatchResult.TEAM_B_WON_THE_MATCH;
+                    case SHIELDON:      return RPSMatchResult.BOTH_ELIMINATED;
+                }
+                break;
+            case SHIELDON:
+                switch (opponent.getSoldierType()){
+                    case KING:          return RPSMatchResult.TEAM_A_WINS_THE_GAME;
+                    case ASHES:         return RPSMatchResult.REVEAL_TEAM_A;
+                    default:            return RPSMatchResult.BOTH_ELIMINATED;
+                }
+            case ASHES:
+                switch (opponent.getSoldierType()){
+                    case ASHES:         return RPSMatchResult.BOTH_ELIMINATED;
+                    default:            return RPSMatchResult.REVEAL_TEAM_B;
+                }
+            case KING:
+                switch (opponent.getSoldierType()){
+                    //todo: solve king vs king
+                    case KING:          return RPSMatchResult.TEAM_A_WINS_THE_GAME;
+                    case ASHES:         return RPSMatchResult.REVEAL_TEAM_A;
+                    default:            return RPSMatchResult.TEAM_B_WINS_THE_GAME;
+                }
+
+            //todo: implement this? random a weapon maybe?
+            case LASSO:
+                break;
+
+        }
         return RPSMatchResult.TIE;
     }
 
@@ -110,23 +175,19 @@ public class GameManager {
 
 
     private void moveSoldier(Soldier focusedSoldier, Tile tile) {
-        clearTileByRectPos(focusedSoldier.getRectPosition());
-        focusedSoldier.setRectPosition(tile.getRect());
+        focusedSoldier.getTile().setOccupied(false);
+        focusedSoldier.setTile(tile);
+        focusedSoldier.getTile().setOccupied(true);
+        focusedSoldier.getTile().setCurrSoldier(focusedSoldier);
 
-    }
 
-    private void clearTileByRectPos(Rect rectPosition) {
-        //clear old tile
-        Integer[] xyPos = new Integer[2];
-        getBoard().rectPositionToTileIndex(rectPosition, xyPos );
-        getBoard().getTiles()[xyPos[0]][xyPos[1]].setOccupied(false);
     }
 
     private void clearHighlights() {
         board.getPathArrows().clear();
 
         for(Soldier s : getBoard().getSoldierTeamB()){
-            if(s.isHighlighted() == true)
+            if(s.isHighlighted())
                 s.removeHighlight();
         }
     }
