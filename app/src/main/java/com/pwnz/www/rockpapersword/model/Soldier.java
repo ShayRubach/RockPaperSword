@@ -139,7 +139,7 @@ public class Soldier {
                 if(getTeam() == Board.TEAM_A)
                     setOnAITeam();
                 else
-                    setOnPlayerTeam(R.drawable.attack_1, R.drawable.attack_1_highlighted);
+                    setOnPlayerTeam(R.drawable.pepper, R.drawable.pepper_highlighted);
                 break;
             case ASHES:
                 if(getTeam() == Board.TEAM_A)
@@ -157,13 +157,13 @@ public class Soldier {
                 if(getTeam() == Board.TEAM_A)
                     setOnAITeam();
                 else
-                    setOnPlayerTeam(R.drawable.attack_1, R.drawable.attack_1_highlighted);
+                    setOnPlayerTeam(R.drawable.shieldon, R.drawable.shieldon_highlighted);
                 break;
             case LASSO:
                 if(getTeam() == Board.TEAM_A)
                     setOnAITeam();
                 else
-                    setOnPlayerTeam(R.drawable.attack_1, R.drawable.attack_1_highlighted);
+                    setOnPlayerTeam(R.drawable.lasso, R.drawable.lasso_highlighted);
                 break;
         }
 

@@ -255,4 +255,9 @@ public class Board {
         int randIdx = (int )(Math.random() * pathArrows.size()-1 + 0);
         return pathArrows.get(randIdx).first;
     }
+
+    public Soldier getFirstSurroundingOpponent(Soldier initiator) {
+        
+        return null;
+    }
 }

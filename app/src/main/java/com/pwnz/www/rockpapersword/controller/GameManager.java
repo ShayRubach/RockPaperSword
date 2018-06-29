@@ -5,8 +5,8 @@ import android.view.MotionEvent;
 
 import com.pwnz.www.rockpapersword.GamePanel;
 import com.pwnz.www.rockpapersword.model.Board;
+import com.pwnz.www.rockpapersword.model.RPSMatchResult;
 import com.pwnz.www.rockpapersword.model.Soldier;
-import com.pwnz.www.rockpapersword.model.SoldierMovement;
 import com.pwnz.www.rockpapersword.model.Tile;
 
 public class GameManager {
@@ -53,12 +53,14 @@ public class GameManager {
     public void onTouchEvent(MotionEvent event){
         float x = event.getX();
         float y = event.getY();
+        Soldier potentialInitiator = null;
 
         //A.I:
         if(teamTurn == TEAM_A_TURN){
             clearHighlights();
             playAsAI();
             teamTurn = TEAM_B_TURN;
+            potentialInitiator = AISoldier;
         }
         //USER:
         else if(board.getClickedSoldier(x,y) != null) {
@@ -75,11 +77,27 @@ public class GameManager {
                 clearHighlights();
                 hasFocusedSoldier = false;
                 teamTurn = TEAM_A_TURN;
+                potentialInitiator = focusedSoldier;
             }
         }
 
         //todo: implement match logic
-        //seekForMatch();
+        lookForPotentialMatch(potentialInitiator);
+    }
+
+    //after a move has been initiated, we wish to check the surrounding soldiers for a possible match.
+    private void lookForPotentialMatch(Soldier potentialInitiator) {
+        Soldier opponent;
+        RPSMatchResult matchResult;
+
+        opponent = board.getFirstSurroundingOpponent(AISoldier);
+        if(opponent != null)
+            matchResult = match(AISoldier, opponent);
+
+    }
+
+    private RPSMatchResult match(Soldier aiSoldier, Soldier opponent) {
+        return RPSMatchResult.TIE;
     }
 
     private void playAsAI() {
