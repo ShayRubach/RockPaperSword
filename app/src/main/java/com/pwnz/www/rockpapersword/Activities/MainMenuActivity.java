@@ -8,9 +8,11 @@ import android.os.Bundle;
 import android.view.View;
 import android.view.WindowManager;
 
+import com.crashlytics.android.Crashlytics;
 import com.pwnz.www.rockpapersword.R;
 import com.pwnz.www.rockpapersword.model.MyMusicRunnable;
 import com.pwnz.www.rockpapersword.model.MySFxRunnable;
+import io.fabric.sdk.android.Fabric;
 
 public class MainMenuActivity extends AppCompatActivity {
 
@@ -20,6 +22,7 @@ public class MainMenuActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        Fabric.with(this, new Crashlytics());
 
         View decorView = getWindow().getDecorView();
         int uiOptions = View.SYSTEM_UI_FLAG_FULLSCREEN;
