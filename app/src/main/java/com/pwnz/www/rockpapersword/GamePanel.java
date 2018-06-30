@@ -98,51 +98,6 @@ public class GamePanel extends SurfaceView implements Runnable {
         }
     }
 
-    //TODO: remove this
-    private void drawTiles2() {
-
-        final int gapTop = 2;
-        final int gapBtm = 2;
-        final int hDivisor = 10;
-        final int wDivisor = 7;
-
-        Bitmap soldier = BitmapFactory.decodeResource(getResources(), R.drawable.attack_1);
-
-        Paint brushBlack = new Paint();
-        brushBlack.setColor(Color.rgb(249, 184, 72));
-        brushBlack.setStyle(Paint.Style.FILL);
-
-        Paint brushGreen = new Paint();
-        brushGreen.setColor(Color.rgb(242, 227, 201));
-        brushGreen.setStyle(Paint.Style.FILL);
-
-        Paint brushes[] = new Paint[2];
-        brushes[0] = brushBlack;
-        brushes[1] = brushGreen;
-
-        int brushRand = 0 ;
-        int rectW = mCanvasW / wDivisor;
-        int rectH = mCanvasH / hDivisor;
-
-        for (int i = 0; i < hDivisor ; i++) {
-            if(i < gapTop || i > hDivisor - gapBtm - 1)
-                continue;
-            for (int k = 0; k < wDivisor; k++) {
-                Rect rect = new Rect(k * rectW, i * rectH, (k+1) * rectW, (i+1) * rectH);
-                brushRand = brushRand == 1 ? 0 : 1;
-                mCanvas.drawRect(rect, brushes[brushRand]);
-
-                //dont draw the 2 separating middle rows:
-                if(i != (hDivisor / 2) && i != (hDivisor / 2) - 1){
-                    mCanvas.drawBitmap(soldier, null, rect,null);
-                }
-
-
-            }
-        }
-
-    }
-
     private void drawInstructions(Canvas canvas) {
 
     }
