@@ -176,7 +176,7 @@ public class Board {
     }
 
     public void displaySoldierPath(Soldier focusedSoldier) {
-        ArrayList<Pair<Tile, SoldierMovement>> surroundingTiles = new ArrayList<>();
+
         highlightPathArrows(focusedSoldier);
         focusedSoldier.highlight();
     }
@@ -262,17 +262,14 @@ public class Board {
     public Soldier getFirstSurroundingOpponent(Soldier initiator) {
         Integer[] xyPos = new Integer[2];
         getTileIndex(initiator.getTile(), xyPos);
-        int newX = xyPos[0];
-        int newY = xyPos[1];
+        int newX, newY;
 
-        System.out.println("getFirstSurroundingOpponent: initiator pos["+xyPos[0]+"["+xyPos[1]+"]");
 
         //potential opponent to the left
         if(xyPos[0]-1 > -1){
             newX = xyPos[0]-1;
             newY = xyPos[1];
             if(isValidOpponent(newX, newY, initiator)) {
-                System.out.println("getFirstSurroundingOpponent: LEFT");
                 return getTiles()[newX][newY].getCurrSoldier();
             }
         }
@@ -281,7 +278,6 @@ public class Board {
             newX = xyPos[0]+1;
             newY = xyPos[1];
             if (isValidOpponent(newX, newY, initiator)){
-                System.out.println("getFirstSurroundingOpponent: RIGHT");
                 return getTiles()[newX][newY].getCurrSoldier();
             }
 
@@ -291,7 +287,6 @@ public class Board {
             newX = xyPos[0];
             newY = xyPos[1]-1;
             if (isValidOpponent(newX, newY, initiator)) {
-                System.out.println("getFirstSurroundingOpponent: TOP");
                 return getTiles()[newX][newY].getCurrSoldier();
             }
         }
@@ -300,21 +295,20 @@ public class Board {
             newX = xyPos[0];
             newY = xyPos[1]+1;
             if (isValidOpponent(newX, newY, initiator)) {
-                System.out.println("getFirstSurroundingOpponent: BOTTOM");
                 return getTiles()[newX][newY].getCurrSoldier();
             }
         }
-        System.out.println("getFirstSurroundingOpponent: FOUND NONE");
+
         return null;
     }
 
     private boolean isValidOpponent(int newX, int newY, Soldier initiator) {
-        System.out.println("isValidOpponent: [newX][newY]=" + newX + " , " + newY);
 
-        boolean res = getTiles()[newX][newY].isOccupied() &&
-                      getTiles()[newX][newY].getCurrSoldier().getTeam() != initiator.getTeam();
-        System.out.println("isValidOpponent: res=" + res);
-        return res;
+
+        return getTiles()[newX][newY].isOccupied() &&
+               getTiles()[newX][newY].getCurrSoldier().getTeam() != initiator.getTeam();
+
+
 
     }
 }

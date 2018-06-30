@@ -27,14 +27,11 @@ public class GamePanel extends SurfaceView implements Runnable {
     private Thread mPlayThread = null;
     private Canvas mCanvas;
     private SurfaceHolder mSurfaceHolder;
-    private Bitmap mTtpBitmap, bg;
-    private static Tile[][] tilesMatrix = null;
     private int mCanvasH, mCanvasW;
 
 
     public GamePanel(Context context) {
         super(context);
-        bg = BitmapFactory.decodeResource(getResources(), R.drawable.chartest);
         mSurfaceHolder = getHolder();
 
     }
