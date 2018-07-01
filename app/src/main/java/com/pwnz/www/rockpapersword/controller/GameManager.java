@@ -35,8 +35,14 @@ public class GameManager {
         this.canvasH = board.getCanvasH();
         this.canvasW = board.getCanvasW();
         this.panel.setManager(this);
+        this.panel.setRedraw(true);
         initBoard();
+        initClock();
         randTeamTurn();
+    }
+
+    private void initClock() {
+
     }
 
     private void randTeamTurn() {
@@ -54,6 +60,7 @@ public class GameManager {
     public void onTouchEvent(MotionEvent event){
         float x = event.getX();
         float y = event.getY();
+        panel.setRedraw(true);
 
         //A.I:
         if(teamTurn == TEAM_A_TURN){
