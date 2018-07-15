@@ -21,6 +21,7 @@ public class GameManager {
     private Soldier AISoldier = null;
     private Soldier potentialInitiator = null;
     private boolean hasFocusedSoldier = false;
+    private boolean possibleMatch = false;
     private int teamTurn;
     public int canvasW, canvasH;
 
@@ -62,19 +63,11 @@ public class GameManager {
         float y = event.getY();
         panel.setRedraw(true);
 
-        //A.I:
-        if(teamTurn == TEAM_A_TURN){
-            clearHighlights();
-            playAsAI();
-            System.out.println("____POTENTIAL____, AISoldier="+AISoldier);
-            potentialInitiator = AISoldier;
-            teamTurn = TEAM_B_TURN;
-        }
-        //USER:
-        else if(board.getClickedSoldier(x,y) != null) {
+        if(board.getClickedSoldier(x,y) != null) {
             focusedSoldier = board.getClickedSoldier(x, y);
             clearHighlights();
             hasFocusedSoldier = true;
+            possibleMatch = false;
             board.displaySoldierPath(focusedSoldier);
         }
         else if(hasFocusedSoldier){
@@ -86,11 +79,28 @@ public class GameManager {
                 potentialInitiator = focusedSoldier;
                 clearHighlights();
                 hasFocusedSoldier = false;
+                possibleMatch = true;
                 teamTurn = TEAM_A_TURN;
+
             }
         }
 
-        lookForPotentialMatch(potentialInitiator);
+        if(possibleMatch) {
+            lookForPotentialMatch(potentialInitiator);
+        }
+
+        //A.I:
+        if(teamTurn == TEAM_A_TURN){
+            clearHighlights();
+            playAsAI();
+            System.out.println("____POTENTIAL____, AISoldier="+AISoldier);
+            potentialInitiator = AISoldier;
+            possibleMatch = true;
+            teamTurn = TEAM_B_TURN;
+            panel.resetClock();
+        }
+
+
     }
 
     //after a move has been initiated, we wish to check the surrounding soldiers for a possible match.
@@ -108,6 +118,7 @@ public class GameManager {
         System.out.println("lookForPotentialMatch: opponent="+opponent);
 
         if(opponent != null) {
+            panel.stopClock();
             matchResult = match(potentialInitiator, opponent);
             System.out.println("MATCH RESULT: " + matchResult);
         }
@@ -199,4 +210,19 @@ public class GameManager {
         }
     }
 
+    public void swapTurns() {
+        if(teamTurn == TEAM_B_TURN) {
+            teamTurn = TEAM_A_TURN;
+            clearHighlights();
+            playAsAI();
+            System.out.println("____POTENTIAL____, AISoldier="+AISoldier);
+            potentialInitiator = AISoldier;
+            lookForPotentialMatch(potentialInitiator);
+            teamTurn = TEAM_B_TURN;
+        }
+        else {
+            //do nothing, we still haven't finished playing as AI.
+            return;
+        }
+    }
 }

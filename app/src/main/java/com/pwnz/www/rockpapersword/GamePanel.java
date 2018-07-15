@@ -24,6 +24,7 @@ public class GamePanel extends SurfaceView implements Runnable {
     public static final int MAX_FPS = 60;
     private boolean canPlay = false;
     private boolean isInMenuScreen = true;
+    private boolean shouldDrawClock = true;
     private GameManager manager;
     private Thread mPlayThread = null;
     private Canvas mCanvas;
@@ -112,7 +113,11 @@ public class GamePanel extends SurfaceView implements Runnable {
             timeMillis = System.currentTimeMillis();
             endTimeSeconds = TimeUnit.MILLISECONDS.toSeconds(timeMillis);
             System.out.println("endTimeSeconds - startTimeSeconds= " + (endTimeSeconds - startTimeSeconds));
-            gameClock.updateTime(endTimeSeconds - startTimeSeconds);
+
+            //if updateTime == true, clock resets and we need to tell GameManager so force a turn swap:
+            if(gameClock.updateTime(endTimeSeconds - startTimeSeconds)){
+
+            }
 
         }
     }
@@ -122,7 +127,8 @@ public class GamePanel extends SurfaceView implements Runnable {
     }
 
     private void drawClock() {
-        gameClock.drawClock(mCanvas);
+        if(shouldDrawClock)
+            gameClock.drawClock(mCanvas);
     }
 
     private void update() {
@@ -235,5 +241,14 @@ public class GamePanel extends SurfaceView implements Runnable {
 
     public void setRedraw(boolean redraw) {
         this.redraw = redraw;
+    }
+
+    public void stopClock(){
+        shouldDrawClock = false;
+    }
+
+    public void resetClock() {
+        gameClock.resetClock();
+        shouldDrawClock = true;
     }
 }
