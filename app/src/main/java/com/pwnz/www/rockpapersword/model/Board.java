@@ -11,6 +11,7 @@ public class Board {
     ArrayList<Soldier> soldierTeamA = new ArrayList<>();
     ArrayList<Soldier> soldierTeamB = new ArrayList<>();
     ArrayList<Pair<Tile, SoldierMovement>> pathArrows = new ArrayList<>();
+    private double playerMatchRect, aiMatchRect;
 
     int cols, rows;
     int canvasW, canvasH;

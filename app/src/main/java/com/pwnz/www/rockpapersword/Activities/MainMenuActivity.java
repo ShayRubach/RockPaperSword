@@ -19,7 +19,7 @@ import io.fabric.sdk.android.Fabric;
 
 public class MainMenuActivity extends AppCompatActivity {
 
-    private static MyMusicRunnable mMusicPlayer = null;
+    public static MediaPlayer mediaPlayer = null;
     private static MySFxRunnable mSoundEffects = null;
 
     @Override
@@ -33,27 +33,18 @@ public class MainMenuActivity extends AppCompatActivity {
 
         setContentView(R.layout.activity_main_menu);
 
-        initAndPlayMusicPlauer();
+        mediaPlayer = MediaPlayer.create(this, R.raw.handmade_moments_wanderin_eyes_edited);
+        mediaPlayer.setVolume(SettingsActivity.sfxGeneralVolume, SettingsActivity.sfxGeneralVolume);
+        mediaPlayer.start();
 
         if (mSoundEffects == null) {
             mSoundEffects = new MySFxRunnable(this);
         }
     }
 
-    private void initAndPlayMusicPlauer() {
-        if (mMusicPlayer == null) {
-            mMusicPlayer = new MyMusicRunnable(this);
-        }
-
-        AsyncHandler.post(mMusicPlayer);
-
-    }
-
-
     @Override
     protected void onDestroy() {
         super.onDestroy();
-        mMusicPlayer = null;
         Toast.makeText(getApplicationContext(),"onDestroy", Toast.LENGTH_SHORT ).show();
     }
 
@@ -75,12 +66,8 @@ public class MainMenuActivity extends AppCompatActivity {
     }
 
     void onClickStart(View v){
-        mMusicPlayer = null;
+        mediaPlayer.pause();
         startActivity(new Intent(MainMenuActivity.this, GameActivity.class));
-    }
-
-    public static MyMusicRunnable getMusicPlayer() {
-        return mMusicPlayer;
     }
 
     public static MySFxRunnable getSoundEffects() {

@@ -55,7 +55,6 @@ public class MySFxRunnable implements Runnable {
            soundsMap.put(R.raw.move_self, soundPool.load(appContext, R.raw.move_self, 1));
            soundsMap.put(R.raw.move_enemy, soundPool.load(appContext, R.raw.move_enemy, 1));
 
-
     }
 
     public void play(int soundKey, float leftVol, float rightVol ) {

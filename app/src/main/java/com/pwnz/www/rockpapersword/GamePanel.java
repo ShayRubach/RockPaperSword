@@ -31,6 +31,8 @@ public class GamePanel extends SurfaceView implements Runnable {
     private SurfaceHolder mSurfaceHolder;
     private int mCanvasH, mCanvasW;
     private boolean redraw = false;
+    private boolean matchRectsInitialized = false;
+
     private double fps, fts, ftm, ftn; //frames per seconds, frame time second/ms/ns
     private double framePerSecond, frameTimeSeconds ,frameTimeMs, frameTimeNs;
     private double lastFrameTime, endOfRenderTime, deltaTime;
@@ -85,14 +87,20 @@ public class GamePanel extends SurfaceView implements Runnable {
             mCanvasW = mCanvas.getWidth();
 
             if(isInMenuScreen){
-
+                //todo: implement a menu screen later
             }
             else {
-                drawTiles();
-                drawSoldiers();
-                drawPathArrows();
-                drawClock();
-                drawJudges();
+                //if match is on, override whole gamepanel screen with the match.
+                if(isMatchOn()){
+                    drawMatch();
+                }
+                else {
+                    drawTiles();
+                    drawSoldiers();
+                    drawPathArrows();
+                    drawClock();
+                    drawJudges();
+                }
 
             }
             mSurfaceHolder.unlockCanvasAndPost(mCanvas);
@@ -120,6 +128,14 @@ public class GamePanel extends SurfaceView implements Runnable {
             }
 
         }
+    }
+
+    private void drawMatch() {
+        
+    }
+
+    private boolean isMatchOn() {
+        return manager.getIsMatchOn();
     }
 
     private void drawJudges() {

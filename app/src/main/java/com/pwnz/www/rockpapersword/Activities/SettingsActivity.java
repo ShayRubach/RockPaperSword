@@ -47,7 +47,7 @@ public class SettingsActivity extends AppCompatActivity {
             @Override
             public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
                 float output = progress / MAX_VOLUME;
-                MainMenuActivity.getMusicPlayer().getMediaPlayer().setVolume(output, output);
+                MainMenuActivity.mediaPlayer.setVolume(output, output);
 
                 if(progress == MUTE){
                     mute(bgVolumeLogo);

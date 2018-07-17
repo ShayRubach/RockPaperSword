@@ -24,8 +24,10 @@ public class GameManager {
     private Soldier focusedSoldier = null;
     private Soldier AISoldier = null;
     private Soldier potentialInitiator = null;
+    private Soldier opponent = null;
     private boolean hasFocusedSoldier = false;
     private boolean possibleMatch = false;
+    private boolean isMatchOn = false;
     private int teamTurn;
     public int canvasW, canvasH;
 
@@ -110,7 +112,6 @@ public class GameManager {
 
     //after a move has been initiated, we wish to check the surrounding soldiers for a possible match.
     private void lookForPotentialMatch(Soldier potentialInitiator) {
-        Soldier opponent;
         RPSMatchResult matchResult;
 
         System.out.println("lookForPotentialMatch: called, ");
@@ -124,6 +125,7 @@ public class GameManager {
 
         if(opponent != null) {
             panel.stopClock();
+            setMatchOn(true);
             matchResult = match(potentialInitiator, opponent);
             System.out.println("MATCH RESULT: " + matchResult);
         }
@@ -232,5 +234,21 @@ public class GameManager {
             //do nothing, we still haven't finished playing as AI.
             return;
         }
+    }
+
+    public boolean getIsMatchOn() {
+        return isMatchOn;
+    }
+
+    public void setMatchOn(boolean matchOn) {
+        isMatchOn = matchOn;
+    }
+
+    public Soldier getPotentialInitiator() {
+        return potentialInitiator;
+    }
+
+    public Soldier getOpponent() {
+        return opponent;
     }
 }
