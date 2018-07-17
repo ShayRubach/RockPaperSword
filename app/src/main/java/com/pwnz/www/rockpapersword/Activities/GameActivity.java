@@ -8,6 +8,7 @@ import android.view.MotionEvent;
 import android.view.View;
 import com.pwnz.www.rockpapersword.GamePanel;
 import com.pwnz.www.rockpapersword.controller.GameManager;
+import com.pwnz.www.rockpapersword.model.AsyncHandler;
 import com.pwnz.www.rockpapersword.model.Board;
 
 public class GameActivity extends AppCompatActivity {
@@ -47,6 +48,7 @@ public class GameActivity extends AppCompatActivity {
 
         //force no-black-screen before staring a game
         mGamePanel.setInMenuScreen(false);
+
 
     }
 

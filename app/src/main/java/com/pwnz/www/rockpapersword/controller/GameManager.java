@@ -1,9 +1,13 @@
 package com.pwnz.www.rockpapersword.controller;
 
 import android.graphics.Rect;
+import android.provider.Settings;
 import android.view.MotionEvent;
 
+import com.pwnz.www.rockpapersword.Activities.MainMenuActivity;
+import com.pwnz.www.rockpapersword.Activities.SettingsActivity;
 import com.pwnz.www.rockpapersword.GamePanel;
+import com.pwnz.www.rockpapersword.R;
 import com.pwnz.www.rockpapersword.model.Board;
 import com.pwnz.www.rockpapersword.model.RPSMatchResult;
 import com.pwnz.www.rockpapersword.model.Soldier;
@@ -75,6 +79,7 @@ public class GameManager {
 
             if(newTile != null){
                 moveSoldier(focusedSoldier, newTile);
+                MainMenuActivity.getSoundEffects().play(R.raw.move_self, SettingsActivity.sfxGeneralVolume, SettingsActivity.sfxGeneralVolume);
                 System.out.println("__POTENTIAL__, focusedSoldier="+focusedSoldier);
                 potentialInitiator = focusedSoldier;
                 clearHighlights();
@@ -187,6 +192,9 @@ public class GameManager {
         AISoldier = board.getRandomSoldier();
         Tile tile = board.getTraversalTile();
         moveSoldier(AISoldier, tile);
+
+        //todo: turn this on with a delay?
+        //MainMenuActivity.getSoundEffects().play(R.raw.move_enemy, SettingsActivity.sfxGeneralVolume, SettingsActivity.sfxGeneralVolume);
         clearHighlights();
         hasFocusedSoldier = false;
     }

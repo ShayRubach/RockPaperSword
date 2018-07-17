@@ -2,22 +2,25 @@ package com.pwnz.www.rockpapersword.Activities;
 
 import android.app.ActionBar;
 import android.content.Intent;
+import android.media.MediaPlayer;
 import android.os.Build;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.View;
 import android.view.WindowManager;
+import android.widget.Toast;
 
 import com.crashlytics.android.Crashlytics;
 import com.pwnz.www.rockpapersword.R;
+import com.pwnz.www.rockpapersword.model.AsyncHandler;
 import com.pwnz.www.rockpapersword.model.MyMusicRunnable;
 import com.pwnz.www.rockpapersword.model.MySFxRunnable;
 import io.fabric.sdk.android.Fabric;
 
 public class MainMenuActivity extends AppCompatActivity {
 
-    private static MyMusicRunnable mMusicPlayer;
-    private static MySFxRunnable mSoundEffects;
+    private static MyMusicRunnable mMusicPlayer = null;
+    private static MySFxRunnable mSoundEffects = null;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -30,22 +33,40 @@ public class MainMenuActivity extends AppCompatActivity {
 
         setContentView(R.layout.activity_main_menu);
 
-
-        if (mMusicPlayer == null) {
-            mMusicPlayer = new MyMusicRunnable(this);
-        }
-
-        //TODO: UNCOMMENT THIS, its just a workaround for instantly mute when app comes up, its annoying during development
-        //AsyncHandler.post(mMusicPlayer);
+        initAndPlayMusicPlauer();
 
         if (mSoundEffects == null) {
             mSoundEffects = new MySFxRunnable(this);
         }
     }
 
+    private void initAndPlayMusicPlauer() {
+        if (mMusicPlayer == null) {
+            mMusicPlayer = new MyMusicRunnable(this);
+        }
+
+        AsyncHandler.post(mMusicPlayer);
+
+    }
+
+
     @Override
     protected void onDestroy() {
         super.onDestroy();
+        mMusicPlayer = null;
+        Toast.makeText(getApplicationContext(),"onDestroy", Toast.LENGTH_SHORT ).show();
+    }
+
+    @Override
+    protected void onPause() {
+        super.onPause();
+        Toast.makeText(getApplicationContext(),"onPause", Toast.LENGTH_SHORT ).show();
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        Toast.makeText(getApplicationContext(),"onResume", Toast.LENGTH_SHORT ).show();
 
     }
 
@@ -54,6 +75,7 @@ public class MainMenuActivity extends AppCompatActivity {
     }
 
     void onClickStart(View v){
+        mMusicPlayer = null;
         startActivity(new Intent(MainMenuActivity.this, GameActivity.class));
     }
 

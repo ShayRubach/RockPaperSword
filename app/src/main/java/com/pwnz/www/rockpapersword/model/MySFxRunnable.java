@@ -52,6 +52,9 @@ public class MySFxRunnable implements Runnable {
          * them
          */
            soundsMap.put(R.raw.blop, soundPool.load(appContext, R.raw.blop, 1));
+           soundsMap.put(R.raw.move_self, soundPool.load(appContext, R.raw.move_self, 1));
+           soundsMap.put(R.raw.move_enemy, soundPool.load(appContext, R.raw.move_enemy, 1));
+
 
     }
 

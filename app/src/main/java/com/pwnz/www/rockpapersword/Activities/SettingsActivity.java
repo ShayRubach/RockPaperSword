@@ -14,7 +14,7 @@ public class SettingsActivity extends AppCompatActivity {
     private static final float MAX_VOLUME = 100f;
     private SeekBar mBgMusic, mSfx;
     private ImageView bgVolumeLogo, sfxVolumeLogo;
-    private float sfxGeneralVolume = 0;
+    public static float sfxGeneralVolume = 50;
 
 
     private final int DEFAULT_VOLUME_VALUE = 50;
