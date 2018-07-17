@@ -1,7 +1,6 @@
 package com.pwnz.www.rockpapersword.model;
 
 import android.graphics.Bitmap;
-import android.graphics.Rect;
 
 import com.pwnz.www.rockpapersword.R;
 
@@ -9,7 +8,10 @@ import java.util.ArrayList;
 
 public class Soldier {
 
-    private static ArrayList<SoldierType> soldierTypes = initSoldierTypesList();
+    private static ArrayList<SoldierType> startingSoldierTypes = initStartingSoldierTypesList();
+    private static ArrayList<SoldierType> uniqueSoldierTypes = initUniqueSoldierTypesList();
+
+
     private static int pickedTypesCount = 0;
 
     private Bitmap soldierBitmap;
@@ -31,9 +33,8 @@ public class Soldier {
         this.soldierType = mSoldierType;
     }
 
-    private static ArrayList<SoldierType> initSoldierTypesList(){
-        soldierTypes = new ArrayList<>();
-
+    private static ArrayList<SoldierType> initStartingSoldierTypesList(){
+        startingSoldierTypes = new ArrayList<>();
         allocateType(3, SoldierType.STONE);
         allocateType(3, SoldierType.SWORDMASTER);
         allocateType(3, SoldierType.PEPPER);
@@ -45,7 +46,7 @@ public class Soldier {
         //todo: add randomed one here instead of this
         allocateType(1, SoldierType.STONE);
 
-        return soldierTypes;
+        return startingSoldierTypes;
     }
 
     @Override
@@ -79,7 +80,7 @@ public class Soldier {
 
     private static void allocateType(int i, SoldierType type) {
         while(i-- != 0)
-            soldierTypes.add(type);
+            startingSoldierTypes.add(type);
     }
 
     public SoldierType getSoldierType() {
@@ -107,14 +108,14 @@ public class Soldier {
     }
 
     public static SoldierType pickAvailableSoldierType() {
-        if(soldierTypes.isEmpty())
+        if(startingSoldierTypes.isEmpty())
             return null;
 
-        if( pickedTypesCount == soldierTypes.size()) {
+        if( pickedTypesCount == startingSoldierTypes.size()) {
             pickedTypesCount = 0;
         }
 
-        return soldierTypes.get(pickedTypesCount++);
+        return startingSoldierTypes.get(pickedTypesCount++);
     }
 
     public void setSoldierAnimationSpriteByType() {
@@ -207,5 +208,28 @@ public class Soldier {
 
     public boolean isHighlighted() {
         return isHighlighted;
+    }
+
+    public static SoldierType pickUniqueSoldierType() {
+        if(uniqueSoldierTypes.isEmpty())
+            return null;
+
+        if( pickedTypesCount == uniqueSoldierTypes.size()) {
+            pickedTypesCount = 0;
+        }
+
+        return uniqueSoldierTypes.get(pickedTypesCount++);
+    }
+
+    private static ArrayList<SoldierType> initUniqueSoldierTypesList() {
+        uniqueSoldierTypes = new ArrayList<>();
+        allocateType(1, SoldierType.STONE);
+        allocateType(1, SoldierType.SWORDMASTER);
+        allocateType(1, SoldierType.PEPPER);
+        allocateType(1, SoldierType.KING);
+        allocateType(1, SoldierType.ASHES);
+        allocateType(1, SoldierType.SHIELDON);
+        allocateType(1, SoldierType.LASSO);
+        return uniqueSoldierTypes;
     }
 }

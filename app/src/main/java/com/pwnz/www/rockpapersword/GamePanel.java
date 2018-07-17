@@ -5,6 +5,7 @@ import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Canvas;
 import android.graphics.Paint;
+import android.graphics.Rect;
 import android.os.Build;
 import android.support.annotation.RequiresApi;
 import android.view.SurfaceHolder;
@@ -91,17 +92,17 @@ public class GamePanel extends SurfaceView implements Runnable {
             }
             else {
                 //if match is on, override whole gamepanel screen with the match.
-                if(isMatchOn()){
-                    drawMatch();
-                }
-                else {
+
+
                     drawTiles();
                     drawSoldiers();
                     drawPathArrows();
                     drawClock();
                     drawJudges();
-                }
 
+                if(isMatchOn()){
+                    drawMatch();
+                }
             }
             mSurfaceHolder.unlockCanvasAndPost(mCanvas);
             setRedraw(false);
@@ -131,7 +132,35 @@ public class GamePanel extends SurfaceView implements Runnable {
     }
 
     private void drawMatch() {
-        
+
+//        Bitmap bm = BitmapFactory.decodeResource(getResources(), R.drawable.attack_1);
+//        mCanvas.drawBitmap(bm, null, new Rect(0,0,300,300), null);
+
+
+        Bitmap aiBm, playerBm;
+        System.out.println("MATCH IS ON");
+
+        System.out.println("drawMatch: teamA  " + manager.getBoard().getMatchSoldierTeamA().get(0).getSoldierType());
+        System.out.println("drawMatch: teamA  " + manager.getBoard().getMatchSoldierTeamA().get(0).getTile().getRect().left);
+        System.out.println("drawMatch: teamA  " + manager.getBoard().getMatchSoldierTeamA().get(0).getTile().getRect().top);
+        System.out.println("drawMatch: teamA  " + manager.getBoard().getMatchSoldierTeamA().get(0).getTile().getRect().right);
+        System.out.println("drawMatch: teamA  " + manager.getBoard().getMatchSoldierTeamA().get(0).getTile().getRect().bottom);
+
+
+        System.out.println("drawMatch: teamB  " + manager.getBoard().getMatchSoldierTeamB().get(0).getSoldierType());
+        System.out.println("drawMatch: teamB  " + manager.getBoard().getMatchSoldierTeamB().get(0).getTile().getRect().left);
+        System.out.println("drawMatch: teamB  " + manager.getBoard().getMatchSoldierTeamB().get(0).getTile().getRect().top);
+        System.out.println("drawMatch: teamB  " + manager.getBoard().getMatchSoldierTeamB().get(0).getTile().getRect().right);
+        System.out.println("drawMatch: teamB  " + manager.getBoard().getMatchSoldierTeamB().get(0).getTile().getRect().bottom);
+
+
+        aiBm = BitmapFactory.decodeResource(getResources(), manager.getBoard().getMatchSoldierTeamA().get(0).getAnimationSprite());
+        playerBm = BitmapFactory.decodeResource(getResources(), manager.getBoard().getMatchSoldierTeamB().get(0).getAnimationSprite());
+
+        mCanvas.drawBitmap(aiBm, null, manager.getBoard().getMatchSoldierTeamA().get(0).getTile().getRect(),null);
+        mCanvas.drawBitmap(playerBm, null, manager.getBoard().getMatchSoldierTeamB().get(0).getTile().getRect(),null);
+
+       //manager.setMatchOn(false);
     }
 
     private boolean isMatchOn() {
