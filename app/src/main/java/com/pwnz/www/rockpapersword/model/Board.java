@@ -4,7 +4,6 @@ import android.graphics.Rect;
 import android.util.Pair;
 
 import com.pwnz.www.rockpapersword.R;
-import com.pwnz.www.rockpapersword.controller.GameManager;
 
 import java.util.ArrayList;
 
@@ -35,8 +34,6 @@ public class Board {
         allocateTiles();
         allocateSoldierTeam(soldierTeamA, cols*2);
         allocateSoldierTeam(soldierTeamB, cols*2);
-        //allocateSoldierMatchTeam(TEAM_A, matchSoldierTeamA, SOLDIERS_TYPES_COUNT);
-        //allocateSoldierMatchTeam(TEAM_B, matchSoldierTeamB, SOLDIERS_TYPES_COUNT);
         setBrightColor(brightColor);
         setDarkColor(darkColor);
     }
@@ -45,7 +42,7 @@ public class Board {
     Allocate a team of soldiers that will be displayed on the match scenes. According to which team is asked to be allocated,
     the sprites will be chosen.
      */
-    private void allocateSoldierMatchTeam(int team, ArrayList<Soldier> matchSoldierTeam, int soldiersTypesCount) {
+    private void initSoldierMatchTeam(int team, ArrayList<Soldier> matchSoldierTeam, int soldiersTypesCount) {
 
         if(matchSoldierTeam == null)
             return;
@@ -68,12 +65,6 @@ public class Board {
             rect.bottom = (int)((canvasH/2) + tileHeightOffset);
         }
 
-        System.out.println("allocateSoldierMatchTeam:   called") ;
-        System.out.println("allocateSoldierMatchTeam:   " + rect.left);
-        System.out.println("allocateSoldierMatchTeam:   " + rect.top);
-        System.out.println("allocateSoldierMatchTeam:   " + rect.right);
-        System.out.println("allocateSoldierMatchTeam:   " + rect.bottom);
-
         tile.setRect(rect);
 
         for (int i = 0; i < soldiersTypesCount ; i++) {
@@ -84,13 +75,13 @@ public class Board {
             //todo: fix the pick func
             //soldier.setSoldierType(Soldier.pickUniqueSoldierType());
 
-            soldier.setSoldierType(SoldierType.PEPPER);
+            //todo: change this so it will set all 7 unique soldier types
+            soldier.setSoldierType(Soldier.pickUniqueSoldierType(i));
+            System.out.println("FUCKKKKKK  " + i + " = " + soldier.getSoldierType());
             soldier.setAnimationSprite(getMatchSpriteAnimation(soldier.getSoldierType(), soldier.getTeam()));
 
             matchSoldierTeam.add(soldier);
         }
-
-
     }
 
     private int getMatchSpriteAnimation(SoldierType soldierType, int team) {
@@ -140,6 +131,32 @@ public class Board {
 
 
         return R.drawable.shieldon;
+    }
+
+    public Soldier getFightingSoldier(SoldierType soldierType, int team) {
+
+        if(soldierType == null){
+            System.out.println("SOLDIER TYPE IS NULL");
+            return null;
+        }
+
+        ArrayList<Soldier> matchSoldierTeam = (team == TEAM_A) ? matchSoldierTeamA : matchSoldierTeamB;
+
+        Soldier soldierInMatch = null;
+
+        for(Soldier soldier : matchSoldierTeam){
+            System.out.println("++++++++++++++++++++++++++++++++");
+            System.out.println("soldier.getSoldierType() = " + soldier.getSoldierType());
+            System.out.println("soldierType = " + soldierType);
+            if(soldier.getSoldierType() == soldierType){
+                System.out.println("SOLDIER_TYPE_IS = " + soldier.getSoldierType()) ;
+                soldierInMatch = soldier;
+                System.out.println("SOLDIER_IN_MATCH = " + soldierInMatch) ;
+                break;
+            }
+        }
+
+        return soldierInMatch;
     }
 
     private void allocateSoldierTeam(ArrayList<Soldier> soldierTeam, int size) {
@@ -217,8 +234,8 @@ public class Board {
         initTiles(boardPadding, tileW, tileH);
         initSoldiers(soldierTeamA, TEAM_A, 0);
         initSoldiers(soldierTeamB, TEAM_B, 4);
-        allocateSoldierMatchTeam(TEAM_A, matchSoldierTeamA, SOLDIERS_TYPES_COUNT);
-        allocateSoldierMatchTeam(TEAM_B, matchSoldierTeamB, SOLDIERS_TYPES_COUNT);
+        initSoldierMatchTeam(TEAM_A, matchSoldierTeamA, SOLDIERS_TYPES_COUNT);
+        initSoldierMatchTeam(TEAM_B, matchSoldierTeamB, SOLDIERS_TYPES_COUNT);
     }
 
     private void initTiles(int boardPadding, int tileW, int tileH) {

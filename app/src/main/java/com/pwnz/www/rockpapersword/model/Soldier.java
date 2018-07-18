@@ -13,6 +13,7 @@ public class Soldier {
 
 
     private static int pickedTypesCount = 0;
+    private static int pickedUniqueTypesCount = 0;
 
     private Bitmap soldierBitmap;
     private Tile tile;
@@ -22,7 +23,6 @@ public class Soldier {
     private int nonHighlightedSpriteSource, highlightedSpriteSource;
     private int animationSprite;
     private int team;
-
 
     public Soldier() {}
 
@@ -35,16 +35,16 @@ public class Soldier {
 
     private static ArrayList<SoldierType> initStartingSoldierTypesList(){
         startingSoldierTypes = new ArrayList<>();
-        allocateType(3, SoldierType.STONE);
-        allocateType(3, SoldierType.SWORDMASTER);
-        allocateType(3, SoldierType.PEPPER);
-        allocateType(1, SoldierType.KING);
-        allocateType(1, SoldierType.ASHES);
-        allocateType(1, SoldierType.SHIELDON);
-        allocateType(1, SoldierType.LASSO);
+        allocateType(3, SoldierType.STONE, startingSoldierTypes );
+        allocateType(3, SoldierType.SWORDMASTER, startingSoldierTypes );
+        allocateType(3, SoldierType.PEPPER, startingSoldierTypes );
+        allocateType(1, SoldierType.KING, startingSoldierTypes );
+        allocateType(1, SoldierType.ASHES, startingSoldierTypes );
+        allocateType(1, SoldierType.SHIELDON, startingSoldierTypes );
+        allocateType(1, SoldierType.LASSO, startingSoldierTypes );
 
         //todo: add randomed one here instead of this
-        allocateType(1, SoldierType.STONE);
+        allocateType(1, SoldierType.STONE, startingSoldierTypes );
 
         return startingSoldierTypes;
     }
@@ -78,9 +78,9 @@ public class Soldier {
         return nonHighlightedSpriteSource;
     }
 
-    private static void allocateType(int i, SoldierType type) {
+    private static void allocateType(int i, SoldierType type, ArrayList<SoldierType> soldierTypesList) {
         while(i-- != 0)
-            startingSoldierTypes.add(type);
+            soldierTypesList.add(type);
     }
 
     public SoldierType getSoldierType() {
@@ -170,7 +170,6 @@ public class Soldier {
 
     private void setOnAITeam() {
         setNonHighlightedSpriteSource(R.drawable.attack_1_ai);
-        //setHighlightedSpriteSource(R.drawable.attack_1_ai);
         setAnimationSprite(getNonHighlightedSpriteSource());
     }
 
@@ -210,26 +209,26 @@ public class Soldier {
         return isHighlighted;
     }
 
-    public static SoldierType pickUniqueSoldierType() {
-        if(uniqueSoldierTypes.isEmpty())
-            return null;
+    public static SoldierType pickUniqueSoldierType(int i) {
 
-        if( pickedTypesCount == uniqueSoldierTypes.size()) {
-            pickedTypesCount = 0;
+        if(uniqueSoldierTypes.isEmpty()) {
+            System.out.println("uniqueSoldierTypes is empty");
+            return null;
         }
 
-        return uniqueSoldierTypes.get(pickedTypesCount++);
+        return uniqueSoldierTypes.get(i);
     }
 
     private static ArrayList<SoldierType> initUniqueSoldierTypesList() {
+        System.out.println("initUniqueSoldierTypesList called " + System.currentTimeMillis());
         uniqueSoldierTypes = new ArrayList<>();
-        allocateType(1, SoldierType.STONE);
-        allocateType(1, SoldierType.SWORDMASTER);
-        allocateType(1, SoldierType.PEPPER);
-        allocateType(1, SoldierType.KING);
-        allocateType(1, SoldierType.ASHES);
-        allocateType(1, SoldierType.SHIELDON);
-        allocateType(1, SoldierType.LASSO);
+        allocateType(1, SoldierType.STONE, uniqueSoldierTypes);
+        allocateType(1, SoldierType.SWORDMASTER, uniqueSoldierTypes);
+        allocateType(1, SoldierType.PEPPER, uniqueSoldierTypes);
+        allocateType(1, SoldierType.KING, uniqueSoldierTypes);
+        allocateType(1, SoldierType.ASHES, uniqueSoldierTypes);
+        allocateType(1, SoldierType.SHIELDON, uniqueSoldierTypes);
+        allocateType(1, SoldierType.LASSO, uniqueSoldierTypes);
         return uniqueSoldierTypes;
     }
 }

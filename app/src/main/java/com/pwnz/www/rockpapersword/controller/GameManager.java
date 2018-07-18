@@ -11,6 +11,7 @@ import com.pwnz.www.rockpapersword.R;
 import com.pwnz.www.rockpapersword.model.Board;
 import com.pwnz.www.rockpapersword.model.RPSMatchResult;
 import com.pwnz.www.rockpapersword.model.Soldier;
+import com.pwnz.www.rockpapersword.model.SoldierType;
 import com.pwnz.www.rockpapersword.model.Tile;
 
 public class GameManager {
@@ -250,5 +251,14 @@ public class GameManager {
 
     public Soldier getOpponent() {
         return opponent;
+    }
+
+    public Soldier getFightingSoldier(int team) {
+
+        //get the type of the fighting soldier of the requested team:
+        SoldierType type = (team == potentialInitiator.getTeam() ) ?
+                potentialInitiator.getSoldierType() : opponent.getSoldierType();
+
+        return getBoard().getFightingSoldier(type, team);
     }
 }

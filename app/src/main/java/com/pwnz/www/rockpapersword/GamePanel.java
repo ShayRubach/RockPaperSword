@@ -12,6 +12,7 @@ import android.view.SurfaceHolder;
 import android.view.SurfaceView;
 
 import com.pwnz.www.rockpapersword.controller.GameManager;
+import com.pwnz.www.rockpapersword.model.Board;
 import com.pwnz.www.rockpapersword.model.RPSClock;
 import com.pwnz.www.rockpapersword.model.Soldier;
 import com.pwnz.www.rockpapersword.model.SoldierMovement;
@@ -132,33 +133,21 @@ public class GamePanel extends SurfaceView implements Runnable {
     }
 
     private void drawMatch() {
+        Soldier soldierA = manager.getFightingSoldier(Board.TEAM_A);
+        Soldier soldierB = manager.getFightingSoldier(Board.TEAM_B);
 
-//        Bitmap bm = BitmapFactory.decodeResource(getResources(), R.drawable.attack_1);
-//        mCanvas.drawBitmap(bm, null, new Rect(0,0,300,300), null);
-
-
-        Bitmap aiBm, playerBm;
-        System.out.println("MATCH IS ON");
-
-        System.out.println("drawMatch: teamA  " + manager.getBoard().getMatchSoldierTeamA().get(0).getSoldierType());
-        System.out.println("drawMatch: teamA  " + manager.getBoard().getMatchSoldierTeamA().get(0).getTile().getRect().left);
-        System.out.println("drawMatch: teamA  " + manager.getBoard().getMatchSoldierTeamA().get(0).getTile().getRect().top);
-        System.out.println("drawMatch: teamA  " + manager.getBoard().getMatchSoldierTeamA().get(0).getTile().getRect().right);
-        System.out.println("drawMatch: teamA  " + manager.getBoard().getMatchSoldierTeamA().get(0).getTile().getRect().bottom);
+        if(soldierA == null || soldierB == null)
+            System.out.println("drawMatch: one of the fighting soldiers is null.");
 
 
-        System.out.println("drawMatch: teamB  " + manager.getBoard().getMatchSoldierTeamB().get(0).getSoldierType());
-        System.out.println("drawMatch: teamB  " + manager.getBoard().getMatchSoldierTeamB().get(0).getTile().getRect().left);
-        System.out.println("drawMatch: teamB  " + manager.getBoard().getMatchSoldierTeamB().get(0).getTile().getRect().top);
-        System.out.println("drawMatch: teamB  " + manager.getBoard().getMatchSoldierTeamB().get(0).getTile().getRect().right);
-        System.out.println("drawMatch: teamB  " + manager.getBoard().getMatchSoldierTeamB().get(0).getTile().getRect().bottom);
+        System.out.println("JJJJJJJJJJJJJJJJJJJJJJJJJJJJJJJJJJJJJJJJJJJ");
+        System.out.println("soldierA.getSoldierType() = " + soldierA.getSoldierType());
+        System.out.println("soldierB.getSoldierType() = " + soldierB.getSoldierType());
+        Bitmap aBitmap = BitmapFactory.decodeResource(getResources(), soldierA.getAnimationSprite());
+        Bitmap bBitmap = BitmapFactory.decodeResource(getResources(), soldierB.getAnimationSprite());
 
-
-        aiBm = BitmapFactory.decodeResource(getResources(), manager.getBoard().getMatchSoldierTeamA().get(0).getAnimationSprite());
-        playerBm = BitmapFactory.decodeResource(getResources(), manager.getBoard().getMatchSoldierTeamB().get(0).getAnimationSprite());
-
-        mCanvas.drawBitmap(aiBm, null, manager.getBoard().getMatchSoldierTeamA().get(0).getTile().getRect(),null);
-        mCanvas.drawBitmap(playerBm, null, manager.getBoard().getMatchSoldierTeamB().get(0).getTile().getRect(),null);
+        mCanvas.drawBitmap(aBitmap, null, soldierA.getTile().getRect(),null);
+        mCanvas.drawBitmap(bBitmap, null, soldierB.getTile().getRect(),null);
 
        //manager.setMatchOn(false);
     }
