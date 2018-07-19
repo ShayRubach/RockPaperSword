@@ -1,9 +1,11 @@
 package com.pwnz.www.rockpapersword.model;
 
+import android.graphics.BitmapFactory;
 import android.graphics.Rect;
 import android.util.Pair;
 
 import com.pwnz.www.rockpapersword.R;
+import com.pwnz.www.rockpapersword.controller.GameManager;
 
 import java.util.ArrayList;
 
@@ -25,6 +27,7 @@ public class Board {
     public static final int TEAM_B = 1;
     public static final int SOLDIERS_TYPES_COUNT = 7;
     public static final int MAX_PATH_ARROWS = 4;
+    private GameManager manager;
 
     public Board(int cols, int rows, int canvasW, int canvasH, int brightColor, int darkColor) {
         this.cols = cols;
@@ -72,13 +75,21 @@ public class Board {
             soldier.setTile(tile);
             soldier.setVisible(true);
             soldier.setTeam(team);
-            //todo: fix the pick func
-            //soldier.setSoldierType(Soldier.pickUniqueSoldierType());
-
-            //todo: change this so it will set all 7 unique soldier types
             soldier.setSoldierType(Soldier.pickUniqueSoldierType(i));
-            System.out.println("FUCKKKKKK  " + i + " = " + soldier.getSoldierType());
-            soldier.setAnimationSprite(getMatchSpriteAnimation(soldier.getSoldierType(), soldier.getTeam()));
+
+            //soldier.setAnimationSprite(getMatchSpriteAnimation(soldier.getSoldierType(), soldier.getTeam()));
+            soldier.spriteId = getMatchSpriteAnimation(soldier.getSoldierType(), soldier.getTeam());
+
+            soldier.spriteSheet = BitmapFactory.decodeResource(manager.getAppResources(), soldier.spriteId);
+            soldier.spriteSheetH = soldier.spriteSheet.getHeight();
+            soldier.spriteSheetW = soldier.spriteSheet.getWidth();
+            soldier.numberOfSpriteFrames = 4;
+            soldier.spriteFrameSrcH = soldier.spriteSheetH / 2;   //2 rows
+            soldier.spriteFrameSrcW = soldier.spriteSheetW / 5;   //5 columns
+
+            soldier.sourceRect = new Rect();
+            soldier.destRect = soldier.getTile().getRect();
+            soldier.resetToFirstFrame();
 
             matchSoldierTeam.add(soldier);
         }
@@ -94,37 +105,37 @@ public class Board {
         switch (soldierType){
             case ASHES:
                 if(team == TEAM_A)
-                    return R.drawable.enemy;
+                    return R.drawable.samurai_hit_sprite;
                 else
                     return R.drawable.shieldon;
             case SWORDMASTER:
                 if(team == TEAM_A)
-                    return R.drawable.enemy;
+                    return R.drawable.samurai_hit_sprite;
                 else
                     return R.drawable.shieldon;
             case SHIELDON:
                 if(team == TEAM_A)
-                    return R.drawable.enemy;
+                    return R.drawable.samurai_hit_sprite;
                 else
                     return R.drawable.shieldon;
             case PEPPER:
                 if(team == TEAM_A)
-                    return R.drawable.enemy;
+                    return R.drawable.samurai_hit_sprite;
                 else
                     return R.drawable.shieldon;
             case STONE:
                 if(team == TEAM_A)
-                    return R.drawable.enemy;
+                    return R.drawable.samurai_hit_sprite;
                 else
                     return R.drawable.shieldon;
             case KING:
                 if(team == TEAM_A)
-                    return R.drawable.enemy;
+                    return R.drawable.samurai_hit_sprite;
                 else
                     return R.drawable.shieldon;
             case LASSO:
                 if(team == TEAM_A)
-                    return R.drawable.enemy;
+                    return R.drawable.samurai_hit_sprite;
                 else
                     return R.drawable.shieldon;
         }
@@ -451,5 +462,9 @@ public class Board {
 
 
 
+    }
+
+    public void setManager(GameManager manager) {
+        this.manager = manager;
     }
 }

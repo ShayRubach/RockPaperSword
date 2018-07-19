@@ -1,5 +1,6 @@
 package com.pwnz.www.rockpapersword.controller;
 
+import android.content.res.Resources;
 import android.graphics.Rect;
 import android.provider.Settings;
 import android.view.MotionEvent;
@@ -44,6 +45,7 @@ public class GameManager {
         this.canvasW = board.getCanvasW();
         this.panel.setManager(this);
         this.panel.setRedraw(true);
+        this.board.setManager(this);
         initBoard();
         initClock();
         randTeamTurn();
@@ -260,5 +262,9 @@ public class GameManager {
                 potentialInitiator.getSoldierType() : opponent.getSoldierType();
 
         return getBoard().getFightingSoldier(type, team);
+    }
+
+    public Resources getAppResources() {
+        return panel.getResources();
     }
 }

@@ -5,7 +5,6 @@ import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Canvas;
 import android.graphics.Paint;
-import android.graphics.Rect;
 import android.os.Build;
 import android.support.annotation.RequiresApi;
 import android.view.SurfaceHolder;
@@ -146,8 +145,14 @@ public class GamePanel extends SurfaceView implements Runnable {
         Bitmap aBitmap = BitmapFactory.decodeResource(getResources(), soldierA.getAnimationSprite());
         Bitmap bBitmap = BitmapFactory.decodeResource(getResources(), soldierB.getAnimationSprite());
 
-        mCanvas.drawBitmap(aBitmap, null, soldierA.getTile().getRect(),null);
-        mCanvas.drawBitmap(bBitmap, null, soldierB.getTile().getRect(),null);
+        //mCanvas.drawBitmap(aBitmap, null, soldierA.getTile().getRect(),null);
+        //mCanvas.drawBitmap(bBitmap, null, soldierB.getTile().getRect(),null);
+
+        soldierA.drawAnimation(mCanvas);
+        soldierB.drawAnimation(mCanvas);
+
+        soldierA.chooseNextFrame();
+        soldierB.chooseNextFrame();
 
        //manager.setMatchOn(false);
     }
@@ -162,7 +167,7 @@ public class GamePanel extends SurfaceView implements Runnable {
 
     private void drawClock() {
         if(shouldDrawClock)
-            gameClock.drawClock(mCanvas);
+            gameClock.drawAnimation(mCanvas);
     }
 
     private void update() {
@@ -282,7 +287,7 @@ public class GamePanel extends SurfaceView implements Runnable {
     }
 
     public void resetClock() {
-        gameClock.resetClock();
+        gameClock.resetToFirstFrame();
         shouldDrawClock = true;
     }
 }

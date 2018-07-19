@@ -6,7 +6,7 @@ import com.pwnz.www.rockpapersword.R;
 
 import java.util.ArrayList;
 
-public class Soldier {
+public class Soldier extends AnimationHandler {
 
     private static ArrayList<SoldierType> startingSoldierTypes = initStartingSoldierTypesList();
     private static ArrayList<SoldierType> uniqueSoldierTypes = initUniqueSoldierTypesList();
