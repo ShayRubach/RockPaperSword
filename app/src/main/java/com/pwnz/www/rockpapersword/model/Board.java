@@ -50,19 +50,20 @@ public class Board {
         if(matchSoldierTeam == null)
             return;
 
+        int distanceBetweenAnimationsOffset = (tileW/2);
         float tileWidthOffset = (float) (tileW * 2.5);
         float tileHeightOffset = (float) (tileH * 1.5);
 
         Tile tile = new Tile();
         Rect rect = new Rect();
         if(team == TEAM_A){
-            rect.left   = (int)((canvasW/2) - tileWidthOffset);
+            rect.left   = (int)((canvasW/2) - tileWidthOffset) + distanceBetweenAnimationsOffset;
             rect.top    = (int)((canvasH/2) - tileHeightOffset);
             rect.right  = canvasW/2;
             rect.bottom = (int)((canvasH/2) + tileHeightOffset);
         }
         else{
-            rect.left   =  canvasW/2;
+            rect.left   =  canvasW/2 - distanceBetweenAnimationsOffset;
             rect.top    = (int)((canvasH/2) - tileHeightOffset);
             rect.right  = (int)((canvasW/2) + tileWidthOffset);
             rect.bottom = (int)((canvasH/2) + tileHeightOffset);
@@ -107,37 +108,37 @@ public class Board {
                 if(team == TEAM_A)
                     return R.drawable.samurai_hit_sprite;
                 else
-                    return R.drawable.shieldon;
+                    return R.drawable.samurai_die_sprite;
             case SWORDMASTER:
                 if(team == TEAM_A)
                     return R.drawable.samurai_hit_sprite;
                 else
-                    return R.drawable.shieldon;
+                    return R.drawable.samurai_die_sprite;
             case SHIELDON:
                 if(team == TEAM_A)
                     return R.drawable.samurai_hit_sprite;
                 else
-                    return R.drawable.shieldon;
+                    return R.drawable.samurai_die_sprite;
             case PEPPER:
                 if(team == TEAM_A)
                     return R.drawable.samurai_hit_sprite;
                 else
-                    return R.drawable.shieldon;
+                    return R.drawable.samurai_die_sprite;
             case STONE:
                 if(team == TEAM_A)
                     return R.drawable.samurai_hit_sprite;
                 else
-                    return R.drawable.shieldon;
+                    return R.drawable.samurai_die_sprite;
             case KING:
                 if(team == TEAM_A)
-                    return R.drawable.samurai_hit_sprite;
+                    return R.drawable.samurai_die_sprite;
                 else
-                    return R.drawable.shieldon;
+                    return R.drawable.samurai_die_sprite;
             case LASSO:
                 if(team == TEAM_A)
-                    return R.drawable.samurai_hit_sprite;
+                    return R.drawable.samurai_die_sprite;
                 else
-                    return R.drawable.shieldon;
+                    return R.drawable.samurai_die_sprite;
         }
 
 

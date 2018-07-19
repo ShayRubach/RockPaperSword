@@ -152,7 +152,9 @@ public class GamePanel extends SurfaceView implements Runnable {
         soldierA.chooseNextFrame();
         soldierB.chooseNextFrame();
 
-       //manager.setMatchOn(false);
+        //todo: @shay
+        //if animation ended, set match off
+        //    manager.setMatchOn(false);
     }
 
     private boolean isMatchOn() {

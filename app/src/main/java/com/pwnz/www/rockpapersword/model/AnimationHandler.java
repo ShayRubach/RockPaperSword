@@ -72,7 +72,6 @@ public class AnimationHandler {
         sourceRect.top = j * spriteFrameSrcH;
         sourceRect.right = (i+1) * spriteFrameSrcW;
         sourceRect.bottom = (j+1) * spriteFrameSrcH;
-
     }
 }
 
