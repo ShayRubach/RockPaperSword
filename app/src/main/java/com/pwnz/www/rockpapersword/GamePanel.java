@@ -91,12 +91,10 @@ public class GamePanel extends SurfaceView implements Runnable {
                 //todo: implement a menu screen later
             }
             else {
-                //if match is on, override whole gamepanel screen with the match.
-
-
                     drawTiles();
                     drawSoldiers();
-                    drawPathArrows();
+                    //todo: fix and enable this function (it procs ArrayOutOfBounds Exception) @idan
+                    //drawPathArrows();
                     drawClock();
                     drawJudges();
 
@@ -227,8 +225,6 @@ public class GamePanel extends SurfaceView implements Runnable {
 
         for(Soldier soldier: soldierTeam){
             if(soldier != null){
-                //todo: move this to an earlier stage. (taking the advantage we got a context here and setting the bitmap)
-                soldier.setSoldierBitmap(BitmapFactory.decodeResource(getResources(), soldier.getAnimationSprite()));
                 mCanvas.drawBitmap(soldier.getSoldierBitmap(), null, soldier.getTile().getRect(), null);
             }
         }

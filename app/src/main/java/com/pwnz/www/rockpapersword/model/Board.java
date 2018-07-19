@@ -280,6 +280,7 @@ public class Board {
             soldiersTeam.get(i).setTeam(team);
             soldiersTeam.get(i).setSoldierType(pickAvailableSoldierType());
             soldiersTeam.get(i).setSoldierAnimationSpriteByType();
+            soldiersTeam.get(i).setSoldierBitmap(BitmapFactory.decodeResource(manager.getAppResources(), soldiersTeam.get(i).getAnimationSprite()));
             soldiersTeam.get(i).setVisible(true);
             tiles[k % cols][j].setOccupied(true);
             tiles[k % cols][j].setCurrSoldier(soldiersTeam.get(i));
