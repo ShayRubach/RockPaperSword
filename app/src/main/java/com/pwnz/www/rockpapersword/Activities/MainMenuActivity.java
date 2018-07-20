@@ -8,6 +8,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.View;
 import android.view.WindowManager;
+import android.widget.Button;
 import android.widget.Toast;
 
 import com.crashlytics.android.Crashlytics;
@@ -17,10 +18,12 @@ import com.pwnz.www.rockpapersword.model.MyMusicRunnable;
 import com.pwnz.www.rockpapersword.model.MySFxRunnable;
 import io.fabric.sdk.android.Fabric;
 
-public class MainMenuActivity extends AppCompatActivity {
+public class MainMenuActivity extends AppCompatActivity implements View.OnClickListener {
 
     public static MediaPlayer mediaPlayer = null;
     private static MySFxRunnable mSoundEffects = null;
+
+    private Button mStartBtn, mSettingsBtn;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -32,6 +35,12 @@ public class MainMenuActivity extends AppCompatActivity {
         decorView.setSystemUiVisibility(uiOptions);
 
         setContentView(R.layout.activity_main_menu);
+
+        mStartBtn = findViewById(R.id.btn_start);
+        mStartBtn.setOnClickListener(this);
+
+        mSettingsBtn = findViewById(R.id.btn_settings);
+        mSettingsBtn.setOnClickListener(this);
 
         mediaPlayer = MediaPlayer.create(this, R.raw.handmade_moments_wanderin_eyes_edited);
         mediaPlayer.setVolume(SettingsActivity.sfxGeneralVolume, SettingsActivity.sfxGeneralVolume);
@@ -72,5 +81,18 @@ public class MainMenuActivity extends AppCompatActivity {
 
     public static MySFxRunnable getSoundEffects() {
         return mSoundEffects;
+    }
+
+    @Override
+    public void onClick(View view) {
+
+        switch (view.getId()){
+            case R.id.btn_start:
+                startActivity(new Intent(MainMenuActivity.this, GameActivity.class));
+                break;
+            case R.id.btn_settings:
+                startActivity(new Intent(MainMenuActivity.this, SettingsActivity.class));
+                break;
+        }
     }
 }

@@ -131,7 +131,35 @@ public class GameManager {
             setMatchOn(true);
             matchResult = match(potentialInitiator, opponent);
             System.out.println("MATCH RESULT: " + matchResult);
+            //matchResult = RPSMatchResult.BOTH_ELIMINATED;  //TODO: REMOVE THIS SHIT!
+            panel.setCanPlay(false);
+            switch (matchResult){
+                case TIE:
+                    rematch(potentialInitiator, opponent);
+                    break;
+                case BOTH_ELIMINATED:
+                    eliminateBoth(potentialInitiator, opponent);
+                    break;
+                case TEAM_A_WON_THE_MATCH:
+                    eliminateSoldier(opponent);
+                    break;
+                case TEAM_B_WON_THE_MATCH:
+                    eliminateSoldier(potentialInitiator);
+                    break;
+
+            }
+            panel.setCanPlay(true);
         }
+    }
+
+    private void rematch(Soldier potentialInitiator, Soldier opponent){
+        //TODO: Implement this shit
+    }
+    private void eliminateBoth(Soldier potentialInitiator, Soldier opponent){
+        getBoard().eliminateBoth(potentialInitiator, opponent);
+    }
+    private void eliminateSoldier(Soldier soldier){
+        getBoard().eliminateSoldier(soldier);
     }
 
     private RPSMatchResult match(Soldier aiSoldier, Soldier opponent) {

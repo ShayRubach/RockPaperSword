@@ -40,6 +40,8 @@ public class GamePanel extends SurfaceView implements Runnable {
     private RPSClock gameClock;
 
 
+
+
     public GamePanel(Context context) {
         super(context);
         gameClock = new RPSClock(this.getContext());
@@ -121,7 +123,7 @@ public class GamePanel extends SurfaceView implements Runnable {
             endTimeSeconds = TimeUnit.MILLISECONDS.toSeconds(timeMillis);
             System.out.println("endTimeSeconds - startTimeSeconds= " + (endTimeSeconds - startTimeSeconds));
 
-            //todo: impl this
+            //todo: Idan - impl this
             //if updateTime == true, clock resets and we need to tell GameManager so force a turn swap:
             if(gameClock.updateTime(endTimeSeconds - startTimeSeconds)){
 
@@ -283,5 +285,13 @@ public class GamePanel extends SurfaceView implements Runnable {
     public void resetClock() {
         gameClock.resetToFirstFrame();
         shouldDrawClock = true;
+    }
+
+    public boolean isCanPlay() {
+        return canPlay;
+    }
+
+    public void setCanPlay(boolean canPlay) {
+        this.canPlay = canPlay;
     }
 }

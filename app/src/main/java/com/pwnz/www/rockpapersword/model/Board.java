@@ -4,6 +4,7 @@ import android.graphics.BitmapFactory;
 import android.graphics.Rect;
 import android.util.Pair;
 
+import com.pwnz.www.rockpapersword.GamePanel;
 import com.pwnz.www.rockpapersword.R;
 import com.pwnz.www.rockpapersword.controller.GameManager;
 
@@ -269,6 +270,20 @@ public class Board {
 
             }
         }
+    }
+
+    public void eliminateSoldier(Soldier soldier){
+
+        ArrayList<Soldier> removeFrom = soldier.getTeam() == Board.TEAM_A ? soldierTeamA : soldierTeamB;
+
+        removeFrom.remove(soldier);
+
+    }
+
+    public void eliminateBoth(Soldier potentialInitiator, Soldier opponent){
+
+        soldierTeamB.remove(potentialInitiator);
+        soldierTeamA.remove(opponent);
     }
 
     private void initSoldiers(ArrayList<Soldier> soldiersTeam, int team, int SOLDIERS_START_ROW) {
