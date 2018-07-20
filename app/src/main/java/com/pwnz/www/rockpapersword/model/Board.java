@@ -268,7 +268,7 @@ public class Board {
     }
 
     public void eliminateSoldier(Soldier soldier){
-
+        //
         ArrayList<Soldier> removeFrom = soldier.getTeam() == Board.TEAM_A ? soldierTeamA : soldierTeamB;
         synchronized (removeFrom){
             soldier.setVisible(false);
