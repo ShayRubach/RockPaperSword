@@ -1,3 +1,14 @@
 <resources>
     <string name="app_name">RockPaperSword</string>
+    <string name="title_activity_instructions">InstructionsActivity</string>
+    <string name="instructions">
+        - Every player starts with a shuffled team (random positions) on a chess-like board\n\n
+        - Every player sees his own team weapons and none of the enemies (they all look a like)\n\n
+        - Each turn is limited with a 10 seconds timer\n\n
+        - When a player reaches his turn, he is able to choose a soldier and move to a neighbour tile\n\n
+        - When 2 soldiers are facing each other, they are staged into a fight with simple RPS rules. Losing soldier is eliminated\n\n
+        - The goal is to find and kill the king\n\n
+        - Total game play time is 3 minutes. At the buzzer, the team with the highest number of survivors wins\n\n
+        - May the force be with you\n\n
+    </string>
 </resources>

@@ -2,6 +2,8 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="com.pwnz.www.rockpapersword">
 
+    <uses-permission android:name="android.permission.INTERNET" />
+
     <application
         android:allowBackup="true"
         android:icon="@mipmap/ic_launcher"
@@ -17,11 +19,13 @@
             </intent-filter>
         </activity>
         <activity android:name=".Activities.GameActivity" />
-        <activity android:name=".Activities.SettingsActivity"></activity>
+        <activity android:name=".Activities.SettingsActivity" />
+
         <meta-data
             android:name="io.fabric.ApiKey"
             android:value="16bceb849397dc64a1ba7d0e624d58d56d3007b4" />
+
+        <activity android:name=".Activities.InstructionsActivity"></activity>
     </application>
 
-    <uses-permission android:name="android.permission.INTERNET" />
 </manifest>

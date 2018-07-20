@@ -23,7 +23,7 @@ public class MainMenuActivity extends AppCompatActivity implements View.OnClickL
     public static MediaPlayer mediaPlayer = null;
     private static MySFxRunnable mSoundEffects = null;
 
-    private Button mStartBtn, mSettingsBtn;
+    private Button mStartBtn, mSettingsBtn, mInstructionsBtn;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -41,6 +41,9 @@ public class MainMenuActivity extends AppCompatActivity implements View.OnClickL
 
         mSettingsBtn = findViewById(R.id.btn_settings);
         mSettingsBtn.setOnClickListener(this);
+
+        mInstructionsBtn = findViewById(R.id.btn_instructions);
+        mInstructionsBtn.setOnClickListener(this);
 
         mediaPlayer = MediaPlayer.create(this, R.raw.handmade_moments_wanderin_eyes_edited);
         mediaPlayer.setVolume(SettingsActivity.sfxGeneralVolume, SettingsActivity.sfxGeneralVolume);
@@ -92,6 +95,9 @@ public class MainMenuActivity extends AppCompatActivity implements View.OnClickL
                 break;
             case R.id.btn_settings:
                 startActivity(new Intent(MainMenuActivity.this, SettingsActivity.class));
+                break;
+            case R.id.btn_instructions:
+                startActivity(new Intent(MainMenuActivity.this, InstructionsActivity.class));
                 break;
         }
     }
