@@ -121,6 +121,7 @@ public class GamePanel extends SurfaceView implements Runnable {
             endTimeSeconds = TimeUnit.MILLISECONDS.toSeconds(timeMillis);
             System.out.println("endTimeSeconds - startTimeSeconds= " + (endTimeSeconds - startTimeSeconds));
 
+            //todo: impl this
             //if updateTime == true, clock resets and we need to tell GameManager so force a turn swap:
             if(gameClock.updateTime(endTimeSeconds - startTimeSeconds)){
 
@@ -130,31 +131,26 @@ public class GamePanel extends SurfaceView implements Runnable {
     }
 
     private void drawMatch() {
+        //todo: possible logic simplification: use 1 animation that holds both players in match with all permutations @shay
+
         Soldier soldierA = manager.getFightingSoldier(Board.TEAM_A);
         Soldier soldierB = manager.getFightingSoldier(Board.TEAM_B);
 
         if(soldierA == null || soldierB == null)
             System.out.println("drawMatch: one of the fighting soldiers is null.");
 
-
-        System.out.println("JJJJJJJJJJJJJJJJJJJJJJJJJJJJJJJJJJJJJJJJJJJ");
-        System.out.println("soldierA.getSoldierType() = " + soldierA.getSoldierType());
-        System.out.println("soldierB.getSoldierType() = " + soldierB.getSoldierType());
-        Bitmap aBitmap = BitmapFactory.decodeResource(getResources(), soldierA.getAnimationSprite());
-        Bitmap bBitmap = BitmapFactory.decodeResource(getResources(), soldierB.getAnimationSprite());
-
-        //mCanvas.drawBitmap(aBitmap, null, soldierA.getTile().getRect(),null);
-        //mCanvas.drawBitmap(bBitmap, null, soldierB.getTile().getRect(),null);
-
         soldierA.drawAnimation(mCanvas);
         soldierB.drawAnimation(mCanvas);
 
-        soldierA.chooseNextFrame();
-        soldierB.chooseNextFrame();
+        boolean aAnimationEnded = soldierA.chooseNextFrame();
+        boolean bAnimationEnded = soldierB.chooseNextFrame();
 
         //todo: @shay
         //if animation ended, set match off
-        //    manager.setMatchOn(false);
+        if(aAnimationEnded && bAnimationEnded){
+            manager.setMatchOn(false);
+        }
+
     }
 
     private boolean isMatchOn() {
