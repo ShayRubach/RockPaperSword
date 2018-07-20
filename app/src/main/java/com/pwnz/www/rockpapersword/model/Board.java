@@ -158,13 +158,8 @@ public class Board {
         Soldier soldierInMatch = null;
 
         for(Soldier soldier : matchSoldierTeam){
-            System.out.println("++++++++++++++++++++++++++++++++");
-            System.out.println("soldier.getSoldierType() = " + soldier.getSoldierType());
-            System.out.println("soldierType = " + soldierType);
             if(soldier.getSoldierType() == soldierType){
-                System.out.println("SOLDIER_TYPE_IS = " + soldier.getSoldierType()) ;
                 soldierInMatch = soldier;
-                System.out.println("SOLDIER_IN_MATCH = " + soldierInMatch) ;
                 break;
             }
         }
@@ -275,15 +270,19 @@ public class Board {
     public void eliminateSoldier(Soldier soldier){
 
         ArrayList<Soldier> removeFrom = soldier.getTeam() == Board.TEAM_A ? soldierTeamA : soldierTeamB;
+        synchronized (removeFrom){
+            soldier.setVisible(false);
+            soldier.getTile().setOccupied(false);
+            soldier.getTile().setCurrSoldier(null);
+            removeFrom.remove(soldier);
+        }
 
-        removeFrom.remove(soldier);
 
     }
 
     public void eliminateBoth(Soldier potentialInitiator, Soldier opponent){
-
-        soldierTeamB.remove(potentialInitiator);
-        soldierTeamA.remove(opponent);
+        eliminateSoldier(potentialInitiator);
+        eliminateSoldier(opponent);
     }
 
     private void initSoldiers(ArrayList<Soldier> soldiersTeam, int team, int SOLDIERS_START_ROW) {

@@ -35,8 +35,6 @@ public class AnimationHandler {
     protected int spriteRow = 0;
 
 
-
-
     public void drawAnimation(Canvas canvas){
         canvas.drawBitmap(spriteSheet, sourceRect, destRect,null);
     }
@@ -62,7 +60,6 @@ public class AnimationHandler {
         else
             spriteCol++;
 
-        System.out.println("chooseNextFrame: spriteCol="+spriteCol+"  spriteRow="+spriteRow);
         setFrameIndex(spriteCol, spriteRow);
         return false;
     }

@@ -3,6 +3,7 @@ package com.pwnz.www.rockpapersword.controller;
 import android.content.res.Resources;
 import android.graphics.Rect;
 import android.provider.Settings;
+import android.util.Log;
 import android.view.MotionEvent;
 
 import com.pwnz.www.rockpapersword.Activities.MainMenuActivity;
@@ -85,7 +86,6 @@ public class GameManager {
             if(newTile != null){
                 moveSoldier(focusedSoldier, newTile);
                 MainMenuActivity.getSoundEffects().play(R.raw.move_self, SettingsActivity.sfxGeneralVolume, SettingsActivity.sfxGeneralVolume);
-                System.out.println("__POTENTIAL__, focusedSoldier="+focusedSoldier);
                 potentialInitiator = focusedSoldier;
                 clearHighlights();
                 hasFocusedSoldier = false;
@@ -103,7 +103,6 @@ public class GameManager {
         if(teamTurn == TEAM_A_TURN){
             clearHighlights();
             playAsAI();
-            System.out.println("____POTENTIAL____, AISoldier="+AISoldier);
             potentialInitiator = AISoldier;
             possibleMatch = true;
             teamTurn = TEAM_B_TURN;
@@ -117,22 +116,22 @@ public class GameManager {
     private void lookForPotentialMatch(Soldier potentialInitiator) {
         RPSMatchResult matchResult;
 
-        System.out.println("lookForPotentialMatch: called, ");
 
         if(potentialInitiator == null)
             return;
 
         opponent = board.getFirstSurroundingOpponent(potentialInitiator);
-        System.out.println("getFirstSurroundingOpponent: Done, ");
-        System.out.println("lookForPotentialMatch: opponent="+opponent);
 
         if(opponent != null) {
+            panel.pause();
             panel.stopClock();
             setMatchOn(true);
             matchResult = match(potentialInitiator, opponent);
             System.out.println("MATCH RESULT: " + matchResult);
             //matchResult = RPSMatchResult.BOTH_ELIMINATED;  //TODO: REMOVE THIS SHIT!
-            panel.setCanPlay(false);
+
+            Tile newTile = null;
+
             switch (matchResult){
                 case TIE:
                     rematch(potentialInitiator, opponent);
@@ -141,14 +140,18 @@ public class GameManager {
                     eliminateBoth(potentialInitiator, opponent);
                     break;
                 case TEAM_A_WON_THE_MATCH:
+                    newTile = opponent.getTile();
                     eliminateSoldier(opponent);
+                    moveSoldier(potentialInitiator, newTile);
                     break;
                 case TEAM_B_WON_THE_MATCH:
+                    newTile = potentialInitiator.getTile();
                     eliminateSoldier(potentialInitiator);
+                    moveSoldier(opponent, newTile);
                     break;
 
             }
-            panel.setCanPlay(true);
+            panel.resume();
         }
     }
 
@@ -235,11 +238,10 @@ public class GameManager {
 
     private void moveSoldier(Soldier focusedSoldier, Tile tile) {
         focusedSoldier.getTile().setOccupied(false);
+        focusedSoldier.getTile().setCurrSoldier(null);
         focusedSoldier.setTile(tile);
         focusedSoldier.getTile().setOccupied(true);
         focusedSoldier.getTile().setCurrSoldier(focusedSoldier);
-
-
     }
 
     private void clearHighlights() {
@@ -256,7 +258,6 @@ public class GameManager {
             teamTurn = TEAM_A_TURN;
             clearHighlights();
             playAsAI();
-            System.out.println("____POTENTIAL____, AISoldier="+AISoldier);
             potentialInitiator = AISoldier;
             lookForPotentialMatch(potentialInitiator);
             teamTurn = TEAM_B_TURN;

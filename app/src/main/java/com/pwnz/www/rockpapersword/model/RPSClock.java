@@ -42,7 +42,6 @@ public class RPSClock extends AnimationHandler {
     }
 
     public boolean updateTime(long timePassed) {
-        System.out.println("updateTime: timePassed = " + timePassed);
         boolean swapTurns = false;
 
         if (timePassed >= 1) {

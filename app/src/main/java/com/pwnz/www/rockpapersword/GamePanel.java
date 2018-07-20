@@ -66,7 +66,6 @@ public class GamePanel extends SurfaceView implements Runnable {
     @RequiresApi(api = Build.VERSION_CODES.LOLLIPOP)
     @Override
     public void run() {
-
         long timeMillis;
         long startTimeSeconds, endTimeSeconds;
 
@@ -121,14 +120,12 @@ public class GamePanel extends SurfaceView implements Runnable {
 
             timeMillis = System.currentTimeMillis();
             endTimeSeconds = TimeUnit.MILLISECONDS.toSeconds(timeMillis);
-            System.out.println("endTimeSeconds - startTimeSeconds= " + (endTimeSeconds - startTimeSeconds));
 
             //todo: Idan - impl this
             //if updateTime == true, clock resets and we need to tell GameManager so force a turn swap:
             if(gameClock.updateTime(endTimeSeconds - startTimeSeconds)){
 
             }
-
         }
     }
 
@@ -222,12 +219,14 @@ public class GamePanel extends SurfaceView implements Runnable {
     }
 
     private void drawSoldiersTeam(ArrayList<Soldier> soldierTeam) {
-
-        for(Soldier soldier: soldierTeam){
-            if(soldier != null){
-                mCanvas.drawBitmap(soldier.getSoldierBitmap(), null, soldier.getTile().getRect(), null);
+        synchronized (soldierTeam){
+            for(Soldier soldier: soldierTeam){
+                if(soldier != null){
+                    mCanvas.drawBitmap(soldier.getSoldierBitmap(), null, soldier.getTile().getRect(), null);
+                }
             }
         }
+
     }
 
     public void pause(){
@@ -251,7 +250,6 @@ public class GamePanel extends SurfaceView implements Runnable {
         canPlay = true;
         mPlayThread = new Thread(this);
         mPlayThread.start();
-
     }
 
     private int toPxs(int dps){
@@ -293,5 +291,9 @@ public class GamePanel extends SurfaceView implements Runnable {
 
     public void setCanPlay(boolean canPlay) {
         this.canPlay = canPlay;
+    }
+
+    public Thread getPlayThread() {
+        return mPlayThread;
     }
 }

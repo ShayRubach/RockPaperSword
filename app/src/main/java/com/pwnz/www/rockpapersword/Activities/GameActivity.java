@@ -72,9 +72,6 @@ public class GameActivity extends AppCompatActivity {
         if(mGamePanel.isInMenuScreen() ){
             mGamePanel.setInMenuScreen(false);
         }
-        //more code goes here later
-        System.out.println("_______");
-        System.out.println("{x,y} = {" + event.getX() + "," + event.getY() + "}");
     }
 
     @Override
