@@ -220,7 +220,6 @@ public class Soldier extends AnimationHandler {
     }
 
     private static ArrayList<SoldierType> initUniqueSoldierTypesList() {
-        System.out.println("initUniqueSoldierTypesList called " + System.currentTimeMillis());
         uniqueSoldierTypes = new ArrayList<>();
         allocateType(1, SoldierType.STONE, uniqueSoldierTypes);
         allocateType(1, SoldierType.SWORDMASTER, uniqueSoldierTypes);

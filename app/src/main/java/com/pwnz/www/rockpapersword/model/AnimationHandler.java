@@ -62,7 +62,6 @@ public class AnimationHandler {
         else
             spriteCol++;
 
-        System.out.println("chooseNextFrame: spriteCol="+spriteCol+"  spriteRow="+spriteRow);
         setFrameIndex(spriteCol, spriteRow);
         return false;
     }
