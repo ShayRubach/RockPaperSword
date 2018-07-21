@@ -91,6 +91,7 @@ public class GameManager {
             //make sure tile is traversal and in legit location on screen
             if(newTile != null){
                 clearHighlights();
+                Log.d("NullPtrDEBUG","new tile isOccupied:" + newTile.isOccupied() + " new tile soldier:" + (newTile.getCurrSoldier()!=null ? "present":"not present"));
                 moveSoldier(focusedSoldier, newTile);
                 MainMenuActivity.getSoundEffects().play(R.raw.move_self, SettingsActivity.sfxGeneralVolume, SettingsActivity.sfxGeneralVolume);
                 potentialInitiator = focusedSoldier;
@@ -126,7 +127,7 @@ public class GameManager {
     //after a move has been initiated, we wish to check the surrounding soldiers for a possible match.
     private void lookForPotentialMatch(Soldier potentialInitiator) {
         Log.d("NullPtrDEBUG","\nLook For Pot Started\n");
-        Log.d("NullPtrDEBUG","--\nPotentialInitiator " + potentialInitiator.toString());
+        Log.d("NullPtrDEBUG","--\nPotentialInitiator " + potentialInitiator);
         RPSMatchResult matchResult;
 
         if(potentialInitiator == null)
@@ -146,15 +147,15 @@ public class GameManager {
             panel.stopClock();
             setMatchOn(true);
             matchResult = match(potentialInitiator, opponent);
-            System.out.println("MATCH RESULT: " + matchResult);
+            Log.d("NullPtrDEBUG",  "" + matchResult);
             //matchResult = RPSMatchResult.BOTH_ELIMINATED;  //TODO: REMOVE THIS SHIT!
 
             Tile newTile = null;
 
             switch (matchResult){
                 case TIE:
-                    rematch(potentialInitiator, opponent);
-                    break;
+//                    rematch(potentialInitiator, opponent);    //TODO: remove when implemented
+//                    break;
                 case BOTH_ELIMINATED:
                     eliminateBoth(potentialInitiator, opponent);
                     Log.d("NullPtrDEBUG","\nBoth Eliminated\n");
@@ -172,6 +173,7 @@ public class GameManager {
                     moveSoldier(opponent, newTile);
                     break;
                 default:
+                    Log.d("NullPtrDEBUG","\nBoth Eliminated Default\n");
                     eliminateBoth(potentialInitiator, opponent);
 
             }
@@ -192,10 +194,12 @@ public class GameManager {
 
 
     private RPSMatchResult match(Soldier potentialInitiator, Soldier opponent) {
+        Log.d("NullPtrDEBUG","\nMatch Func:\n potInit team: " + potentialInitiator.getTeam() + " opponent team:" + opponent.getTeam());
 
         switch (potentialInitiator.getSoldierType()){
 
             case LASSO:
+                return RPSMatchResult.TEAM_A_WON_THE_MATCH;
             case STONE:
                 switch (opponent.getSoldierType()){
                     case KING:          return RPSMatchResult.TEAM_A_WINS_THE_GAME;
@@ -267,7 +271,7 @@ public class GameManager {
         focusedSoldier.setTile(tile);
         focusedSoldier.getTile().setOccupied(true);
         focusedSoldier.getTile().setCurrSoldier(focusedSoldier);
-        Log.d("NullPtrDEBUG","\nMoved " + focusedSoldier);
+        //Log.d("NullPtrDEBUG","\nMoved " + focusedSoldier);
     }
 
     private void clearHighlights() {

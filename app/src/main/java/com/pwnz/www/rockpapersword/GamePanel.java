@@ -94,7 +94,7 @@ public class GamePanel extends SurfaceView implements Runnable {
             else {
                     drawTiles();
                     drawSoldiers();
-                    drawPathArrows();
+                    //drawPathArrows();
                     drawClock();
                     drawJudges();
 
