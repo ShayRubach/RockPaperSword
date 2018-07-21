@@ -17,7 +17,7 @@ public class SettingsActivity extends AppCompatActivity {
     public static float sfxGeneralVolume = 50;
 
 
-    private final int DEFAULT_VOLUME_VALUE = 50;
+    private final int DEFAULT_VOLUME_VALUE = 30;
     private final int MUTE = 0;
     private static final String MUTE_MSG = "Muted";
     private final int mMuteLogo = android.R.drawable.ic_lock_silent_mode;

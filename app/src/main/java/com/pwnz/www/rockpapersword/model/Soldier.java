@@ -126,13 +126,13 @@ public class Soldier extends AnimationHandler {
                 if(getTeam() == Board.TEAM_A)
                     setOnAITeam();
                 else
-                    setOnPlayerTeam(R.drawable.attack_1, R.drawable.attack_1_highlighted);
+                    setOnPlayerTeam(R.drawable.soldier_stone, R.drawable.attack_1_highlighted);
                 break;
             case SWORDMASTER:
                 if(getTeam() == Board.TEAM_A)
                     setOnAITeam();
                 else
-                    setOnPlayerTeam(R.drawable.attack_1, R.drawable.attack_1_highlighted);
+                    setOnPlayerTeam(R.drawable.soldier_sword, R.drawable.attack_1_highlighted);
                 break;
             case PEPPER:
                 if(getTeam() == Board.TEAM_A)
@@ -144,13 +144,13 @@ public class Soldier extends AnimationHandler {
                 if(getTeam() == Board.TEAM_A)
                     setOnAITeam();
                 else
-                    setOnPlayerTeam(R.drawable.attack_1, R.drawable.attack_1_highlighted);
+                    setOnPlayerTeam(R.drawable.soldier_ashes, R.drawable.attack_1_highlighted);
                 break;
             case KING:
                 if(getTeam() == Board.TEAM_A)
                     setOnAITeam();
                 else
-                    setOnPlayerTeam(R.drawable.attack_1, R.drawable.attack_1_highlighted);
+                    setOnPlayerTeam(R.drawable.soldier_king, R.drawable.attack_1_highlighted);
                 break;
             case SHIELDON:
                 if(getTeam() == Board.TEAM_A)
@@ -169,7 +169,7 @@ public class Soldier extends AnimationHandler {
     }
 
     private void setOnAITeam() {
-        setNonHighlightedSpriteSource(R.drawable.attack_1_ai);
+        setNonHighlightedSpriteSource(R.drawable.enemy);
         setAnimationSprite(getNonHighlightedSpriteSource());
     }
 
