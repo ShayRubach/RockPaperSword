@@ -34,9 +34,7 @@ public class AnimationHandler {
     protected int spriteCol = 0;
     protected int spriteRow = 0;
 
-
-
-
+    
     public void drawAnimation(Canvas canvas){
         canvas.drawBitmap(spriteSheet, sourceRect, destRect,null);
     }
