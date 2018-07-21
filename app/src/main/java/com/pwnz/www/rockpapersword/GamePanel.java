@@ -94,8 +94,7 @@ public class GamePanel extends SurfaceView implements Runnable {
             else {
                     drawTiles();
                     drawSoldiers();
-                    //todo: fix and enable this function (it procs ArrayOutOfBounds Exception) @idan
-                    //drawPathArrows();
+                    drawPathArrows();
                     drawClock();
                     drawJudges();
 
@@ -175,9 +174,9 @@ public class GamePanel extends SurfaceView implements Runnable {
     private void drawPathArrows() {
         Bitmap bm = null;
 
+        if(manager.getBoard().getPathArrows().isEmpty())
+            return;
 
-        System.out.println("drawPathArrows called.");
-        System.out.println("manager.getBoard().getPathArrows().size() = " + manager.getBoard().getPathArrows().size());
         for (int i = 0; i < manager.getBoard().getPathArrows().size() ; i++) {
             if(manager.getBoard().getPathArrows().get(i) != null) {
                 System.out.println("i = " + i);

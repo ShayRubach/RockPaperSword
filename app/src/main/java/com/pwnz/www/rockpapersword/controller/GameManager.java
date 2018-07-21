@@ -73,6 +73,7 @@ public class GameManager {
         float y = event.getY();
         panel.setRedraw(true);
 
+        //Player has focused a soldier but yet tried to moved
         if(board.getClickedSoldier(x,y) != null) {
             focusedSoldier = board.getClickedSoldier(x, y);
             clearHighlights();
@@ -80,28 +81,35 @@ public class GameManager {
             possibleMatch = false;
             board.displaySoldierPath(focusedSoldier);
         }
-        if(hasFocusedSoldier){
+
+        //Player has a legit focused soldier and attempted to move to new tile
+        else if(hasFocusedSoldier){
+            panel.pause();
+
             Tile newTile = board.getTileAt(x, y);
 
+            //make sure tile is traversal and in legit location on screen
             if(newTile != null){
+                clearHighlights();
                 moveSoldier(focusedSoldier, newTile);
                 MainMenuActivity.getSoundEffects().play(R.raw.move_self, SettingsActivity.sfxGeneralVolume, SettingsActivity.sfxGeneralVolume);
                 potentialInitiator = focusedSoldier;
-                clearHighlights();
                 hasFocusedSoldier = false;
                 possibleMatch = true;
                 Log.d("onTouchEvent", "inside focused\n");
                 teamTurn = TEAM_A_TURN;
 
             }
+            panel.resume();
         }
 
+        //look for another potential match after player has made a move
         if(possibleMatch) {
             Log.d("onTouchEvent", "Match Is Possible. turn: " + (teamTurn == Board.TEAM_A ? "A":"B") + '\n');
             lookForPotentialMatch(potentialInitiator);
         }
 
-        //A.I:
+        //A.I will instantly play after Player's turn
         if(teamTurn == TEAM_A_TURN){
             panel.pause();
             clearHighlights();
@@ -113,8 +121,6 @@ public class GameManager {
             panel.resetClock();
             panel.resume();
         }
-
-
     }
 
     //after a move has been initiated, we wish to check the surrounding soldiers for a possible match.
@@ -122,7 +128,6 @@ public class GameManager {
         Log.d("NullPtrDEBUG","\nLook For Pot Started\n");
         Log.d("NullPtrDEBUG","--\nPotentialInitiator " + potentialInitiator.toString());
         RPSMatchResult matchResult;
-
 
         if(potentialInitiator == null)
             return;
@@ -185,9 +190,11 @@ public class GameManager {
         getBoard().eliminateSoldier(soldier);
     }
 
+
     private RPSMatchResult match(Soldier potentialInitiator, Soldier opponent) {
 
         switch (potentialInitiator.getSoldierType()){
+
             case LASSO:
             case STONE:
                 switch (opponent.getSoldierType()){
@@ -304,6 +311,9 @@ public class GameManager {
     }
 
     public Soldier getFightingSoldier(int team) {
+
+        if(potentialInitiator == null || opponent == null)
+            return null;
 
         //get the type of the fighting soldier of the requested team:
         SoldierType type = (team == potentialInitiator.getTeam() ) ?
