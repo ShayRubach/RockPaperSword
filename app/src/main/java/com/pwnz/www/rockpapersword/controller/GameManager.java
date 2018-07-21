@@ -80,7 +80,7 @@ public class GameManager {
             possibleMatch = false;
             board.displaySoldierPath(focusedSoldier);
         }
-        else if(hasFocusedSoldier){
+        if(hasFocusedSoldier){
             Tile newTile = board.getTileAt(x, y);
 
             if(newTile != null){
@@ -90,23 +90,28 @@ public class GameManager {
                 clearHighlights();
                 hasFocusedSoldier = false;
                 possibleMatch = true;
+                Log.d("onTouchEvent", "inside focused\n");
                 teamTurn = TEAM_A_TURN;
 
             }
         }
 
         if(possibleMatch) {
+            Log.d("onTouchEvent", "Match Is Possible. turn: " + (teamTurn == Board.TEAM_A ? "A":"B") + '\n');
             lookForPotentialMatch(potentialInitiator);
         }
 
         //A.I:
         if(teamTurn == TEAM_A_TURN){
+            panel.pause();
             clearHighlights();
             playAsAI();
             potentialInitiator = AISoldier;
+            lookForPotentialMatch(potentialInitiator);
             possibleMatch = true;
             teamTurn = TEAM_B_TURN;
             panel.resetClock();
+            panel.resume();
         }
 
 
@@ -114,6 +119,8 @@ public class GameManager {
 
     //after a move has been initiated, we wish to check the surrounding soldiers for a possible match.
     private void lookForPotentialMatch(Soldier potentialInitiator) {
+        Log.d("NullPtrDEBUG","\nLook For Pot Started\n");
+        Log.d("NullPtrDEBUG","--\nPotentialInitiator " + potentialInitiator.toString());
         RPSMatchResult matchResult;
 
 
@@ -123,6 +130,13 @@ public class GameManager {
         opponent = board.getFirstSurroundingOpponent(potentialInitiator);
 
         if(opponent != null) {
+            Log.d("NullPtrDEBUG","--\nopponent " + opponent.toString());
+            if( potentialInitiator.getTeam() != Board.TEAM_A){
+                //swap refrences
+                Soldier temp = potentialInitiator;
+                potentialInitiator = opponent;
+                opponent = temp;
+            }
             panel.pause();
             panel.stopClock();
             setMatchOn(true);
@@ -138,21 +152,27 @@ public class GameManager {
                     break;
                 case BOTH_ELIMINATED:
                     eliminateBoth(potentialInitiator, opponent);
+                    Log.d("NullPtrDEBUG","\nBoth Eliminated\n");
                     break;
                 case TEAM_A_WON_THE_MATCH:
+                    Log.d("NullPtrDEBUG","\nTeam A won\n");
                     newTile = opponent.getTile();
                     eliminateSoldier(opponent);
                     moveSoldier(potentialInitiator, newTile);
                     break;
                 case TEAM_B_WON_THE_MATCH:
+                    Log.d("NullPtrDEBUG","\nTeam B won\n");
                     newTile = potentialInitiator.getTile();
                     eliminateSoldier(potentialInitiator);
                     moveSoldier(opponent, newTile);
                     break;
+                default:
+                    eliminateBoth(potentialInitiator, opponent);
 
             }
             panel.resume();
         }
+        Log.d("NullPtrDEBUG","\nLook For Pot Ended\n");
     }
 
     private void rematch(Soldier potentialInitiator, Soldier opponent){
@@ -165,8 +185,10 @@ public class GameManager {
         getBoard().eliminateSoldier(soldier);
     }
 
-    private RPSMatchResult match(Soldier aiSoldier, Soldier opponent) {
-        switch (aiSoldier.getSoldierType()){
+    private RPSMatchResult match(Soldier potentialInitiator, Soldier opponent) {
+
+        switch (potentialInitiator.getSoldierType()){
+            case LASSO:
             case STONE:
                 switch (opponent.getSoldierType()){
                     case KING:          return RPSMatchResult.TEAM_A_WINS_THE_GAME;
@@ -216,10 +238,6 @@ public class GameManager {
                     default:            return RPSMatchResult.TEAM_B_WINS_THE_GAME;
                 }
 
-            //todo: implement this? random a weapon maybe?
-            case LASSO:
-                break;
-
         }
         return RPSMatchResult.TIE;
     }
@@ -242,6 +260,7 @@ public class GameManager {
         focusedSoldier.setTile(tile);
         focusedSoldier.getTile().setOccupied(true);
         focusedSoldier.getTile().setCurrSoldier(focusedSoldier);
+        Log.d("NullPtrDEBUG","\nMoved " + focusedSoldier);
     }
 
     private void clearHighlights() {

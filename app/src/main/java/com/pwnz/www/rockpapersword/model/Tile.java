@@ -25,6 +25,11 @@ public class Tile {
 
     }
 
+    @Override
+    public String toString(){
+        return "left: " + rect.left + " top:" +rect.top;
+    }
+
     public Soldier getCurrSoldier() {
         return currSoldier;
     }

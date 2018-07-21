@@ -2,6 +2,7 @@ package com.pwnz.www.rockpapersword.model;
 
 import android.graphics.BitmapFactory;
 import android.graphics.Rect;
+import android.util.Log;
 import android.util.Pair;
 
 import com.pwnz.www.rockpapersword.GamePanel;
@@ -269,6 +270,7 @@ public class Board {
 
     public void eliminateSoldier(Soldier soldier){
         //
+        Log.d("NullPtrDEBUG","\nEliminated: " + soldier);
         ArrayList<Soldier> removeFrom = soldier.getTeam() == Board.TEAM_A ? soldierTeamA : soldierTeamB;
         synchronized (removeFrom){
             soldier.setVisible(false);
@@ -432,7 +434,7 @@ public class Board {
         getTileIndex(initiator.getTile(), xyPos);
         int newX, newY;
 
-
+        Log.d("GFSO", initiator.toString());
         //potential opponent to the left
         if(xyPos[0]-1 > -1){
             newX = xyPos[0]-1;
@@ -467,12 +469,14 @@ public class Board {
             }
         }
 
+        Log.d("GFSO", "returning null");
         return null;
     }
 
     private boolean isValidOpponent(int newX, int newY, Soldier initiator) {
 
 
+        Log.d("NullPtrDEBUG","---\nPlayer " + (initiator.getTeam() == Board.TEAM_A ? "A" : "B") + " isOccupied[" + newX + "][" + newY + "]:"  + getTiles()[newX][newY].isOccupied() + "\n\n");
         return getTiles()[newX][newY].isOccupied() &&
                getTiles()[newX][newY].getCurrSoldier().getTeam() != initiator.getTeam();
 

@@ -100,7 +100,8 @@ public class GamePanel extends SurfaceView implements Runnable {
                     drawJudges();
 
                 if(isMatchOn()){
-                    drawMatch();
+                    //drawMatch();
+                    manager.setMatchOn(false);
                 }
             }
             mSurfaceHolder.unlockCanvasAndPost(mCanvas);
