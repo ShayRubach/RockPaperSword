@@ -55,7 +55,7 @@ public class Soldier extends AnimationHandler {
                 "\tTile = " + tile+ "\n" +
                 "\tisVisible = " + isVisible + "\n" +
                 "\tSoldierType = " + soldierType + "\n" +
-                "\tSoldierTeam = " + team + "\n" +
+                "\tSoldierTeam = " + (team == Board.TEAM_A ? "A" : "B") + "\n" +
                 '}';
     }
 

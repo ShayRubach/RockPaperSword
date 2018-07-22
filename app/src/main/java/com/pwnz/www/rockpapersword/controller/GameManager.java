@@ -82,9 +82,11 @@ public class GameManager {
             possibleMatch = false;
             board.displaySoldierPath(focusedSoldier);
         }
+
         //Player has a legit focused soldier and attempted to move to new tile
         else if(hasFocusedSoldier){
             panel.pause();
+
             Tile newTile = board.getTileAt(x, y);
 
             //make sure tile is traversal and in legit location on screen
@@ -95,6 +97,7 @@ public class GameManager {
                 potentialInitiator = focusedSoldier;
                 hasFocusedSoldier = false;
                 possibleMatch = true;
+                Log.d("onTouchEvent", "inside focused\n");
                 teamTurn = TEAM_A_TURN;
 
             }
@@ -103,6 +106,7 @@ public class GameManager {
 
         //look for another potential match after player has made a move
         if(possibleMatch) {
+            Log.d("onTouchEvent", "Match Is Possible. turn: " + (teamTurn == Board.TEAM_A ? "A":"B") + '\n');
             lookForPotentialMatch(potentialInitiator);
         }
 
@@ -129,67 +133,71 @@ public class GameManager {
 
     //after a move has been initiated, we wish to check the surrounding soldiers for a possible match.
     private void lookForPotentialMatch(Soldier potentialInitiator) {
+
         RPSMatchResult matchResult;
 
         if(potentialInitiator == null)
             return;
 
+        Log.d("NullPtrDEBUG","\nLook For Pot Started\n");
+        Log.d("NullPtrDEBUG","--\nPotentialInitiator " + potentialInitiator);
+
         opponent = board.getFirstSurroundingOpponent(potentialInitiator);
 
         if(opponent != null) {
+            Log.d("NullPtrDEBUG","--\nopponent " + opponent);
+
+
+
+            if( potentialInitiator.getTeam() != Board.TEAM_A){
+                Log.d("NullPtrDEBUG","BEFORE SWAPPING: \n");
+                Log.d("NullPtrDEBUG","POT: " + potentialInitiator + "\n");
+                //swap refrences
+                Soldier temp = potentialInitiator;
+                potentialInitiator = opponent;
+                opponent = temp;
+                Log.d("NullPtrDEBUG","AFTER SWAPPING: \n");
+                Log.d("NullPtrDEBUG","POT: " + potentialInitiator + "\n");
+            }
             panel.pause();
             panel.stopClock();
             setMatchOn(true);
             matchResult = match(potentialInitiator, opponent);
-            handleMatchResult(matchResult);
+
+            Tile newTile;
+            switch (matchResult){
+                case TIE:
+                    rematch(potentialInitiator, opponent);
+                    break;
+                case BOTH_ELIMINATED:
+                    eliminateBoth(potentialInitiator, opponent);
+                    break;
+                case TEAM_A_WON_THE_MATCH:
+                    newTile = opponent.getTile();
+                    eliminateSoldier(opponent);
+                    moveSoldier(potentialInitiator, newTile);
+                    break;
+                case TEAM_B_WON_THE_MATCH:
+                    newTile = potentialInitiator.getTile();
+                    eliminateSoldier(potentialInitiator);
+                    moveSoldier(opponent, newTile);
+                    break;
+
+                case TEAM_A_WINS_THE_GAME:
+                    finishGame(Board.TEAM_A);
+                    break;
+                case TEAM_B_WINS_THE_GAME:
+                    finishGame(Board.TEAM_B);
+                    break;
+                case REVEAL_TEAM_A:
+                case REVEAL_TEAM_B:
+                    //todo: change this logic, this is temporarily.
+                    eliminateBoth(potentialInitiator, opponent);
+            }
+
             panel.resume();
         }
-    }
-
-    private void handleMatchResult(RPSMatchResult matchResult) {
-        Tile newTile = null;
-
-        if( potentialInitiator.getTeam() != Board.TEAM_A){
-            //swap refrences
-            Soldier temp = potentialInitiator;
-            potentialInitiator = opponent;
-            opponent = temp;
-        }
-
-        Log.d("RESULT_DBG","MATCH SODLIERS: \n");
-        Log.d("RESULT_DBG","POT: " + potentialInitiator + "\n");
-        Log.d("RESULT_DBG","OPP: " + opponent + "\n");
-        Log.d("RESULT_DBG","MATCH RESULT: " + matchResult + "\n");
-
-        switch (matchResult){
-            case TIE:
-                rematch(potentialInitiator, opponent);
-                break;
-            case BOTH_ELIMINATED:
-                eliminateBoth(potentialInitiator, opponent);
-                break;
-            case TEAM_A_WON_THE_MATCH:
-                newTile = opponent.getTile();
-                eliminateSoldier(opponent);
-                moveSoldier(potentialInitiator, newTile);
-                break;
-            case TEAM_B_WON_THE_MATCH:
-                newTile = potentialInitiator.getTile();
-                eliminateSoldier(potentialInitiator);
-                moveSoldier(opponent, newTile);
-                break;
-
-            case TEAM_A_WINS_THE_GAME:
-                finishGame(Board.TEAM_A);
-                break;
-            case TEAM_B_WINS_THE_GAME:
-                finishGame(Board.TEAM_B);
-                break;
-            case REVEAL_TEAM_A:
-            case REVEAL_TEAM_B:
-                //todo: change this logic, this is temporarily.
-                eliminateBoth(potentialInitiator, opponent);
-        }
+        Log.d("NullPtrDEBUG","\nLook For Pot Ended\n");
     }
 
     private void finishGame(int team) {
@@ -209,15 +217,9 @@ public class GameManager {
 
     private RPSMatchResult match(Soldier potentialInitiator, Soldier opponent) {
 
-        if( potentialInitiator.getTeam() != Board.TEAM_A){
-            //swap refrences
-            Soldier temp = potentialInitiator;
-            potentialInitiator = opponent;
-            opponent = temp;
-        }
-
         switch (potentialInitiator.getSoldierType()){
             //todo: impl this later. LASSO == STONE at the moment - @shay
+
             case LASSO:
             case STONE:
                 switch (opponent.getSoldierType()){
@@ -293,6 +295,7 @@ public class GameManager {
         focusedSoldier.setTile(tile);
         focusedSoldier.getTile().setOccupied(true);
         focusedSoldier.getTile().setCurrSoldier(focusedSoldier);
+        Log.d("NullPtrDEBUG","\nMoved " + focusedSoldier);
     }
 
     private void clearHighlights() {
