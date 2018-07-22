@@ -104,7 +104,9 @@ public class GamePanel extends SurfaceView implements Runnable {
                     drawJudges();
 
                 if(isMatchOn()){
-                    drawMatch();
+                    //todo: @shay @idan turn this back on and debug the null reference inside. meanwhile, no match shown.
+                    //drawMatch();
+                    manager.setMatchOn(false);
                 }
             }
             mSurfaceHolder.unlockCanvasAndPost(mCanvas);
@@ -261,7 +263,6 @@ public class GamePanel extends SurfaceView implements Runnable {
 
     public void pause(){
         canPlay = false;
-        //cats.clear();
 
         while (true) {
             try {

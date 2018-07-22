@@ -119,6 +119,12 @@ public class GameManager {
 
             panel.resume();
         }
+
+        //look for another potential match after player has made a move
+        if(possibleMatch) {
+            lookForPotentialMatch(potentialInitiator);
+        }
+
     }
 
     //after a move has been initiated, we wish to check the surrounding soldiers for a possible match.
