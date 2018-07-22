@@ -108,12 +108,16 @@ public class GameManager {
 
         //A.I will instantly play after Player's turn
         if(teamTurn == TEAM_A_TURN){
+            panel.pause();
+
             clearHighlights();
             playAsAI();
             potentialInitiator = AISoldier;
             possibleMatch = true;
             teamTurn = TEAM_B_TURN;
             panel.resetClock();
+
+            panel.resume();
         }
     }
 
@@ -138,7 +142,18 @@ public class GameManager {
 
     private void handleMatchResult(RPSMatchResult matchResult) {
         Tile newTile = null;
-        System.out.println("MATCH RESULT: " + matchResult);
+
+        if( potentialInitiator.getTeam() != Board.TEAM_A){
+            //swap refrences
+            Soldier temp = potentialInitiator;
+            potentialInitiator = opponent;
+            opponent = temp;
+        }
+
+        Log.d("RESULT_DBG","MATCH SODLIERS: \n");
+        Log.d("RESULT_DBG","POT: " + potentialInitiator + "\n");
+        Log.d("RESULT_DBG","OPP: " + opponent + "\n");
+        Log.d("RESULT_DBG","MATCH RESULT: " + matchResult + "\n");
 
         switch (matchResult){
             case TIE:
@@ -164,7 +179,10 @@ public class GameManager {
             case TEAM_B_WINS_THE_GAME:
                 finishGame(Board.TEAM_B);
                 break;
-
+            case REVEAL_TEAM_A:
+            case REVEAL_TEAM_B:
+                //todo: change this logic, this is temporarily.
+                eliminateBoth(potentialInitiator, opponent);
         }
     }
 
@@ -183,14 +201,23 @@ public class GameManager {
         getBoard().eliminateSoldier(soldier);
     }
 
-    private RPSMatchResult match(Soldier aiSoldier, Soldier opponent) {
-        switch (aiSoldier.getSoldierType()){
+    private RPSMatchResult match(Soldier potentialInitiator, Soldier opponent) {
+
+        if( potentialInitiator.getTeam() != Board.TEAM_A){
+            //swap refrences
+            Soldier temp = potentialInitiator;
+            potentialInitiator = opponent;
+            opponent = temp;
+        }
+
+        switch (potentialInitiator.getSoldierType()){
             //todo: impl this later. LASSO == STONE at the moment - @shay
             case LASSO:
             case STONE:
                 switch (opponent.getSoldierType()){
                     case KING:          return RPSMatchResult.TEAM_A_WINS_THE_GAME;
                     case ASHES:         return RPSMatchResult.REVEAL_TEAM_A;
+                    case LASSO:
                     case STONE:         return RPSMatchResult.TIE;
                     case SWORDMASTER:   return RPSMatchResult.TEAM_A_WON_THE_MATCH;
                     case PEPPER:        return RPSMatchResult.TEAM_B_WON_THE_MATCH;
@@ -201,6 +228,7 @@ public class GameManager {
                 switch (opponent.getSoldierType()){
                     case KING:          return RPSMatchResult.TEAM_A_WINS_THE_GAME;
                     case ASHES:         return RPSMatchResult.REVEAL_TEAM_A;
+                    case LASSO:
                     case STONE:         return RPSMatchResult.TEAM_A_WON_THE_MATCH;
                     case PEPPER:        return RPSMatchResult.TIE;
                     case SWORDMASTER:   return RPSMatchResult.TEAM_B_WON_THE_MATCH;
@@ -213,6 +241,7 @@ public class GameManager {
                     case ASHES:         return RPSMatchResult.REVEAL_TEAM_A;
                     case PEPPER:        return RPSMatchResult.TEAM_A_WON_THE_MATCH;
                     case SWORDMASTER:   return RPSMatchResult.TIE;
+                    case LASSO:
                     case STONE:         return RPSMatchResult.TEAM_B_WON_THE_MATCH;
                     case SHIELDON:      return RPSMatchResult.BOTH_ELIMINATED;
                 }
