@@ -46,6 +46,14 @@ public class AnimationHandler {
     }
 
     public boolean chooseNextFrame() {
+        System.out.println("chooseNextFrame: called");
+        System.out.println("spriteCol = " +spriteCol);
+        System.out.println("spriteRow = " + spriteRow);
+        System.out.println("spriteSheetW = " +spriteSheetW);
+        System.out.println("spriteSheetH = " +spriteSheetH);
+        System.out.println("spriteFrameSrcW = " + spriteFrameSrcW);
+        System.out.println("spriteFrameSrcH = " + spriteFrameSrcH);
+        System.out.println("=====_______++++++++++++++++++++++++=================");
         //if we reached the last frame on our row
         if(spriteCol == spriteSheetW / spriteFrameSrcW - 1){
             if(spriteRow != spriteSheetH / spriteFrameSrcH - 1){

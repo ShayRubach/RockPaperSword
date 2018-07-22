@@ -1,5 +1,6 @@
 package com.pwnz.www.rockpapersword.model;
 
+import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Rect;
 import android.util.Pair;
@@ -19,6 +20,7 @@ public class Board {
     ArrayList<Soldier> matchSoldierTeamB = new ArrayList<>();
 
     ArrayList<Pair<Tile, SoldierMovement>> pathArrows = new ArrayList<>();
+    AnimationHandler winAnnouncementAnimation, loseAnnouncementAnimation;
 
     int cols, rows;
     int canvasW, canvasH;
@@ -244,6 +246,53 @@ public class Board {
         initSoldiers(soldierTeamB, TEAM_B, 4);
         initSoldierMatchTeam(TEAM_A, matchSoldierTeamA, SOLDIERS_TYPES_COUNT);
         initSoldierMatchTeam(TEAM_B, matchSoldierTeamB, SOLDIERS_TYPES_COUNT);
+        initWinningTeamAnnouncementAnimation();
+    }
+
+    private void initWinningTeamAnnouncementAnimation() {
+        //todo: @shay @idan - handle code dup. perhaps create an initFunction for all these values and use it on RPSclock too?
+        winAnnouncementAnimation = new AnimationHandler();
+        loseAnnouncementAnimation = new AnimationHandler();
+
+        canvasH = manager.getAppResources().getDisplayMetrics().heightPixels;
+        canvasW = manager.getAppResources().getDisplayMetrics().widthPixels;
+
+        winAnnouncementAnimation.spriteId = R.drawable.win_anim;
+        loseAnnouncementAnimation.spriteId = R.drawable.lose_anim;
+
+        winAnnouncementAnimation.spriteSheet = BitmapFactory.decodeResource(manager.getAppResources(), winAnnouncementAnimation.spriteId);
+        loseAnnouncementAnimation.spriteSheet = BitmapFactory.decodeResource(manager.getAppResources(), loseAnnouncementAnimation.spriteId);
+
+        winAnnouncementAnimation.spriteSheetW =  winAnnouncementAnimation.spriteSheet.getWidth();
+        winAnnouncementAnimation.spriteSheetH =  winAnnouncementAnimation.spriteSheet.getHeight();
+
+        loseAnnouncementAnimation.spriteSheetW =  loseAnnouncementAnimation.spriteSheet.getWidth();
+        loseAnnouncementAnimation.spriteSheetH =  loseAnnouncementAnimation.spriteSheet.getHeight();
+
+        System.out.println(" winAnnouncementAnimation.spriteSheetH = " +  winAnnouncementAnimation.spriteSheetH);
+        System.out.println(" winAnnouncementAnimation.spriteSheetW = " +  winAnnouncementAnimation.spriteSheetW);
+
+        System.out.println(" loseAnnouncementAnimation.spriteSheetH = " +  loseAnnouncementAnimation.spriteSheetH);
+        System.out.println(" loseAnnouncementAnimation.spriteSheetW = " +  loseAnnouncementAnimation.spriteSheetW);
+
+
+
+        winAnnouncementAnimation.numberOfSpriteFrames = 4;
+        loseAnnouncementAnimation.numberOfSpriteFrames = 4;
+
+        winAnnouncementAnimation.spriteFrameSrcH = winAnnouncementAnimation.spriteSheetH / 2;   //2 rows
+        winAnnouncementAnimation.spriteFrameSrcW = winAnnouncementAnimation.spriteSheetW / 5;   //5 columns
+
+        loseAnnouncementAnimation.spriteFrameSrcH = loseAnnouncementAnimation.spriteSheetH / 2;   //2 rows
+        loseAnnouncementAnimation.spriteFrameSrcW = loseAnnouncementAnimation.spriteSheetW / 5;   //5 columns
+
+        loseAnnouncementAnimation.sourceRect = new Rect();
+        loseAnnouncementAnimation.destRect = new Rect(0, 0, canvasW, canvasH);
+        loseAnnouncementAnimation.resetToFirstFrame();
+
+        winAnnouncementAnimation.sourceRect = new Rect();
+        winAnnouncementAnimation.destRect = new Rect(0, 0, canvasW, canvasH);
+        winAnnouncementAnimation.resetToFirstFrame();
     }
 
     private void initTiles(int boardPadding, int tileW, int tileH) {
@@ -482,5 +531,13 @@ public class Board {
 
     public void setManager(GameManager manager) {
         this.manager = manager;
+    }
+
+    public AnimationHandler getWinAnnouncementAnimation() {
+        return winAnnouncementAnimation;
+    }
+
+    public AnimationHandler getLoseAnnouncementAnimation() {
+        return loseAnnouncementAnimation;
     }
 }

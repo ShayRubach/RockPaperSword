@@ -24,6 +24,7 @@ public class GameManager {
     private final int SCREEN_BOARD_PADDING_FACTOR = 2;
     private final int HEIGHT_DIV = 10;
     private final int WIDTH_DIV  = 7;
+    private static int winningTeam = -1;
     private Soldier focusedSoldier = null;
     private Soldier AISoldier = null;
     private Soldier potentialInitiator = null;
@@ -130,36 +131,50 @@ public class GameManager {
             panel.stopClock();
             setMatchOn(true);
             matchResult = match(potentialInitiator, opponent);
-            System.out.println("MATCH RESULT: " + matchResult);
-            //matchResult = RPSMatchResult.BOTH_ELIMINATED;  //TODO: REMOVE THIS SHIT!
-
-            Tile newTile = null;
-
-            switch (matchResult){
-                case TIE:
-                    rematch(potentialInitiator, opponent);
-                    break;
-                case BOTH_ELIMINATED:
-                    eliminateBoth(potentialInitiator, opponent);
-                    break;
-                case TEAM_A_WON_THE_MATCH:
-                    newTile = opponent.getTile();
-                    eliminateSoldier(opponent);
-                    moveSoldier(potentialInitiator, newTile);
-                    break;
-                case TEAM_B_WON_THE_MATCH:
-                    newTile = potentialInitiator.getTile();
-                    eliminateSoldier(potentialInitiator);
-                    moveSoldier(opponent, newTile);
-                    break;
-
-            }
+            handleMatchResult(matchResult);
             panel.resume();
         }
     }
 
+    private void handleMatchResult(RPSMatchResult matchResult) {
+        Tile newTile = null;
+        System.out.println("MATCH RESULT: " + matchResult);
+
+        switch (matchResult){
+            case TIE:
+                rematch(potentialInitiator, opponent);
+                break;
+            case BOTH_ELIMINATED:
+                eliminateBoth(potentialInitiator, opponent);
+                break;
+            case TEAM_A_WON_THE_MATCH:
+                newTile = opponent.getTile();
+                eliminateSoldier(opponent);
+                moveSoldier(potentialInitiator, newTile);
+                break;
+            case TEAM_B_WON_THE_MATCH:
+                newTile = potentialInitiator.getTile();
+                eliminateSoldier(potentialInitiator);
+                moveSoldier(opponent, newTile);
+                break;
+
+            case TEAM_A_WINS_THE_GAME:
+                finishGame(Board.TEAM_A);
+                break;
+            case TEAM_B_WINS_THE_GAME:
+                finishGame(Board.TEAM_B);
+                break;
+
+        }
+    }
+
+    private void finishGame(int team) {
+        winningTeam = team;
+    }
+
     private void rematch(Soldier potentialInitiator, Soldier opponent){
-        //TODO: Implement this shit
+        //TODO: temporarily returns BOTH_ELIMINATED . Implement this shit later
+        eliminateBoth(potentialInitiator, opponent);
     }
     private void eliminateBoth(Soldier potentialInitiator, Soldier opponent){
         getBoard().eliminateBoth(potentialInitiator, opponent);
@@ -299,5 +314,9 @@ public class GameManager {
 
     public Resources getAppResources() {
         return panel.getResources();
+    }
+
+    public static int getWinningTeam() {
+        return winningTeam;
     }
 }

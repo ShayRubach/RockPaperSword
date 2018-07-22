@@ -38,6 +38,7 @@ public class GamePanel extends SurfaceView implements Runnable {
     private double framePerSecond, frameTimeSeconds ,frameTimeMs, frameTimeNs;
     private double lastFrameTime, endOfRenderTime, deltaTime;
     private RPSClock gameClock;
+    public static final int GAME_IN_PROGRESS = -1;
 
 
 
@@ -91,6 +92,10 @@ public class GamePanel extends SurfaceView implements Runnable {
             if(isInMenuScreen){
                 //todo: implement a menu screen later
             }
+            //if game is finished
+            else if(isGameFinished() != GAME_IN_PROGRESS){
+                drawWinnerAnnouncement(manager.getWinningTeam());
+            }
             else {
                     drawTiles();
                     drawSoldiers();
@@ -126,6 +131,32 @@ public class GamePanel extends SurfaceView implements Runnable {
 
             }
         }
+    }
+
+    private void drawWinnerAnnouncement(int winningTeam) {
+        //todo: @shay - make a premade winning announcement animation. calculate bitmaps on earlier stage and post here
+        if(winningTeam == manager.getBoard().TEAM_A){
+            manager.getBoard().getLoseAnnouncementAnimation().drawAnimation(mCanvas);
+            boolean animationEnded = manager.getBoard().getLoseAnnouncementAnimation().chooseNextFrame();
+
+        }
+        else{
+            manager.getBoard().getWinAnnouncementAnimation().drawAnimation(mCanvas);
+            boolean animationEnded = manager.getBoard().getWinAnnouncementAnimation().chooseNextFrame();
+        }
+
+        //sleep abit to slow animation down:
+        try {
+            if(deltaTime > 0 )
+                mPlayThread.sleep(150);
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
+
+    }
+
+    private int isGameFinished() {
+        return manager.getWinningTeam();
     }
 
     private void drawMatch() {
