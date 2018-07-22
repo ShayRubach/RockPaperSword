@@ -151,23 +151,30 @@ public class Board {
 
     public Soldier getFightingSoldier(SoldierType soldierType, int team) {
 
+        Log.d("DRAW_MATCH_DBG","getFightingSoldier: called.\n");
         if(soldierType == null){
-            System.out.println("SOLDIER TYPE IS NULL");
+            Log.d("DRAW_MATCH_DBG","soldierType is NULL.\n");
             return null;
         }
 
         ArrayList<Soldier> matchSoldierTeam = (team == TEAM_A) ? matchSoldierTeamA : matchSoldierTeamB;
 
-        Soldier soldierInMatch = null;
+        if(matchSoldierTeam == null)
+            Log.d("DRAW_MATCH_DBG","matchSoldierTeam is NULL.\n");
 
+        Log.d("DRAW_MATCH_DBG","sodlierType to be found is = " + soldierType + "\n");
+        int i = 0 ;
         for(Soldier soldier : matchSoldierTeam){
+            Log.d("DRAW_MATCH_DBG","i = " + i  + "\n");
+            Log.d("DRAW_MATCH_DBG","iterating soldier = \n" + soldier  + "\n");
             if(soldier.getSoldierType() == soldierType){
-                soldierInMatch = soldier;
-                break;
+                Log.d("DRAW_MATCH_DBG","Found the soldier type = " + soldier.getSoldierType() );
+                return soldier;
             }
+            ++i;
         }
 
-        return soldierInMatch;
+        return null;
     }
 
     private void allocateSoldierTeam(ArrayList<Soldier> soldierTeam, int size) {

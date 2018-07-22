@@ -1,8 +1,6 @@
 package com.pwnz.www.rockpapersword.controller;
 
 import android.content.res.Resources;
-import android.graphics.Rect;
-import android.provider.Settings;
 import android.util.Log;
 import android.view.MotionEvent;
 
@@ -16,6 +14,9 @@ import com.pwnz.www.rockpapersword.model.Soldier;
 import com.pwnz.www.rockpapersword.model.SoldierType;
 import com.pwnz.www.rockpapersword.model.Tile;
 
+import java.util.ArrayList;
+import java.util.Collections;
+
 public class GameManager {
 
     public static final int TEAM_A_TURN = 0;
@@ -24,6 +25,7 @@ public class GameManager {
     private final int SCREEN_BOARD_PADDING_FACTOR = 2;
     private final int HEIGHT_DIV = 10;
     private final int WIDTH_DIV  = 7;
+    private static int F_SOLDIER_IDX = 0;
     private static int winningTeam = -1;
     private Soldier focusedSoldier = null;
     private Soldier AISoldier = null;
@@ -34,8 +36,6 @@ public class GameManager {
     private boolean isMatchOn = false;
     private int teamTurn;
     public int canvasW, canvasH;
-
-
 
     private Board board;
     private GamePanel panel;
@@ -51,6 +51,7 @@ public class GameManager {
         initBoard();
         initClock();
         randTeamTurn();
+
     }
 
     private void initClock() {
@@ -162,6 +163,7 @@ public class GameManager {
             panel.pause();
             panel.stopClock();
             setMatchOn(true);
+            updateMatchSoldiersList(potentialInitiator, opponent);
             matchResult = match(potentialInitiator, opponent);
 
             Tile newTile;
@@ -198,6 +200,24 @@ public class GameManager {
             panel.resume();
         }
         Log.d("NullPtrDEBUG","\nLook For Pot Ended\n");
+    }
+
+    /*
+    This function updates the current soldier-duo that are in match. It places them as the first 2
+    elements on an already pre-made list of optional fighting soldiers object that holds the
+    special animations for the match.
+     */
+    private void updateMatchSoldiersList(Soldier potentialInitiator, Soldier opponent) {
+        findAndSwap(potentialInitiator, board.getMatchSoldierTeamA(), F_SOLDIER_IDX);
+        findAndSwap(opponent, board.getMatchSoldierTeamB(), F_SOLDIER_IDX);
+    }
+
+    private void findAndSwap(Soldier soldier, ArrayList<Soldier> list, int pairIndex) {
+        for (int i = 0; i < list.size() && !list.isEmpty(); i++) {
+            if(list.get(i).getSoldierType() == soldier.getSoldierType()){
+                Collections.swap(list, i,pairIndex);
+            }
+        }
     }
 
     private void finishGame(int team) {
@@ -340,12 +360,15 @@ public class GameManager {
 
     public Soldier getFightingSoldier(int team) {
 
-        if(potentialInitiator == null || opponent == null)
+        if (potentialInitiator == null || opponent == null){
+            Log.d("DRAW_MATCH_DBG","getFightingSoldier: one of the fighting soldiers is null.");
             return null;
+        }
 
         //get the type of the fighting soldier of the requested team:
         SoldierType type = (team == potentialInitiator.getTeam() ) ?
                 potentialInitiator.getSoldierType() : opponent.getSoldierType();
+
 
         return getBoard().getFightingSoldier(type, team);
     }

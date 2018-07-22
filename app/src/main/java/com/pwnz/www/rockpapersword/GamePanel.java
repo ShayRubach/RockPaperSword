@@ -7,6 +7,7 @@ import android.graphics.Canvas;
 import android.graphics.Paint;
 import android.os.Build;
 import android.support.annotation.RequiresApi;
+import android.util.Log;
 import android.view.SurfaceHolder;
 import android.view.SurfaceView;
 
@@ -15,6 +16,7 @@ import com.pwnz.www.rockpapersword.model.Board;
 import com.pwnz.www.rockpapersword.model.RPSClock;
 import com.pwnz.www.rockpapersword.model.Soldier;
 import com.pwnz.www.rockpapersword.model.SoldierMovement;
+import com.pwnz.www.rockpapersword.model.SoldierType;
 import com.pwnz.www.rockpapersword.model.Tile;
 
 import java.util.ArrayList;
@@ -104,9 +106,7 @@ public class GamePanel extends SurfaceView implements Runnable {
                     drawJudges();
 
                 if(isMatchOn()){
-                    //todo: @shay @idan turn this back on and debug the null reference inside. meanwhile, no match shown.
-                    //drawMatch();
-                    manager.setMatchOn(false);
+                    drawMatch();
                 }
             }
             mSurfaceHolder.unlockCanvasAndPost(mCanvas);
@@ -164,14 +164,18 @@ public class GamePanel extends SurfaceView implements Runnable {
     private void drawMatch() {
         //todo: possible logic simplification: use 1 animation that holds both players in match with all permutations @shay
 
-        Soldier soldierA = manager.getFightingSoldier(Board.TEAM_A);
-        Soldier soldierB = manager.getFightingSoldier(Board.TEAM_B);
+
+        //todo: @shay - replace the values with constants
+        Soldier soldierA = manager.getBoard().getMatchSoldierTeamA().get(0);
+        Soldier soldierB = manager.getBoard().getMatchSoldierTeamB().get(0);
 
         if(soldierA == null || soldierB == null)
             System.out.println("drawMatch: one of the fighting soldiers is null.");
 
         soldierA.drawAnimation(mCanvas);
         soldierB.drawAnimation(mCanvas);
+
+        Log.d("ANIMATION_DBG","animation frame drawn.");
 
         boolean aAnimationEnded = soldierA.chooseNextFrame();
         boolean bAnimationEnded = soldierB.chooseNextFrame();
