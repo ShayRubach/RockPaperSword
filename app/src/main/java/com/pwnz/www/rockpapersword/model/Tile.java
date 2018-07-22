@@ -1,6 +1,5 @@
 package com.pwnz.www.rockpapersword.model;
 
-import android.graphics.Color;
 import android.graphics.Rect;
 
 public class Tile {
@@ -13,17 +12,6 @@ public class Tile {
 
 
     public Tile(){}
-
-    public Tile(int left, int right, int top, int bottom, int r, int g, int b) {
-        color = Color.rgb(r,g,b);
-        rect = new Rect(left, top, right, bottom);
-        setOccupied(false);
-
-        //these values would be unchanged
-        width = right-left;
-        height = bottom-top;
-
-    }
 
     @Override
     public String toString(){

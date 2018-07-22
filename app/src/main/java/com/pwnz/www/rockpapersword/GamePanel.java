@@ -5,13 +5,14 @@ import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Canvas;
 import android.graphics.Paint;
+import android.graphics.Rect;
 import android.os.Build;
 import android.support.annotation.RequiresApi;
 import android.view.SurfaceHolder;
 import android.view.SurfaceView;
 
+import com.pwnz.www.rockpapersword.Activities.GameActivity;
 import com.pwnz.www.rockpapersword.controller.GameManager;
-import com.pwnz.www.rockpapersword.model.Board;
 import com.pwnz.www.rockpapersword.model.RPSClock;
 import com.pwnz.www.rockpapersword.model.Soldier;
 import com.pwnz.www.rockpapersword.model.SoldierMovement;
@@ -20,6 +21,9 @@ import com.pwnz.www.rockpapersword.model.Tile;
 import java.util.ArrayList;
 import java.util.concurrent.TimeUnit;
 
+/**
+ * acts as the View (UI Thread). Only responsible of drawing.
+ */
 public class GamePanel extends SurfaceView implements Runnable {
 
     public static final int MAX_FPS = 60;
@@ -32,15 +36,12 @@ public class GamePanel extends SurfaceView implements Runnable {
     private SurfaceHolder mSurfaceHolder;
     private int mCanvasH, mCanvasW;
     private boolean redraw = false;
-    private boolean matchRectsInitialized = false;
 
     private double fps, fts, ftm, ftn; //frames per seconds, frame time second/ms/ns
     private double framePerSecond, frameTimeSeconds ,frameTimeMs, frameTimeNs;
     private double lastFrameTime, endOfRenderTime, deltaTime;
     private RPSClock gameClock;
-
-
-
+    private Bitmap bg;
 
     public GamePanel(Context context) {
         super(context);
@@ -69,7 +70,6 @@ public class GamePanel extends SurfaceView implements Runnable {
         long timeMillis;
         long startTimeSeconds, endTimeSeconds;
 
-
         lastFrameTime = System.nanoTime();
         deltaTime = 0;
 
@@ -77,10 +77,9 @@ public class GamePanel extends SurfaceView implements Runnable {
 
             timeMillis = System.currentTimeMillis();
             startTimeSeconds = TimeUnit.MILLISECONDS.toSeconds(timeMillis);
-
             update();
 
-            if(!mSurfaceHolder.getSurface().isValid()) { //todo: implement this  || !shouldRedraw()){
+            if(!mSurfaceHolder.getSurface().isValid()) {
                 continue;
             }
 
@@ -89,18 +88,20 @@ public class GamePanel extends SurfaceView implements Runnable {
             mCanvasW = mCanvas.getWidth();
 
             if(isInMenuScreen){
-                //todo: implement a menu screen later
+                //todo: pre-game screen place_holder
+            }
+            else if(isGameFinished() != GameActivity.GAME_IN_PROGRESS){
+                drawWinnerAnnouncement(manager.getWinningTeam());
             }
             else {
-                    drawTiles();
-                    drawSoldiers();
-                    //drawPathArrows();
-                    drawClock();
-                    drawJudges();
-
+                drawBg();
+                drawTiles();
+                drawSoldiers();
+                drawPathArrows();
+                drawClock();
+                drawJudges();
                 if(isMatchOn()){
-                    //drawMatch();
-                    manager.setMatchOn(false);
+                    drawMatch();
                 }
             }
             mSurfaceHolder.unlockCanvasAndPost(mCanvas);
@@ -109,6 +110,7 @@ public class GamePanel extends SurfaceView implements Runnable {
             endOfRenderTime = System.nanoTime();
             deltaTime = frameTimeNs - (endOfRenderTime - lastFrameTime);
 
+            //sleep for the missing delta time of the interval frame time between each frame.
             try {
                 if(deltaTime > 0 )
                     mPlayThread.sleep((long) deltaTime/1000000);
@@ -121,19 +123,50 @@ public class GamePanel extends SurfaceView implements Runnable {
             timeMillis = System.currentTimeMillis();
             endTimeSeconds = TimeUnit.MILLISECONDS.toSeconds(timeMillis);
 
-            //todo: Idan - impl this
+            //todo: @Idan @shay - impl this
             //if updateTime == true, clock resets and we need to tell GameManager so force a turn swap:
             if(gameClock.updateTime(endTimeSeconds - startTimeSeconds)){
-
+                //forceTurnSwap()
             }
         }
+    }
+
+    /**
+     * an animation screen that is displayed after a win / lose
+     * @param winningTeam {0 = TEAM_A},{1 = TEAM_B}, {-1 = NONE}
+     * @return none
+     */
+    private void drawWinnerAnnouncement(int winningTeam) {
+
+        if(winningTeam == manager.getBoard().TEAM_A){
+            manager.getBoard().getLoseAnnouncementAnimation().drawAnimation(mCanvas);
+            manager.getBoard().getLoseAnnouncementAnimation().chooseNextFrame();
+        }
+        else{
+            manager.getBoard().getWinAnnouncementAnimation().drawAnimation(mCanvas);
+            manager.getBoard().getWinAnnouncementAnimation().chooseNextFrame();
+        }
+
+        //sleep a bit between each frame to slow animation down:
+        try {
+            if(deltaTime > 0 )
+                mPlayThread.sleep(150);
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
+
+    }
+
+    private int isGameFinished() {
+        return manager.getWinningTeam();
     }
 
     private void drawMatch() {
         //todo: possible logic simplification: use 1 animation that holds both players in match with all permutations @shay
 
-        Soldier soldierA = manager.getFightingSoldier(Board.TEAM_A);
-        Soldier soldierB = manager.getFightingSoldier(Board.TEAM_B);
+        //todo: @shay - replace the values with constants
+        Soldier soldierA = manager.getBoard().getMatchSoldierTeamA().get(0);
+        Soldier soldierB = manager.getBoard().getMatchSoldierTeamB().get(0);
 
         if(soldierA == null || soldierB == null)
             System.out.println("drawMatch: one of the fighting soldiers is null.");
@@ -144,12 +177,15 @@ public class GamePanel extends SurfaceView implements Runnable {
         boolean aAnimationEnded = soldierA.chooseNextFrame();
         boolean bAnimationEnded = soldierB.chooseNextFrame();
 
-        //todo: @shay
-        //if animation ended, set match off
+        //if animation ended, set match off & remove match animation from screen:
         if(aAnimationEnded && bAnimationEnded){
             manager.setMatchOn(false);
         }
 
+    }
+
+    private void drawBg() {
+        mCanvas.drawBitmap(manager.getBoard().getGameBg().getSpriteSheet(), null, manager.getBoard().getGameBg().getDestRect(), null);
     }
 
     private boolean isMatchOn() {
@@ -165,12 +201,21 @@ public class GamePanel extends SurfaceView implements Runnable {
             gameClock.drawAnimation(mCanvas);
     }
 
+    /**
+     * updated delta time for the gameloop drawings
+     * @return none
+     */
     private void update() {
         if (deltaTime < 0 )
             deltaTime = frameTimeSeconds - deltaTime;
 
     }
 
+    /**
+     * after a Player soldier has been clicked (focused), display path arrows to indicate
+     * valid tiles he can move to.
+     * @return none
+     */
     private void drawPathArrows() {
         Bitmap bm = null;
 
@@ -179,8 +224,7 @@ public class GamePanel extends SurfaceView implements Runnable {
 
         for (int i = 0; i < manager.getBoard().getPathArrows().size() ; i++) {
             if(manager.getBoard().getPathArrows().get(i) != null) {
-                System.out.println("i = " + i);
-                System.out.println("manager.getBoard().getPathArrows().get(i).second = " + manager.getBoard().getPathArrows().get(i).second);
+
                 if (manager.getBoard().getPathArrows().get(i).second == SoldierMovement.MOVE_LEFT)
                     bm = BitmapFactory.decodeResource(getResources(), R.drawable.arrow_left);
                 else if (manager.getBoard().getPathArrows().get(i).second == SoldierMovement.MOVE_RIGHT)
@@ -209,10 +253,6 @@ public class GamePanel extends SurfaceView implements Runnable {
         }
     }
 
-    private void drawInstructions(Canvas canvas) {
-
-    }
-
     private void drawSoldiers() {
         drawSoldiersTeam(manager.getBoard().getSoldierTeamA());
         drawSoldiersTeam(manager.getBoard().getSoldierTeamB());
@@ -222,16 +262,21 @@ public class GamePanel extends SurfaceView implements Runnable {
         synchronized (soldierTeam){
             for(Soldier soldier: soldierTeam){
                 if(soldier != null){
+                    changeOffset(soldier.getTile().getRect(), soldier.getTileOffset()*(-1));
                     mCanvas.drawBitmap(soldier.getSoldierBitmap(), null, soldier.getTile().getRect(), null);
+                    changeOffset(soldier.getTile().getRect(), soldier.getTileOffset());
                 }
             }
         }
+    }
 
+    private void changeOffset(Rect rect, int offset) {
+        rect.top += offset;
+        rect.bottom += offset;
     }
 
     public void pause(){
         canPlay = false;
-        //cats.clear();
 
         while (true) {
             try {
@@ -252,13 +297,6 @@ public class GamePanel extends SurfaceView implements Runnable {
         mPlayThread.start();
     }
 
-    private int toPxs(int dps){
-        return (int)(dps * getResources().getDisplayMetrics().density + 0.5f);
-    }
-
-    public boolean isInMenuScreen() {
-        return isInMenuScreen;
-    }
 
     public void setInMenuScreen(boolean inMenuScreen) {
         isInMenuScreen = inMenuScreen;
@@ -266,10 +304,6 @@ public class GamePanel extends SurfaceView implements Runnable {
 
     public void setManager(GameManager manager) {
         this.manager = manager;
-    }
-
-    public boolean shouldRedraw() {
-        return redraw;
     }
 
     public void setRedraw(boolean redraw) {
@@ -285,15 +319,4 @@ public class GamePanel extends SurfaceView implements Runnable {
         shouldDrawClock = true;
     }
 
-    public boolean isCanPlay() {
-        return canPlay;
-    }
-
-    public void setCanPlay(boolean canPlay) {
-        this.canPlay = canPlay;
-    }
-
-    public Thread getPlayThread() {
-        return mPlayThread;
-    }
 }

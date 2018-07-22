@@ -13,8 +13,6 @@ public class Soldier extends AnimationHandler {
 
 
     private static int pickedTypesCount = 0;
-    private static int pickedUniqueTypesCount = 0;
-
     private Bitmap soldierBitmap;
     private Tile tile;
     private boolean isVisible;
@@ -23,16 +21,14 @@ public class Soldier extends AnimationHandler {
     private int nonHighlightedSpriteSource, highlightedSpriteSource;
     private int animationSprite;
     private int team;
+    private int tileOffset;
 
     public Soldier() {}
 
-    public Soldier(Bitmap mSoldierBitmap, Tile tile, boolean isVisible, SoldierType mSoldierType) {
-        this.soldierBitmap = mSoldierBitmap;
-        this.tile= tile;
-        this.isVisible = isVisible;
-        this.soldierType = mSoldierType;
-    }
-
+    /**
+     * creates a static (non-changed) list that will hold the starting team for each side.
+     * @return none
+     */
     private static ArrayList<SoldierType> initStartingSoldierTypesList(){
         startingSoldierTypes = new ArrayList<>();
         allocateType(3, SoldierType.STONE, startingSoldierTypes );
@@ -49,65 +45,11 @@ public class Soldier extends AnimationHandler {
         return startingSoldierTypes;
     }
 
-    @Override
-    public String toString() {
-        return "\n\nSoldier { "+ "\n" +
-                "\tTile = " + tile+ "\n" +
-                "\tisVisible = " + isVisible + "\n" +
-                "\tSoldierType = " + soldierType + "\n" +
-                "\tSoldierTeam = " + (team == Board.TEAM_A ? "A" : "B") + "\n" +
-                '}';
-    }
-
-    public Tile getTile() {
-        return tile;
-    }
-
-    public void setTile(Tile tile) {
-        this.tile = tile;
-    }
-
-    public int getTeam() {
-        return team;
-    }
-
-    public void setTeam(int team) {
-        this.team = team;
-    }
-
-    public int getNonHighlightedSpriteSource() {
-        return nonHighlightedSpriteSource;
-    }
-
-    private static void allocateType(int i, SoldierType type, ArrayList<SoldierType> soldierTypesList) {
-        while(i-- != 0)
-            soldierTypesList.add(type);
-    }
-
-    public SoldierType getSoldierType() {
-        return soldierType;
-    }
-
-    public void setSoldierType(SoldierType soldierType) {
-        this.soldierType = soldierType;
-    }
-
-    public Bitmap getSoldierBitmap() {
-        return soldierBitmap;
-    }
-
-    public void setSoldierBitmap(Bitmap bitmap) {
-        this.soldierBitmap = bitmap;
-    }
-
-    public boolean isVisible() {
-        return isVisible;
-    }
-
-    public void setVisible(boolean visible) {
-        isVisible = visible;
-    }
-
+    /**
+     * picks an available soldier from the static list of starting soldiers
+     * @return none
+     * @see #initStartingSoldierTypesList()
+     */
     public static SoldierType pickAvailableSoldierType() {
         if(startingSoldierTypes.isEmpty())
             return null;
@@ -115,12 +57,12 @@ public class Soldier extends AnimationHandler {
         if( pickedTypesCount == startingSoldierTypes.size()) {
             pickedTypesCount = 0;
         }
-
         return startingSoldierTypes.get(pickedTypesCount++);
     }
 
+
     public void setSoldierAnimationSpriteByType() {
-        //todo: change the animation sprite for each individual case
+        //todo: @shay - enhance animations, add highlighted drawables.
 
         switch (getSoldierType()){
             case STONE:
@@ -180,6 +122,54 @@ public class Soldier extends AnimationHandler {
         setAnimationSprite(getNonHighlightedSpriteSource());
     }
 
+    /**
+     * this list holds uniquely 1 soldier of each type
+     * @return the reference to the list
+     */
+    private static ArrayList<SoldierType> initUniqueSoldierTypesList() {
+        uniqueSoldierTypes = new ArrayList<>();
+        allocateType(1, SoldierType.STONE, uniqueSoldierTypes);
+        allocateType(1, SoldierType.SWORDMASTER, uniqueSoldierTypes);
+        allocateType(1, SoldierType.PEPPER, uniqueSoldierTypes);
+        allocateType(1, SoldierType.KING, uniqueSoldierTypes);
+        allocateType(1, SoldierType.ASHES, uniqueSoldierTypes);
+        allocateType(1, SoldierType.SHIELDON, uniqueSoldierTypes);
+        allocateType(1, SoldierType.LASSO, uniqueSoldierTypes);
+        return uniqueSoldierTypes;
+    }
+
+    /**
+     * uniquely pick a soldier from the unique list
+     * @param i index of the soldier chosen from list
+     * @see #uniqueSoldierTypes
+     * @see #initUniqueSoldierTypesList()
+     * @return the chosen object from list
+     */
+    public static SoldierType pickUniqueSoldierType(int i) {
+
+        if(uniqueSoldierTypes.isEmpty()) {
+            System.out.println("uniqueSoldierTypes is empty");
+            return null;
+        }
+
+        return uniqueSoldierTypes.get(i);
+    }
+
+    private static void allocateType(int i, SoldierType type, ArrayList<SoldierType> soldierTypesList) {
+        while(i-- != 0)
+            soldierTypesList.add(type);
+    }
+
+    @Override
+    public String toString() {
+        return "\n\nSoldier { "+ "\n" +
+                "\tTile = " + tile+ "\n" +
+                "\tisVisible = " + isVisible + "\n" +
+                "\tSoldierType = " + soldierType + "\n" +
+                "\tSoldierTeam = " + (team == Board.TEAM_A ? "A" : "B") + "\n" +
+                '}';
+    }
+
     public void setNonHighlightedSpriteSource(int nonHighlightedSpriteSource) {
         this.nonHighlightedSpriteSource = nonHighlightedSpriteSource;
     }
@@ -210,25 +200,56 @@ public class Soldier extends AnimationHandler {
         return isHighlighted;
     }
 
-    public static SoldierType pickUniqueSoldierType(int i) {
-
-        if(uniqueSoldierTypes.isEmpty()) {
-            System.out.println("uniqueSoldierTypes is empty");
-            return null;
-        }
-
-        return uniqueSoldierTypes.get(i);
+    public int getTileOffset() {
+        return tileOffset;
     }
 
-    private static ArrayList<SoldierType> initUniqueSoldierTypesList() {
-        uniqueSoldierTypes = new ArrayList<>();
-        allocateType(1, SoldierType.STONE, uniqueSoldierTypes);
-        allocateType(1, SoldierType.SWORDMASTER, uniqueSoldierTypes);
-        allocateType(1, SoldierType.PEPPER, uniqueSoldierTypes);
-        allocateType(1, SoldierType.KING, uniqueSoldierTypes);
-        allocateType(1, SoldierType.ASHES, uniqueSoldierTypes);
-        allocateType(1, SoldierType.SHIELDON, uniqueSoldierTypes);
-        allocateType(1, SoldierType.LASSO, uniqueSoldierTypes);
-        return uniqueSoldierTypes;
+    public void setTileOffset(int tileOffset) {
+        this.tileOffset = tileOffset;
     }
+
+    public SoldierType getSoldierType() {
+        return soldierType;
+    }
+
+    public void setSoldierType(SoldierType soldierType) {
+        this.soldierType = soldierType;
+    }
+
+    public Bitmap getSoldierBitmap() {
+        return soldierBitmap;
+    }
+
+    public void setSoldierBitmap(Bitmap bitmap) {
+        this.soldierBitmap = bitmap;
+    }
+
+    public boolean isVisible() {
+        return isVisible;
+    }
+
+    public void setVisible(boolean visible) {
+        isVisible = visible;
+    }
+
+    public Tile getTile() {
+        return tile;
+    }
+
+    public void setTile(Tile tile) {
+        this.tile = tile;
+    }
+
+    public int getTeam() {
+        return team;
+    }
+
+    public void setTeam(int team) {
+        this.team = team;
+    }
+
+    public int getNonHighlightedSpriteSource() {
+        return nonHighlightedSpriteSource;
+    }
+
 }

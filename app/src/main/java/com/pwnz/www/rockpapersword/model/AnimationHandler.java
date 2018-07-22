@@ -4,7 +4,7 @@ import android.graphics.Bitmap;
 import android.graphics.Canvas;
 import android.graphics.Rect;
 
-/*
+/**
     AnimationHandler will handle the 'slicing' of the next frame every time the object is drawn.
     The handler will notify the Game Manager when the animation has started in order to stop the
     clock and when it has ended so it can move on to the next step of the game and restart
@@ -69,6 +69,14 @@ public class AnimationHandler {
         sourceRect.top = j * spriteFrameSrcH;
         sourceRect.right = (i+1) * spriteFrameSrcW;
         sourceRect.bottom = (j+1) * spriteFrameSrcH;
+    }
+
+    public Rect getDestRect() {
+        return destRect;
+    }
+
+    public Bitmap getSpriteSheet() {
+        return spriteSheet;
     }
 }
 

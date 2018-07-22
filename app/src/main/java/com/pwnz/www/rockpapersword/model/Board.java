@@ -1,15 +1,22 @@
 package com.pwnz.www.rockpapersword.model;
 
+
+import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Rect;
 import android.util.Log;
 import android.util.Pair;
+import java.util.ArrayList;
 
-import com.pwnz.www.rockpapersword.GamePanel;
 import com.pwnz.www.rockpapersword.R;
 import com.pwnz.www.rockpapersword.controller.GameManager;
 
-import java.util.ArrayList;
+/**
+ * Acts as the data (model) component.
+ * Responsible for allocating and initializing all game components before they reach the UI Thread.
+ * Manipulating and updating values and performing computations on the game object. Using the GameManager
+ * as controller to communicate with the Gui.
+ */
 
 public class Board {
 
@@ -20,16 +27,18 @@ public class Board {
     ArrayList<Soldier> matchSoldierTeamB = new ArrayList<>();
 
     ArrayList<Pair<Tile, SoldierMovement>> pathArrows = new ArrayList<>();
+    AnimationHandler winAnnouncementAnimation, loseAnnouncementAnimation;
 
     int cols, rows;
     int canvasW, canvasH;
     int tileW, tileH;
     int brightColor, darkColor;
+    public static final int TILE_OFFSET_PERCENTAGE = 6 ;
     public static final int TEAM_A = 0;
     public static final int TEAM_B = 1;
     public static final int SOLDIERS_TYPES_COUNT = 7;
-    public static final int MAX_PATH_ARROWS = 4;
     private GameManager manager;
+    private AnimationHandler gameBg;
 
     public Board(int cols, int rows, int canvasW, int canvasH, int brightColor, int darkColor) {
         this.cols = cols;
@@ -43,9 +52,12 @@ public class Board {
         setDarkColor(darkColor);
     }
 
-    /*
-    Allocate a team of soldiers that will be displayed on the match scenes. According to which team is asked to be allocated,
-    the sprites will be chosen.
+    /**
+     * Allocate a team of soldiers that will be displayed on the match scenes. According to which team is asked to be allocated,
+     * the sprites will be chosen.
+     * @param team which team to init
+     * @param matchSoldierTeam the list
+     * @param soldiersTypesCount usually maximum types number
      */
     private void initSoldierMatchTeam(int team, ArrayList<Soldier> matchSoldierTeam, int soldiersTypesCount) {
 
@@ -74,13 +86,12 @@ public class Board {
         tile.setRect(rect);
 
         for (int i = 0; i < soldiersTypesCount ; i++) {
+            //todo: @shay @idan - wrap this with a function (see todo 01)
             Soldier soldier = new Soldier();
             soldier.setTile(tile);
             soldier.setVisible(true);
             soldier.setTeam(team);
             soldier.setSoldierType(Soldier.pickUniqueSoldierType(i));
-
-            //soldier.setAnimationSprite(getMatchSpriteAnimation(soldier.getSoldierType(), soldier.getTeam()));
             soldier.spriteId = getMatchSpriteAnimation(soldier.getSoldierType(), soldier.getTeam());
 
             soldier.spriteSheet = BitmapFactory.decodeResource(manager.getAppResources(), soldier.spriteId);
@@ -101,7 +112,7 @@ public class Board {
     private int getMatchSpriteAnimation(SoldierType soldierType, int team) {
 
         if(soldierType == null){
-            System.out.println("SOLDIER TYPE IS NULL");
+            System.out.println("SoldierType is null");
             return -1;
         }
 
@@ -147,27 +158,6 @@ public class Board {
         return R.drawable.shieldon;
     }
 
-    public Soldier getFightingSoldier(SoldierType soldierType, int team) {
-
-        if(soldierType == null){
-            System.out.println("SOLDIER TYPE IS NULL");
-            return null;
-        }
-
-        ArrayList<Soldier> matchSoldierTeam = (team == TEAM_A) ? matchSoldierTeamA : matchSoldierTeamB;
-
-        Soldier soldierInMatch = null;
-
-        for(Soldier soldier : matchSoldierTeam){
-            if(soldier.getSoldierType() == soldierType){
-                soldierInMatch = soldier;
-                break;
-            }
-        }
-
-        return soldierInMatch;
-    }
-
     private void allocateSoldierTeam(ArrayList<Soldier> soldierTeam, int size) {
 
         for (int j = 0; j < size; j++) {
@@ -185,66 +175,77 @@ public class Board {
         }
     }
 
-    public ArrayList<Soldier> getSoldierTeamA() {
-        return soldierTeamA;
-    }
-
-    public ArrayList<Soldier> getSoldierTeamB() {
-        return soldierTeamB;
-    }
-
-    public int getBrightColor() {
-        return brightColor;
-    }
-
-    public void setBrightColor(int brightColor) {
-        this.brightColor = brightColor;
-    }
-
-    public int getDarkColor() {
-        return darkColor;
-    }
-
-    public void setDarkColor(int darkColor) {
-        this.darkColor = darkColor;
-    }
-
-    public int getCols() {
-        return cols;
-    }
-
-    public int getRows() {
-        return rows;
-    }
-
-    public Tile[][] getTiles() {
-        return tiles;
-    }
-
-    public int getCanvasW() {
-        return canvasW;
-    }
-
-    public int getCanvasH() {
-        return canvasH;
-    }
-
-
-    //boardPadding is the gap of top and bottom screen where the board shouldn't be drawn.
-    //H and W Divisors are actually rows and cols count. we treat our screen as a grid.
+    /**
+     * Initiation of the board. boardPadding is the gap of top and bottom screen where the
+     * board shouldn't be drawn. H and W Divisors are actually rows and cols count.
+     * We treat our screen as a grid.
+     * @param boardPaddingFactor how much to pad our top and bottom
+     * @param hDivisor how many divisions for height
+     * @param wDivisor how many divisions for width
+     */
     public void initBoard(int boardPaddingFactor, int hDivisor, int wDivisor){
         tileW = canvasW / wDivisor;
         tileH = canvasH / hDivisor;
 
-
         //this will give us a clean pad from the top of the screen which the board will not be drawn at
         int boardPadding = boardPaddingFactor * tileH;
 
+        initBg(canvasH, canvasW, R.drawable.game_bg);
         initTiles(boardPadding, tileW, tileH);
         initSoldiers(soldierTeamA, TEAM_A, 0);
         initSoldiers(soldierTeamB, TEAM_B, 4);
         initSoldierMatchTeam(TEAM_A, matchSoldierTeamA, SOLDIERS_TYPES_COUNT);
         initSoldierMatchTeam(TEAM_B, matchSoldierTeamB, SOLDIERS_TYPES_COUNT);
+        initWinningTeamAnnouncementAnimation();
+    }
+
+    private void initBg(int canvasH, int canvasW, int bg) {
+        gameBg = new AnimationHandler();
+        gameBg.spriteSheet = BitmapFactory.decodeResource(manager.getAppResources(), bg);
+        gameBg.sourceRect = new Rect(0, 0, gameBg.spriteSheet.getWidth(), gameBg.spriteSheet.getHeight());
+        gameBg.destRect = new Rect(0, 0, canvasW, canvasH);
+
+    }
+
+    /**
+     * Initiation of the win/lose announcement animation.
+     */
+    private void initWinningTeamAnnouncementAnimation() {
+        //todo 01: @shay @idan - handle code dup. create an initFunction on AnimationHandler for all these values and use it on RPSclock too.
+        winAnnouncementAnimation = new AnimationHandler();
+        loseAnnouncementAnimation = new AnimationHandler();
+
+        canvasH = manager.getAppResources().getDisplayMetrics().heightPixels;
+        canvasW = manager.getAppResources().getDisplayMetrics().widthPixels;
+
+        winAnnouncementAnimation.spriteId = R.drawable.win_anim;
+        loseAnnouncementAnimation.spriteId = R.drawable.lose_anim;
+
+        winAnnouncementAnimation.spriteSheet = BitmapFactory.decodeResource(manager.getAppResources(), winAnnouncementAnimation.spriteId);
+        loseAnnouncementAnimation.spriteSheet = BitmapFactory.decodeResource(manager.getAppResources(), loseAnnouncementAnimation.spriteId);
+
+        winAnnouncementAnimation.spriteSheetW =  winAnnouncementAnimation.spriteSheet.getWidth();
+        winAnnouncementAnimation.spriteSheetH =  winAnnouncementAnimation.spriteSheet.getHeight();
+
+        loseAnnouncementAnimation.spriteSheetW =  loseAnnouncementAnimation.spriteSheet.getWidth();
+        loseAnnouncementAnimation.spriteSheetH =  loseAnnouncementAnimation.spriteSheet.getHeight();
+
+        winAnnouncementAnimation.numberOfSpriteFrames = 4;
+        loseAnnouncementAnimation.numberOfSpriteFrames = 4;
+
+        winAnnouncementAnimation.spriteFrameSrcH = winAnnouncementAnimation.spriteSheetH / 2;   //2 rows
+        winAnnouncementAnimation.spriteFrameSrcW = winAnnouncementAnimation.spriteSheetW / 5;   //5 columns
+
+        loseAnnouncementAnimation.spriteFrameSrcH = loseAnnouncementAnimation.spriteSheetH / 2;   //2 rows
+        loseAnnouncementAnimation.spriteFrameSrcW = loseAnnouncementAnimation.spriteSheetW / 5;   //5 columns
+
+        loseAnnouncementAnimation.sourceRect = new Rect();
+        loseAnnouncementAnimation.destRect = new Rect(0, 0, canvasW, canvasH);
+        loseAnnouncementAnimation.resetToFirstFrame();
+
+        winAnnouncementAnimation.sourceRect = new Rect();
+        winAnnouncementAnimation.destRect = new Rect(0, 0, canvasW, canvasH);
+        winAnnouncementAnimation.resetToFirstFrame();
     }
 
     private void initTiles(int boardPadding, int tileW, int tileH) {
@@ -269,7 +270,6 @@ public class Board {
     }
 
     public void eliminateSoldier(Soldier soldier){
-        //
         Log.d("NullPtrDEBUG","\nEliminated: " + soldier);
         ArrayList<Soldier> removeFrom = soldier.getTeam() == Board.TEAM_A ? soldierTeamA : soldierTeamB;
         synchronized (removeFrom){
@@ -278,8 +278,6 @@ public class Board {
             soldier.getTile().setCurrSoldier(null);
             removeFrom.remove(soldier);
         }
-
-
     }
 
     public void eliminateBoth(Soldier potentialInitiator, Soldier opponent){
@@ -290,10 +288,6 @@ public class Board {
     private void initSoldiers(ArrayList<Soldier> soldiersTeam, int team, int SOLDIERS_START_ROW) {
 
         for (int i = 0, j = SOLDIERS_START_ROW, k = 0; i < soldiersTeam.size() ; i++, k++) {
-
-            //todo: set the types of the soldiers here by game rules.
-            //todo: 3 Stones, 3 Swordmasters, 3 Peppers, 1 random(between 3 regulars), 1 Shieldon, 1 Sir Lasso, 1 Ashes, 1 King
-
             soldiersTeam.get(i).setTeam(team);
             soldiersTeam.get(i).setSoldierType(pickAvailableSoldierType());
             soldiersTeam.get(i).setSoldierAnimationSpriteByType();
@@ -302,6 +296,7 @@ public class Board {
             tiles[k % cols][j].setOccupied(true);
             tiles[k % cols][j].setCurrSoldier(soldiersTeam.get(i));
             soldiersTeam.get(i).setTile(tiles[k % cols][j]);
+            soldiersTeam.get(i).setTileOffset(tileW / TILE_OFFSET_PERCENTAGE);
 
             //stop over the the next tile row
             if(i == (soldiersTeam.size()-1) / 2)
@@ -309,10 +304,12 @@ public class Board {
         }
     }
 
+    /**
+     * @return an available type from our soldierTypeList in Soldier class.
+     */
     private SoldierType pickAvailableSoldierType() {
         return Soldier.pickAvailableSoldierType();
     }
-
 
     public Soldier getClickedSoldier(float x, float y) {
         //find clicked soldier on self team
@@ -320,10 +317,16 @@ public class Board {
             if(isInside(soldier.getTile().getRect(), x,y) == true)
                 return soldier;
         }
-
         return null;
     }
 
+    /**
+     * Determines whether a a rectangle has been pressed on screen according to x,y
+     * @param rectPosition position of the soldier's occupied tile (rectangle based)
+     * @param x pos
+     * @param y pos
+     * @return true = pressed, false = not pressed
+     */
     private boolean isInside(Rect rectPosition, float x, float y) {
         if(rectPosition.left <= x && rectPosition.right >= x){
             if(rectPosition.top <= y && rectPosition.bottom >= y){
@@ -333,13 +336,19 @@ public class Board {
         return false;
     }
 
+    /**
+     * Displays arrows indicating the eligible tiles to move to
+     * @param focusedSoldier the clicked soldier
+     */
     public void displaySoldierPath(Soldier focusedSoldier) {
-
         highlightPathArrows(focusedSoldier);
         focusedSoldier.highlight();
     }
 
-
+    /**
+     * @see #displaySoldierPath(Soldier)
+     * @param focusedSoldier Soldier
+     */
     private void highlightPathArrows(Soldier focusedSoldier) {
         Tile tile = null;
         Integer[] xyPos = new Integer[2];
@@ -359,6 +368,15 @@ public class Board {
             addNeighbor(pathArrows, tile, xyPos[0], xyPos[1]+1, SoldierMovement.MOVE_DOWN );
     }
 
+    /**
+     * add a valid neighbor tile to be marked with an arrow indicator
+     * @see #pathArrows
+     * @param surroundingTiles all surrounding tiles around the soldier (4)
+     * @param tile soldier's current tile
+     * @param x soldier's x tile pos
+     * @param y soldier's y tile pos
+     * @param move LEFT / RIGHT / UP / DOWN
+     */
     private void addNeighbor(ArrayList<Pair<Tile, SoldierMovement>> surroundingTiles, Tile tile, Integer x, Integer y, SoldierMovement move){
         tile = getTiles()[x][y];
         if(tile.isOccupied() == false){
@@ -378,7 +396,6 @@ public class Board {
         }
     }
 
-
     public Tile getTileAt(float x, float y) {
         for(Pair<Tile, SoldierMovement> pair : pathArrows){
             if(isInside(pair.first.getRect(), x, y) == true){
@@ -388,27 +405,11 @@ public class Board {
         return null;
     }
 
-    public ArrayList<Pair<Tile, SoldierMovement>> getPathArrows() {
-        return pathArrows;
-    }
-
-    public ArrayList<Soldier> getMatchSoldierTeamA() {
-        return matchSoldierTeamA;
-    }
-
-    public ArrayList<Soldier> getMatchSoldierTeamB() {
-        return matchSoldierTeamB;
-    }
-
-    public static int getSoldiersTypesCount() {
-        return SOLDIERS_TYPES_COUNT;
-    }
-
-    public int getMaxPathArrows() {
-        return MAX_PATH_ARROWS;
-    }
-
-
+    /**
+     * picks up a random soldier for the AI to play with on its turn.
+     * will only retrurn a moveable soldir
+     * @return valid soldier to play with
+     */
     public Soldier getRandomSoldier() {
         Soldier AISoldier = null;
         int randIdx;
@@ -429,6 +430,11 @@ public class Board {
         return pathArrows.get(randIdx).first;
     }
 
+    /**
+     * Seeks for the first surrounding soldier next to the initiator
+     * @param initiator the soldier that seeks for a match
+     * @return the first surrounding opponent
+     */
     public Soldier getFirstSurroundingOpponent(Soldier initiator) {
         Integer[] xyPos = new Integer[2];
         getTileIndex(initiator.getTile(), xyPos);
@@ -468,23 +474,68 @@ public class Board {
                 return getTiles()[newX][newY].getCurrSoldier();
             }
         }
-
-        Log.d("GFSO", "returning null");
         return null;
     }
 
     private boolean isValidOpponent(int newX, int newY, Soldier initiator) {
-
-
-        Log.d("NullPtrDEBUG","---\nPlayer " + (initiator.getTeam() == Board.TEAM_A ? "A" : "B") + " isOccupied[" + newX + "][" + newY + "]:"  + getTiles()[newX][newY].isOccupied() + "\n\n");
         return getTiles()[newX][newY].isOccupied() &&
                getTiles()[newX][newY].getCurrSoldier().getTeam() != initiator.getTeam();
-
-
-
     }
 
     public void setManager(GameManager manager) {
         this.manager = manager;
+    }
+
+    public AnimationHandler getWinAnnouncementAnimation() {
+        return winAnnouncementAnimation;
+    }
+
+    public AnimationHandler getLoseAnnouncementAnimation() {
+        return loseAnnouncementAnimation;
+    }
+
+
+    public ArrayList<Soldier> getSoldierTeamA() {
+        return soldierTeamA;
+    }
+
+    public ArrayList<Soldier> getSoldierTeamB() {
+        return soldierTeamB;
+    }
+
+    public void setBrightColor(int brightColor) {
+        this.brightColor = brightColor;
+    }
+
+    public void setDarkColor(int darkColor) {
+        this.darkColor = darkColor;
+    }
+
+    public Tile[][] getTiles() {
+        return tiles;
+    }
+
+    public int getCanvasW() {
+        return canvasW;
+    }
+
+    public int getCanvasH() {
+        return canvasH;
+    }
+
+    public ArrayList<Pair<Tile, SoldierMovement>> getPathArrows() {
+        return pathArrows;
+    }
+
+    public ArrayList<Soldier> getMatchSoldierTeamA() {
+        return matchSoldierTeamA;
+    }
+
+    public ArrayList<Soldier> getMatchSoldierTeamB() {
+        return matchSoldierTeamB;
+    }
+
+    public AnimationHandler getGameBg() {
+        return gameBg;
     }
 }

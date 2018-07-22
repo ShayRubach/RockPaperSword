@@ -6,9 +6,19 @@
         - Every player sees his own team weapons and none of the enemies (they all look a like)\n\n
         - Each turn is limited with a 10 seconds timer\n\n
         - When a player reaches his turn, he is able to choose a soldier and move to a neighbour tile\n\n
-        - When 2 soldiers are facing each other, they are staged into a fight with simple RPS rules. Losing soldier is eliminated\n\n
+        - When 2 soldiers are facing (or next to) each other, they are staged into a fight with simple RPS rules. Losing soldier is eliminated\n\n
+        - Two soldiers can be eliminated in special cases according to their weapons.
         - The goal is to find and kill the king\n\n
-        - Total game play time is 3 minutes. At the buzzer, the team with the highest number of survivors wins\n\n
         - May the force be with you\n\n
+    </string>
+    <string name="str_about_the_app">
+        [BETA VERSION]\n\n
+        Rock Paper Sword was developed by: \n\n
+        Shay [Toch] Rubach\n
+        Idan [Kede] Lazimi\n\n
+        This is the final project submission for Android Development course in
+        Shenkar College of Engineering and Design led by:\n\n
+        Amnon Dekel (Head lecturer)\n
+        Amir Uval (Tutor)\n\n (C) All right received
     </string>
 </resources>

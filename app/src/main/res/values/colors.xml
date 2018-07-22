@@ -5,5 +5,7 @@
     <color name="colorAccent">#FF4081</color>
     <color name="tileA">#edb85c</color>
     <color name="tileB">#978769</color>
+    <color name="btn_main_menu_color">#e9c0c0</color>
+    <color name="main_menu_bg">#755353</color>
 
 </resources>

@@ -1,19 +1,26 @@
 package com.pwnz.www.rockpapersword.Activities;
 
+import android.content.Intent;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.View;
+import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.SeekBar;
 import android.widget.Toast;
 
 import com.pwnz.www.rockpapersword.R;
 
+/**
+ * Handles all configurable settings.
+ */
+
 public class SettingsActivity extends AppCompatActivity {
 
     private static final float MAX_VOLUME = 100f;
     private SeekBar mBgMusic, mSfx;
     private ImageView bgVolumeLogo, sfxVolumeLogo;
+    private Button mBtnBackToMainMenu;
     public static float sfxGeneralVolume = 50;
 
 
@@ -30,11 +37,9 @@ public class SettingsActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_settings);
 
-        //TODO: turn this into function and use it in all activities
-        View decorView = getWindow().getDecorView();
-        int uiOptions = View.SYSTEM_UI_FLAG_FULLSCREEN;
-        decorView.setSystemUiVisibility(uiOptions);
+        MainMenuActivity.hideTopStatusBar(getWindow().getDecorView());
 
+        mBtnBackToMainMenu = findViewById(R.id.btn_back_from_settings);
         mBgMusic = findViewById(R.id.sb_bg_music);
         mSfx = findViewById(R.id.sb_sfx);
         bgVolumeLogo = findViewById(R.id.img_sound_on_or_off);
@@ -76,7 +81,6 @@ public class SettingsActivity extends AppCompatActivity {
                 else {
                     unMute(sfxVolumeLogo);
                 }
-
             }
 
             @Override
@@ -85,6 +89,13 @@ public class SettingsActivity extends AppCompatActivity {
             public void onStopTrackingTouch(SeekBar seekBar) {}
         });
 
+        mBtnBackToMainMenu.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                startActivity(new Intent(SettingsActivity.this, MainMenuActivity.class));
+                finish();
+            }
+        });
 
     }
 
