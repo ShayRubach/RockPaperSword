@@ -34,16 +34,12 @@ public class GamePanel extends SurfaceView implements Runnable {
     private SurfaceHolder mSurfaceHolder;
     private int mCanvasH, mCanvasW;
     private boolean redraw = false;
-    private boolean matchRectsInitialized = false;
 
     private double fps, fts, ftm, ftn; //frames per seconds, frame time second/ms/ns
     private double framePerSecond, frameTimeSeconds ,frameTimeMs, frameTimeNs;
     private double lastFrameTime, endOfRenderTime, deltaTime;
     private RPSClock gameClock;
     public static final int GAME_IN_PROGRESS = -1;
-
-
-
 
     public GamePanel(Context context) {
         super(context);
@@ -72,7 +68,6 @@ public class GamePanel extends SurfaceView implements Runnable {
         long timeMillis;
         long startTimeSeconds, endTimeSeconds;
 
-
         lastFrameTime = System.nanoTime();
         deltaTime = 0;
 
@@ -80,10 +75,9 @@ public class GamePanel extends SurfaceView implements Runnable {
 
             timeMillis = System.currentTimeMillis();
             startTimeSeconds = TimeUnit.MILLISECONDS.toSeconds(timeMillis);
-
             update();
 
-            if(!mSurfaceHolder.getSurface().isValid()) { //todo: implement this  || !shouldRedraw()){
+            if(!mSurfaceHolder.getSurface().isValid()) {
                 continue;
             }
 
@@ -92,18 +86,17 @@ public class GamePanel extends SurfaceView implements Runnable {
             mCanvasW = mCanvas.getWidth();
 
             if(isInMenuScreen){
-                //todo: implement a menu screen later
+                //todo: pre-game screen place_holder
             }
-            //if game is finished
             else if(isGameFinished() != GAME_IN_PROGRESS){
                 drawWinnerAnnouncement(manager.getWinningTeam());
             }
             else {
-                    drawTiles();
-                    drawSoldiers();
-                    drawPathArrows();
-                    drawClock();
-                    drawJudges();
+                drawTiles();
+                drawSoldiers();
+                drawPathArrows();
+                drawClock();
+                drawJudges();
 
                 if(isMatchOn()){
                     drawMatch();
@@ -115,6 +108,7 @@ public class GamePanel extends SurfaceView implements Runnable {
             endOfRenderTime = System.nanoTime();
             deltaTime = frameTimeNs - (endOfRenderTime - lastFrameTime);
 
+            //sleep for the missing delta time of the interval frame time between each frame.
             try {
                 if(deltaTime > 0 )
                     mPlayThread.sleep((long) deltaTime/1000000);
@@ -127,27 +121,31 @@ public class GamePanel extends SurfaceView implements Runnable {
             timeMillis = System.currentTimeMillis();
             endTimeSeconds = TimeUnit.MILLISECONDS.toSeconds(timeMillis);
 
-            //todo: Idan - impl this
+            //todo: @Idan @shay - impl this
             //if updateTime == true, clock resets and we need to tell GameManager so force a turn swap:
             if(gameClock.updateTime(endTimeSeconds - startTimeSeconds)){
-
+                //forceTurnSwap()
             }
         }
     }
 
+    /**
+     * an animation screen that is displayed after a win / lose
+     * @param winningTeam {0 = TEAM_A},{1 = TEAM_B}, {-1 = NONE}
+     * @return none
+     */
     private void drawWinnerAnnouncement(int winningTeam) {
-        //todo: @shay - make a premade winning announcement animation. calculate bitmaps on earlier stage and post here
+
         if(winningTeam == manager.getBoard().TEAM_A){
             manager.getBoard().getLoseAnnouncementAnimation().drawAnimation(mCanvas);
-            boolean animationEnded = manager.getBoard().getLoseAnnouncementAnimation().chooseNextFrame();
-
+            manager.getBoard().getLoseAnnouncementAnimation().chooseNextFrame();
         }
         else{
             manager.getBoard().getWinAnnouncementAnimation().drawAnimation(mCanvas);
-            boolean animationEnded = manager.getBoard().getWinAnnouncementAnimation().chooseNextFrame();
+            manager.getBoard().getWinAnnouncementAnimation().chooseNextFrame();
         }
 
-        //sleep abit to slow animation down:
+        //sleep a bit between each frame to slow animation down:
         try {
             if(deltaTime > 0 )
                 mPlayThread.sleep(150);
@@ -164,7 +162,6 @@ public class GamePanel extends SurfaceView implements Runnable {
     private void drawMatch() {
         //todo: possible logic simplification: use 1 animation that holds both players in match with all permutations @shay
 
-
         //todo: @shay - replace the values with constants
         Soldier soldierA = manager.getBoard().getMatchSoldierTeamA().get(0);
         Soldier soldierB = manager.getBoard().getMatchSoldierTeamB().get(0);
@@ -175,13 +172,10 @@ public class GamePanel extends SurfaceView implements Runnable {
         soldierA.drawAnimation(mCanvas);
         soldierB.drawAnimation(mCanvas);
 
-        Log.d("ANIMATION_DBG","animation frame drawn.");
-
         boolean aAnimationEnded = soldierA.chooseNextFrame();
         boolean bAnimationEnded = soldierB.chooseNextFrame();
 
-        //todo: @shay
-        //if animation ended, set match off
+        //if animation ended, set match off & remove match animation from screen:
         if(aAnimationEnded && bAnimationEnded){
             manager.setMatchOn(false);
         }
@@ -201,12 +195,21 @@ public class GamePanel extends SurfaceView implements Runnable {
             gameClock.drawAnimation(mCanvas);
     }
 
+    /**
+     * updated delta time for the gameloop drawings
+     * @return none
+     */
     private void update() {
         if (deltaTime < 0 )
             deltaTime = frameTimeSeconds - deltaTime;
 
     }
 
+    /**
+     * after a Player soldier has been clicked (focused), display path arrows to indicate
+     * valid tiles he can move to.
+     * @return none
+     */
     private void drawPathArrows() {
         Bitmap bm = null;
 
@@ -215,8 +218,7 @@ public class GamePanel extends SurfaceView implements Runnable {
 
         for (int i = 0; i < manager.getBoard().getPathArrows().size() ; i++) {
             if(manager.getBoard().getPathArrows().get(i) != null) {
-                System.out.println("i = " + i);
-                System.out.println("manager.getBoard().getPathArrows().get(i).second = " + manager.getBoard().getPathArrows().get(i).second);
+
                 if (manager.getBoard().getPathArrows().get(i).second == SoldierMovement.MOVE_LEFT)
                     bm = BitmapFactory.decodeResource(getResources(), R.drawable.arrow_left);
                 else if (manager.getBoard().getPathArrows().get(i).second == SoldierMovement.MOVE_RIGHT)
@@ -245,10 +247,6 @@ public class GamePanel extends SurfaceView implements Runnable {
         }
     }
 
-    private void drawInstructions(Canvas canvas) {
-
-    }
-
     private void drawSoldiers() {
         drawSoldiersTeam(manager.getBoard().getSoldierTeamA());
         drawSoldiersTeam(manager.getBoard().getSoldierTeamB());
@@ -262,7 +260,6 @@ public class GamePanel extends SurfaceView implements Runnable {
                 }
             }
         }
-
     }
 
     public void pause(){
@@ -287,13 +284,6 @@ public class GamePanel extends SurfaceView implements Runnable {
         mPlayThread.start();
     }
 
-    private int toPxs(int dps){
-        return (int)(dps * getResources().getDisplayMetrics().density + 0.5f);
-    }
-
-    public boolean isInMenuScreen() {
-        return isInMenuScreen;
-    }
 
     public void setInMenuScreen(boolean inMenuScreen) {
         isInMenuScreen = inMenuScreen;
@@ -301,10 +291,6 @@ public class GamePanel extends SurfaceView implements Runnable {
 
     public void setManager(GameManager manager) {
         this.manager = manager;
-    }
-
-    public boolean shouldRedraw() {
-        return redraw;
     }
 
     public void setRedraw(boolean redraw) {
@@ -320,15 +306,4 @@ public class GamePanel extends SurfaceView implements Runnable {
         shouldDrawClock = true;
     }
 
-    public boolean isCanPlay() {
-        return canPlay;
-    }
-
-    public void setCanPlay(boolean canPlay) {
-        this.canPlay = canPlay;
-    }
-
-    public Thread getPlayThread() {
-        return mPlayThread;
-    }
 }

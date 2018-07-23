@@ -6,12 +6,12 @@ import android.graphics.Rect;
 
 import com.pwnz.www.rockpapersword.R;
 
+/**
+ * Handles the timing of the Game Clock in game.
+ */
 public class RPSClock extends AnimationHandler {
 
     public Context context;
-    private static final int INITIAL_TURN_TIME = 10;
-    private int turnTimeLeft = INITIAL_TURN_TIME;
-
 
     public RPSClock(Context context) {
         this.context = context;
@@ -30,14 +30,9 @@ public class RPSClock extends AnimationHandler {
 
         clockPadding = (spriteFrameSrcW / 2);
 
-        //todo: remove this
-        spriteFrameDstPosX = 0;
-        spriteFrameDstPosY = 0;
-
-        //todo: apply the above here??
-            sourceRect = new Rect();
-            destRect = new Rect(canvasW - spriteFrameSrcW - clockPadding, 0, canvasW, spriteFrameSrcH + clockPadding);
-            resetToFirstFrame();
+        sourceRect = new Rect();
+        destRect = new Rect(canvasW - spriteFrameSrcW - clockPadding, 0, canvasW, spriteFrameSrcH + clockPadding);
+        resetToFirstFrame();
 
     }
 

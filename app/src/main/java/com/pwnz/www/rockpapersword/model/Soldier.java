@@ -13,8 +13,6 @@ public class Soldier extends AnimationHandler {
 
 
     private static int pickedTypesCount = 0;
-    private static int pickedUniqueTypesCount = 0;
-
     private Bitmap soldierBitmap;
     private Tile tile;
     private boolean isVisible;
@@ -26,13 +24,10 @@ public class Soldier extends AnimationHandler {
 
     public Soldier() {}
 
-    public Soldier(Bitmap mSoldierBitmap, Tile tile, boolean isVisible, SoldierType mSoldierType) {
-        this.soldierBitmap = mSoldierBitmap;
-        this.tile= tile;
-        this.isVisible = isVisible;
-        this.soldierType = mSoldierType;
-    }
-
+    /**
+     * creates a static (non-changed) list that will hold the starting team for each side.
+     * @return none
+     */
     private static ArrayList<SoldierType> initStartingSoldierTypesList(){
         startingSoldierTypes = new ArrayList<>();
         allocateType(3, SoldierType.STONE, startingSoldierTypes );
@@ -108,6 +103,11 @@ public class Soldier extends AnimationHandler {
         isVisible = visible;
     }
 
+    /**
+     * picks an available soldier from the static list of starting soldiers
+     * @return none
+     * @see #initStartingSoldierTypesList()
+     */
     public static SoldierType pickAvailableSoldierType() {
         if(startingSoldierTypes.isEmpty())
             return null;
@@ -119,8 +119,9 @@ public class Soldier extends AnimationHandler {
         return startingSoldierTypes.get(pickedTypesCount++);
     }
 
+
     public void setSoldierAnimationSpriteByType() {
-        //todo: change the animation sprite for each individual case
+        //todo: @shay - enhance animations, add highlighted drawables.
 
         switch (getSoldierType()){
             case STONE:
@@ -210,16 +211,10 @@ public class Soldier extends AnimationHandler {
         return isHighlighted;
     }
 
-    public static SoldierType pickUniqueSoldierType(int i) {
-
-        if(uniqueSoldierTypes.isEmpty()) {
-            System.out.println("uniqueSoldierTypes is empty");
-            return null;
-        }
-
-        return uniqueSoldierTypes.get(i);
-    }
-
+    /**
+     * this list holds uniquely 1 soldier of each type
+     * @return the reference to the list
+     */
     private static ArrayList<SoldierType> initUniqueSoldierTypesList() {
         uniqueSoldierTypes = new ArrayList<>();
         allocateType(1, SoldierType.STONE, uniqueSoldierTypes);
@@ -230,5 +225,22 @@ public class Soldier extends AnimationHandler {
         allocateType(1, SoldierType.SHIELDON, uniqueSoldierTypes);
         allocateType(1, SoldierType.LASSO, uniqueSoldierTypes);
         return uniqueSoldierTypes;
+    }
+
+    /**
+     * uniquely pick a soldier from the unique list
+     * @param i index of the soldier chosen from list
+     * @see #uniqueSoldierTypes
+     * @see #initUniqueSoldierTypesList()
+     * @return the chosen object from list
+     */
+    public static SoldierType pickUniqueSoldierType(int i) {
+
+        if(uniqueSoldierTypes.isEmpty()) {
+            System.out.println("uniqueSoldierTypes is empty");
+            return null;
+        }
+
+        return uniqueSoldierTypes.get(i);
     }
 }

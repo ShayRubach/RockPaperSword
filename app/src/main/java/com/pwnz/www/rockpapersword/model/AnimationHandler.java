@@ -4,7 +4,7 @@ import android.graphics.Bitmap;
 import android.graphics.Canvas;
 import android.graphics.Rect;
 
-/*
+/**
     AnimationHandler will handle the 'slicing' of the next frame every time the object is drawn.
     The handler will notify the Game Manager when the animation has started in order to stop the
     clock and when it has ended so it can move on to the next step of the game and restart
@@ -46,14 +46,6 @@ public class AnimationHandler {
     }
 
     public boolean chooseNextFrame() {
-        System.out.println("chooseNextFrame: called");
-        System.out.println("spriteCol = " +spriteCol);
-        System.out.println("spriteRow = " + spriteRow);
-        System.out.println("spriteSheetW = " +spriteSheetW);
-        System.out.println("spriteSheetH = " +spriteSheetH);
-        System.out.println("spriteFrameSrcW = " + spriteFrameSrcW);
-        System.out.println("spriteFrameSrcH = " + spriteFrameSrcH);
-        System.out.println("=====_______++++++++++++++++++++++++=================");
         //if we reached the last frame on our row
         if(spriteCol == spriteSheetW / spriteFrameSrcW - 1){
             if(spriteRow != spriteSheetH / spriteFrameSrcH - 1){

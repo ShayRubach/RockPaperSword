@@ -11,6 +11,9 @@ import com.pwnz.www.rockpapersword.controller.GameManager;
 import com.pwnz.www.rockpapersword.model.AsyncHandler;
 import com.pwnz.www.rockpapersword.model.Board;
 
+/**
+ * Holds the activity and the view (GamePanel) of the game.
+ */
 public class GameActivity extends AppCompatActivity {
 
     private final int COLUMNS = 7;
@@ -28,28 +31,23 @@ public class GameActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        //hide the top status bar
-        View decorView = getWindow().getDecorView();
-        int uiOptions = View.SYSTEM_UI_FLAG_FULLSCREEN;
-        decorView.setSystemUiVisibility(uiOptions);
-
-        // this will give us the canvas dimensions info before even drawing
-        // and enable us to prepare the ground and objects for drawing on game loop with no
-        // need for calculations inside our game loop - better performance.
-        DisplayMetrics displayMetrics = new DisplayMetrics();
-        getWindowManager().getDefaultDisplay().getMetrics(displayMetrics);
-        canvasH = displayMetrics.heightPixels;
-        canvasW  = displayMetrics.widthPixels;
+        MainMenuActivity.hideTopStatusBar(getWindow().getDecorView());
+        getExactCanvasDims();
 
         mBoard = new Board(COLUMNS, ROWS, canvasW, canvasH, brightColor, darkColor);
         mGamePanel = new GamePanel(this);
         mManager = new GameManager(mBoard, mGamePanel);
         setContentView(mGamePanel);
 
-        //force no-black-screen before staring a game
+        //in case we need a pre-game screen after pressing start, this is our placeholder (set to true)
         mGamePanel.setInMenuScreen(false);
+    }
 
-
+    private void getExactCanvasDims() {
+        DisplayMetrics displayMetrics = new DisplayMetrics();
+        getWindowManager().getDefaultDisplay().getMetrics(displayMetrics);
+        canvasH = displayMetrics.heightPixels;
+        canvasW  = displayMetrics.widthPixels;
     }
 
     @Override
@@ -66,12 +64,6 @@ public class GameActivity extends AppCompatActivity {
         }
 
         return super.onTouchEvent(event);
-    }
-
-    private void handleClickEvent(MotionEvent event) {
-        if(mGamePanel.isInMenuScreen() ){
-            mGamePanel.setInMenuScreen(false);
-        }
     }
 
     @Override
