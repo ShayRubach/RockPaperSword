@@ -32,10 +32,10 @@ public class Board {
     int canvasW, canvasH;
     int tileW, tileH;
     int brightColor, darkColor;
+    public static final int TILE_OFFSET_PERCENTAGE = 4 ;    // 1 unit == 10%
     public static final int TEAM_A = 0;
     public static final int TEAM_B = 1;
     public static final int SOLDIERS_TYPES_COUNT = 7;
-    public static final int MAX_PATH_ARROWS = 4;
     private GameManager manager;
 
     public Board(int cols, int rows, int canvasW, int canvasH, int brightColor, int darkColor) {
@@ -84,6 +84,7 @@ public class Board {
         tile.setRect(rect);
 
         for (int i = 0; i < soldiersTypesCount ; i++) {
+            //todo: @shay @idan - wrap this with a function (see todo 01)
             Soldier soldier = new Soldier();
             soldier.setTile(tile);
             soldier.setVisible(true);
@@ -172,34 +173,6 @@ public class Board {
         }
     }
 
-    public ArrayList<Soldier> getSoldierTeamA() {
-        return soldierTeamA;
-    }
-
-    public ArrayList<Soldier> getSoldierTeamB() {
-        return soldierTeamB;
-    }
-
-    public void setBrightColor(int brightColor) {
-        this.brightColor = brightColor;
-    }
-
-    public void setDarkColor(int darkColor) {
-        this.darkColor = darkColor;
-    }
-
-    public Tile[][] getTiles() {
-        return tiles;
-    }
-
-    public int getCanvasW() {
-        return canvasW;
-    }
-
-    public int getCanvasH() {
-        return canvasH;
-    }
-
     /**
      * Initiation of the board. boardPadding is the gap of top and bottom screen where the
      * board shouldn't be drawn. H and W Divisors are actually rows and cols count.
@@ -211,7 +184,6 @@ public class Board {
     public void initBoard(int boardPaddingFactor, int hDivisor, int wDivisor){
         tileW = canvasW / wDivisor;
         tileH = canvasH / hDivisor;
-
 
         //this will give us a clean pad from the top of the screen which the board will not be drawn at
         int boardPadding = boardPaddingFactor * tileH;
@@ -228,7 +200,7 @@ public class Board {
      * Initiation of the win/lose announcement animation.
      */
     private void initWinningTeamAnnouncementAnimation() {
-        //todo: @shay @idan - handle code dup. create an initFunction on AnimationHandler for all these values and use it on RPSclock too.
+        //todo 01: @shay @idan - handle code dup. create an initFunction on AnimationHandler for all these values and use it on RPSclock too.
         winAnnouncementAnimation = new AnimationHandler();
         loseAnnouncementAnimation = new AnimationHandler();
 
@@ -313,6 +285,7 @@ public class Board {
             tiles[k % cols][j].setOccupied(true);
             tiles[k % cols][j].setCurrSoldier(soldiersTeam.get(i));
             soldiersTeam.get(i).setTile(tiles[k % cols][j]);
+            soldiersTeam.get(i).setTileOffset(tileW / TILE_OFFSET_PERCENTAGE);
 
             //stop over the the next tile row
             if(i == (soldiersTeam.size()-1) / 2)
@@ -421,18 +394,6 @@ public class Board {
         return null;
     }
 
-    public ArrayList<Pair<Tile, SoldierMovement>> getPathArrows() {
-        return pathArrows;
-    }
-
-    public ArrayList<Soldier> getMatchSoldierTeamA() {
-        return matchSoldierTeamA;
-    }
-
-    public ArrayList<Soldier> getMatchSoldierTeamB() {
-        return matchSoldierTeamB;
-    }
-
     /**
      * picks up a random soldier for the AI to play with on its turn.
      * will only retrurn a moveable soldir
@@ -521,4 +482,46 @@ public class Board {
     public AnimationHandler getLoseAnnouncementAnimation() {
         return loseAnnouncementAnimation;
     }
+
+
+    public ArrayList<Soldier> getSoldierTeamA() {
+        return soldierTeamA;
+    }
+
+    public ArrayList<Soldier> getSoldierTeamB() {
+        return soldierTeamB;
+    }
+
+    public void setBrightColor(int brightColor) {
+        this.brightColor = brightColor;
+    }
+
+    public void setDarkColor(int darkColor) {
+        this.darkColor = darkColor;
+    }
+
+    public Tile[][] getTiles() {
+        return tiles;
+    }
+
+    public int getCanvasW() {
+        return canvasW;
+    }
+
+    public int getCanvasH() {
+        return canvasH;
+    }
+
+    public ArrayList<Pair<Tile, SoldierMovement>> getPathArrows() {
+        return pathArrows;
+    }
+
+    public ArrayList<Soldier> getMatchSoldierTeamA() {
+        return matchSoldierTeamA;
+    }
+
+    public ArrayList<Soldier> getMatchSoldierTeamB() {
+        return matchSoldierTeamB;
+    }
+
 }

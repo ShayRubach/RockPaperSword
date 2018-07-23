@@ -21,6 +21,7 @@ public class Soldier extends AnimationHandler {
     private int nonHighlightedSpriteSource, highlightedSpriteSource;
     private int animationSprite;
     private int team;
+    private int tileOffset;
 
     public Soldier() {}
 
@@ -44,65 +45,6 @@ public class Soldier extends AnimationHandler {
         return startingSoldierTypes;
     }
 
-    @Override
-    public String toString() {
-        return "\n\nSoldier { "+ "\n" +
-                "\tTile = " + tile+ "\n" +
-                "\tisVisible = " + isVisible + "\n" +
-                "\tSoldierType = " + soldierType + "\n" +
-                "\tSoldierTeam = " + (team == Board.TEAM_A ? "A" : "B") + "\n" +
-                '}';
-    }
-
-    public Tile getTile() {
-        return tile;
-    }
-
-    public void setTile(Tile tile) {
-        this.tile = tile;
-    }
-
-    public int getTeam() {
-        return team;
-    }
-
-    public void setTeam(int team) {
-        this.team = team;
-    }
-
-    public int getNonHighlightedSpriteSource() {
-        return nonHighlightedSpriteSource;
-    }
-
-    private static void allocateType(int i, SoldierType type, ArrayList<SoldierType> soldierTypesList) {
-        while(i-- != 0)
-            soldierTypesList.add(type);
-    }
-
-    public SoldierType getSoldierType() {
-        return soldierType;
-    }
-
-    public void setSoldierType(SoldierType soldierType) {
-        this.soldierType = soldierType;
-    }
-
-    public Bitmap getSoldierBitmap() {
-        return soldierBitmap;
-    }
-
-    public void setSoldierBitmap(Bitmap bitmap) {
-        this.soldierBitmap = bitmap;
-    }
-
-    public boolean isVisible() {
-        return isVisible;
-    }
-
-    public void setVisible(boolean visible) {
-        isVisible = visible;
-    }
-
     /**
      * picks an available soldier from the static list of starting soldiers
      * @return none
@@ -115,7 +57,6 @@ public class Soldier extends AnimationHandler {
         if( pickedTypesCount == startingSoldierTypes.size()) {
             pickedTypesCount = 0;
         }
-
         return startingSoldierTypes.get(pickedTypesCount++);
     }
 
@@ -181,36 +122,6 @@ public class Soldier extends AnimationHandler {
         setAnimationSprite(getNonHighlightedSpriteSource());
     }
 
-    public void setNonHighlightedSpriteSource(int nonHighlightedSpriteSource) {
-        this.nonHighlightedSpriteSource = nonHighlightedSpriteSource;
-    }
-
-    public void setHighlightedSpriteSource(int highlightedSpriteSource) {
-        this.highlightedSpriteSource = highlightedSpriteSource;
-    }
-
-    public void setAnimationSprite(int animationSprite) {
-        this.animationSprite = animationSprite;
-    }
-
-    public int getAnimationSprite() {
-        return animationSprite;
-    }
-
-    public void highlight() {
-        setAnimationSprite(highlightedSpriteSource);
-        isHighlighted = true;
-    }
-
-    public void removeHighlight() {
-        setAnimationSprite(nonHighlightedSpriteSource);
-        isHighlighted = false;
-    }
-
-    public boolean isHighlighted() {
-        return isHighlighted;
-    }
-
     /**
      * this list holds uniquely 1 soldier of each type
      * @return the reference to the list
@@ -243,4 +154,102 @@ public class Soldier extends AnimationHandler {
 
         return uniqueSoldierTypes.get(i);
     }
+
+    private static void allocateType(int i, SoldierType type, ArrayList<SoldierType> soldierTypesList) {
+        while(i-- != 0)
+            soldierTypesList.add(type);
+    }
+
+    @Override
+    public String toString() {
+        return "\n\nSoldier { "+ "\n" +
+                "\tTile = " + tile+ "\n" +
+                "\tisVisible = " + isVisible + "\n" +
+                "\tSoldierType = " + soldierType + "\n" +
+                "\tSoldierTeam = " + (team == Board.TEAM_A ? "A" : "B") + "\n" +
+                '}';
+    }
+
+    public void setNonHighlightedSpriteSource(int nonHighlightedSpriteSource) {
+        this.nonHighlightedSpriteSource = nonHighlightedSpriteSource;
+    }
+
+    public void setHighlightedSpriteSource(int highlightedSpriteSource) {
+        this.highlightedSpriteSource = highlightedSpriteSource;
+    }
+
+    public void setAnimationSprite(int animationSprite) {
+        this.animationSprite = animationSprite;
+    }
+
+    public int getAnimationSprite() {
+        return animationSprite;
+    }
+
+    public void highlight() {
+        setAnimationSprite(highlightedSpriteSource);
+        isHighlighted = true;
+    }
+
+    public void removeHighlight() {
+        setAnimationSprite(nonHighlightedSpriteSource);
+        isHighlighted = false;
+    }
+
+    public boolean isHighlighted() {
+        return isHighlighted;
+    }
+
+    public int getTileOffset() {
+        return tileOffset;
+    }
+
+    public void setTileOffset(int tileOffset) {
+        this.tileOffset = tileOffset;
+    }
+
+    public SoldierType getSoldierType() {
+        return soldierType;
+    }
+
+    public void setSoldierType(SoldierType soldierType) {
+        this.soldierType = soldierType;
+    }
+
+    public Bitmap getSoldierBitmap() {
+        return soldierBitmap;
+    }
+
+    public void setSoldierBitmap(Bitmap bitmap) {
+        this.soldierBitmap = bitmap;
+    }
+
+    public boolean isVisible() {
+        return isVisible;
+    }
+
+    public void setVisible(boolean visible) {
+        isVisible = visible;
+    }
+
+    public Tile getTile() {
+        return tile;
+    }
+
+    public void setTile(Tile tile) {
+        this.tile = tile;
+    }
+
+    public int getTeam() {
+        return team;
+    }
+
+    public void setTeam(int team) {
+        this.team = team;
+    }
+
+    public int getNonHighlightedSpriteSource() {
+        return nonHighlightedSpriteSource;
+    }
+
 }

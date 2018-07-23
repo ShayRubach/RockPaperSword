@@ -7,21 +7,21 @@ import android.graphics.Canvas;
 import android.graphics.Paint;
 import android.os.Build;
 import android.support.annotation.RequiresApi;
-import android.util.Log;
 import android.view.SurfaceHolder;
 import android.view.SurfaceView;
 
 import com.pwnz.www.rockpapersword.controller.GameManager;
-import com.pwnz.www.rockpapersword.model.Board;
 import com.pwnz.www.rockpapersword.model.RPSClock;
 import com.pwnz.www.rockpapersword.model.Soldier;
 import com.pwnz.www.rockpapersword.model.SoldierMovement;
-import com.pwnz.www.rockpapersword.model.SoldierType;
 import com.pwnz.www.rockpapersword.model.Tile;
 
 import java.util.ArrayList;
 import java.util.concurrent.TimeUnit;
 
+/**
+ * acts as the View (UI Thread). Only responsible of drawing.
+ */
 public class GamePanel extends SurfaceView implements Runnable {
 
     public static final int MAX_FPS = 60;
