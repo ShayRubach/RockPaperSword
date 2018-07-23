@@ -5,6 +5,7 @@ import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Canvas;
 import android.graphics.Paint;
+import android.graphics.Rect;
 import android.os.Build;
 import android.support.annotation.RequiresApi;
 import android.view.SurfaceHolder;
@@ -256,10 +257,17 @@ public class GamePanel extends SurfaceView implements Runnable {
         synchronized (soldierTeam){
             for(Soldier soldier: soldierTeam){
                 if(soldier != null){
+                    changeOffset(soldier.getTile().getRect(), soldier.getTileOffset()*(-1));
                     mCanvas.drawBitmap(soldier.getSoldierBitmap(), null, soldier.getTile().getRect(), null);
+                    changeOffset(soldier.getTile().getRect(), soldier.getTileOffset());
                 }
             }
         }
+    }
+
+    private void changeOffset(Rect rect, int offset) {
+        rect.top += offset;
+        rect.bottom += offset;
     }
 
     public void pause(){

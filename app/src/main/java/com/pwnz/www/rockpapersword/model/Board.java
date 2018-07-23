@@ -32,7 +32,7 @@ public class Board {
     int canvasW, canvasH;
     int tileW, tileH;
     int brightColor, darkColor;
-    public static final int TILE_OFFSET_PERCENTAGE = 4 ;    // 1 unit == 10%
+    public static final int TILE_OFFSET_PERCENTAGE = 6 ;
     public static final int TEAM_A = 0;
     public static final int TEAM_B = 1;
     public static final int SOLDIERS_TYPES_COUNT = 7;
