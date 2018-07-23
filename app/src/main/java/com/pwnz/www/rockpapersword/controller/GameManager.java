@@ -94,6 +94,7 @@ public class GameManager {
             //make sure tile is traversal and in legit location on screen
             if(newTile != null){
                 clearHighlights();
+                Log.d("NullPtrDEBUG","new tile isOccupied:" + newTile.isOccupied() + " new tile soldier:" + (newTile.getCurrSoldier()!=null ? "present":"not present"));
                 moveSoldier(focusedSoldier, newTile);
                 MainMenuActivity.getSoundEffects().play(R.raw.move_self, SettingsActivity.sfxGeneralVolume, SettingsActivity.sfxGeneralVolume);
                 potentialInitiator = focusedSoldier;
@@ -175,8 +176,8 @@ public class GameManager {
             Tile newTile;
             switch (matchResult){
                 case TIE:
-                    rematch(potentialInitiator, opponent);
-                    break;
+//                    rematch(potentialInitiator, opponent);    //TODO: remove when implemented
+//                    break;
                 case BOTH_ELIMINATED:
                     eliminateBoth(potentialInitiator, opponent);
                     break;
@@ -190,7 +191,6 @@ public class GameManager {
                     eliminateSoldier(potentialInitiator);
                     moveSoldier(opponent, newTile);
                     break;
-
                 case TEAM_A_WINS_THE_GAME:
                     finishGame(Board.TEAM_A);
                     break;
@@ -268,11 +268,13 @@ public class GameManager {
      * @return the result of the match
      */
     private RPSMatchResult match(Soldier potentialInitiator, Soldier opponent) {
+        Log.d("NullPtrDEBUG","\nMatch Func:\n potInit team: " + potentialInitiator.getTeam() + " opponent team:" + opponent.getTeam());
 
         switch (potentialInitiator.getSoldierType()){
             //todo: impl this later. LASSO == STONE at the moment - @shay
 
             case LASSO:
+                return RPSMatchResult.TEAM_A_WON_THE_MATCH;
             case STONE:
                 switch (opponent.getSoldierType()){
                     case KING:          return RPSMatchResult.TEAM_A_WINS_THE_GAME;
@@ -350,7 +352,7 @@ public class GameManager {
         focusedSoldier.setTile(tile);
         focusedSoldier.getTile().setOccupied(true);
         focusedSoldier.getTile().setCurrSoldier(focusedSoldier);
-        Log.d("NullPtrDEBUG","\nMoved " + focusedSoldier);
+        //Log.d("NullPtrDEBUG","\nMoved " + focusedSoldier);
     }
 
     /**

@@ -102,7 +102,6 @@ public class GamePanel extends SurfaceView implements Runnable {
                 drawPathArrows();
                 drawClock();
                 drawJudges();
-
                 if(isMatchOn()){
                     drawMatch();
                 }
