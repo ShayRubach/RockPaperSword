@@ -1,5 +1,6 @@
 package com.pwnz.www.rockpapersword.Activities;
 
+import android.graphics.Bitmap;
 import android.graphics.Color;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;

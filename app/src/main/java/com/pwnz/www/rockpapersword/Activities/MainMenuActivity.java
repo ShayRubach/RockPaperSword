@@ -18,6 +18,7 @@ public class MainMenuActivity extends AppCompatActivity implements View.OnClickL
 
     public static MediaPlayer mediaPlayer = null;
     private static MySFxRunnable mSoundEffects = null;
+    private static boolean isMusicPlaying = false;
 
     private Button mStartBtn, mSettingsBtn, mInstructionsBtn;
     private ImageView mAboutImage;
@@ -45,9 +46,12 @@ public class MainMenuActivity extends AppCompatActivity implements View.OnClickL
         mAboutImage = findViewById(R.id.img_about);
         mAboutImage.setOnClickListener(this);
 
-        mediaPlayer = MediaPlayer.create(this, R.raw.handmade_moments_wanderin_eyes_edited);
-        mediaPlayer.setVolume(SettingsActivity.sfxGeneralVolume, SettingsActivity.sfxGeneralVolume);
-        mediaPlayer.start();
+        if(!isMusicPlaying){
+            mediaPlayer = MediaPlayer.create(this, R.raw.handmade_moments_wanderin_eyes_edited);
+            mediaPlayer.setVolume(SettingsActivity.sfxGeneralVolume, SettingsActivity.sfxGeneralVolume);
+            mediaPlayer.start();
+            isMusicPlaying = true;
+        }
 
         if (mSoundEffects == null) {
             mSoundEffects = new MySFxRunnable(this);
@@ -76,12 +80,15 @@ public class MainMenuActivity extends AppCompatActivity implements View.OnClickL
             case R.id.btn_start:
                 mediaPlayer.pause();
                 startActivity(new Intent(MainMenuActivity.this, GameActivity.class));
+                finish();
                 break;
             case R.id.btn_settings:
                 startActivity(new Intent(MainMenuActivity.this, SettingsActivity.class));
+                finish();
                 break;
             case R.id.btn_instructions:
                 startActivity(new Intent(MainMenuActivity.this, InstructionsActivity.class));
+                finish();
                 break;
             case R.id.img_about:
                 popUpAboutWindow();

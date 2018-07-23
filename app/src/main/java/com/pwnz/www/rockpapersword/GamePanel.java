@@ -41,6 +41,7 @@ public class GamePanel extends SurfaceView implements Runnable {
     private double lastFrameTime, endOfRenderTime, deltaTime;
     private RPSClock gameClock;
     public static final int GAME_IN_PROGRESS = -1;
+    private Bitmap bg;
 
     public GamePanel(Context context) {
         super(context);
@@ -93,6 +94,7 @@ public class GamePanel extends SurfaceView implements Runnable {
                 drawWinnerAnnouncement(manager.getWinningTeam());
             }
             else {
+                drawBg();
                 drawTiles();
                 drawSoldiers();
                 drawPathArrows();
@@ -181,6 +183,10 @@ public class GamePanel extends SurfaceView implements Runnable {
             manager.setMatchOn(false);
         }
 
+    }
+
+    private void drawBg() {
+        mCanvas.drawBitmap(manager.getBoard().getGameBg().getSpriteSheet(), null, manager.getBoard().getGameBg().getDestRect(), null);
     }
 
     private boolean isMatchOn() {

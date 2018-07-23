@@ -29,6 +29,7 @@
         android:layout_marginTop="8dp"
         android:background="#2e1f1f"
         android:gravity="center"
+        android:paddingLeft="2dp"
         android:text="@string/str_about_the_app"
         android:textColor="@android:color/background_light"
         app:layout_constraintBottom_toTopOf="@+id/btnGotIt"

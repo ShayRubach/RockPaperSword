@@ -1,6 +1,7 @@
 package com.pwnz.www.rockpapersword.model;
 
 
+import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Rect;
 import android.util.Log;
@@ -37,6 +38,7 @@ public class Board {
     public static final int TEAM_B = 1;
     public static final int SOLDIERS_TYPES_COUNT = 7;
     private GameManager manager;
+    private AnimationHandler gameBg;
 
     public Board(int cols, int rows, int canvasW, int canvasH, int brightColor, int darkColor) {
         this.cols = cols;
@@ -188,12 +190,21 @@ public class Board {
         //this will give us a clean pad from the top of the screen which the board will not be drawn at
         int boardPadding = boardPaddingFactor * tileH;
 
+        initBg(canvasH, canvasW, R.drawable.game_bg);
         initTiles(boardPadding, tileW, tileH);
         initSoldiers(soldierTeamA, TEAM_A, 0);
         initSoldiers(soldierTeamB, TEAM_B, 4);
         initSoldierMatchTeam(TEAM_A, matchSoldierTeamA, SOLDIERS_TYPES_COUNT);
         initSoldierMatchTeam(TEAM_B, matchSoldierTeamB, SOLDIERS_TYPES_COUNT);
         initWinningTeamAnnouncementAnimation();
+    }
+
+    private void initBg(int canvasH, int canvasW, int bg) {
+        gameBg = new AnimationHandler();
+        gameBg.spriteSheet = BitmapFactory.decodeResource(manager.getAppResources(), bg);
+        gameBg.sourceRect = new Rect(0, 0, gameBg.spriteSheet.getWidth(), gameBg.spriteSheet.getHeight());
+        gameBg.destRect = new Rect(0, 0, canvasW, canvasH);
+
     }
 
     /**
@@ -524,4 +535,7 @@ public class Board {
         return matchSoldierTeamB;
     }
 
+    public AnimationHandler getGameBg() {
+        return gameBg;
+    }
 }

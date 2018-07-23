@@ -70,5 +70,13 @@ public class AnimationHandler {
         sourceRect.right = (i+1) * spriteFrameSrcW;
         sourceRect.bottom = (j+1) * spriteFrameSrcH;
     }
+
+    public Rect getDestRect() {
+        return destRect;
+    }
+
+    public Bitmap getSpriteSheet() {
+        return spriteSheet;
+    }
 }
 
