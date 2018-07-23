@@ -1,8 +1,12 @@
 package com.pwnz.www.rockpapersword.model;
 
+import android.content.Context;
 import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.graphics.Canvas;
 import android.graphics.Rect;
+
+import com.pwnz.www.rockpapersword.R;
 
 /**
     AnimationHandler will handle the 'slicing' of the next frame every time the object is drawn.
@@ -11,8 +15,6 @@ import android.graphics.Rect;
     the clock.
  */
 public class AnimationHandler {
-    protected int spriteFrameCnt;
-    protected double localClock;
 
     //Source variables:
     protected Bitmap spriteSheet;
@@ -34,6 +36,22 @@ public class AnimationHandler {
     protected int spriteCol = 0;
     protected int spriteRow = 0;
 
+
+    public void initAnimationDetails(Context context, int spriteId, int rowsCnt, int colsCnt){
+        this.spriteId = spriteId;
+
+        spriteSheet = BitmapFactory.decodeResource(context.getResources(), spriteId);
+        spriteSheetH = spriteSheet.getHeight();
+        spriteSheetW = spriteSheet.getWidth();
+        numberOfSpriteFrames = 4;
+        spriteFrameSrcH = spriteSheetH / rowsCnt;     //2 rows
+        spriteFrameSrcW = spriteSheetW / colsCnt ;    //5 columns
+
+        canvasH = context.getResources().getDisplayMetrics().heightPixels;
+        canvasW = context.getResources().getDisplayMetrics().widthPixels;
+
+        sourceRect = new Rect();
+    }
 
     public void drawAnimation(Canvas canvas){
         canvas.drawBitmap(spriteSheet, sourceRect, destRect,null);

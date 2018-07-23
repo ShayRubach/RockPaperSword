@@ -27,7 +27,7 @@ public class Board {
     ArrayList<Soldier> matchSoldierTeamB = new ArrayList<>();
 
     ArrayList<Pair<Tile, SoldierMovement>> pathArrows = new ArrayList<>();
-    AnimationHandler winAnnouncementAnimation, loseAnnouncementAnimation;
+    AnimationHandler winAnnouncementAnimation, loseAnnouncementAnimation, judge;
 
     int cols, rows;
     int canvasW, canvasH;
@@ -196,7 +196,20 @@ public class Board {
         initSoldiers(soldierTeamB, TEAM_B, 4);
         initSoldierMatchTeam(TEAM_A, matchSoldierTeamA, SOLDIERS_TYPES_COUNT);
         initSoldierMatchTeam(TEAM_B, matchSoldierTeamB, SOLDIERS_TYPES_COUNT);
+        initJudge(R.drawable.judge_nutral_sprite);
         initWinningTeamAnnouncementAnimation();
+    }
+
+    private void initJudge(int spriteId) {
+        judge = new AnimationHandler();
+        judge.initAnimationDetails(manager.getPanelContext(), spriteId, 3, 5);
+        int left = (judge.canvasW/2) - (judge.spriteFrameSrcW/4);
+        int top = 0;
+        int right = (judge.canvasW/2) + (judge.spriteFrameSrcW/4);
+        int bot = judge.spriteFrameSrcH / 2;
+
+        judge.destRect = new Rect(left, top, right, bot);
+        judge.resetToFirstFrame();
     }
 
     private void initBg(int canvasH, int canvasW, int bg) {
@@ -537,5 +550,9 @@ public class Board {
 
     public AnimationHandler getGameBg() {
         return gameBg;
+    }
+
+    public AnimationHandler getJudge() {
+        return judge;
     }
 }

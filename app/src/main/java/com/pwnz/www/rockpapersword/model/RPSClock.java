@@ -15,25 +15,12 @@ public class RPSClock extends AnimationHandler {
 
     public RPSClock(Context context) {
         this.context = context;
-        localClock = 0;
-        spriteId = R.drawable.clock_sprite;
 
-        spriteSheet = BitmapFactory.decodeResource(context.getResources(), spriteId);
-        spriteSheetH = spriteSheet.getHeight();
-        spriteSheetW = spriteSheet.getWidth();
-        numberOfSpriteFrames = 4;
-        spriteFrameSrcH = spriteSheetH / 2;   //2 rows
-        spriteFrameSrcW = spriteSheetW / 5;   //5 columns
-
-        canvasH = context.getResources().getDisplayMetrics().heightPixels;
-        canvasW = context.getResources().getDisplayMetrics().widthPixels;
-
-        clockPadding = (spriteFrameSrcW / 2);
-
-        sourceRect = new Rect();
-        destRect = new Rect(canvasW - spriteFrameSrcW - clockPadding, 0, canvasW, spriteFrameSrcH + clockPadding);
+        initAnimationDetails(context, R.drawable.clock_sprite, 2 ,5 );
         resetToFirstFrame();
 
+        clockPadding = (spriteFrameSrcW / 2);
+        destRect = new Rect(canvasW - spriteFrameSrcW - clockPadding, 0, canvasW, spriteFrameSrcH + clockPadding);
     }
 
     public boolean updateTime(long timePassed) {

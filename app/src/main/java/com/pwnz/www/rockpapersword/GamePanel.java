@@ -36,6 +36,8 @@ public class GamePanel extends SurfaceView implements Runnable {
     private SurfaceHolder mSurfaceHolder;
     private int mCanvasH, mCanvasW;
     private boolean redraw = false;
+    private int COUNTDOWN_VALUE = 80;
+    private int judgeAnimationCountdown = COUNTDOWN_VALUE ;
 
     private double fps, fts, ftm, ftn; //frames per seconds, frame time second/ms/ns
     private double framePerSecond, frameTimeSeconds ,frameTimeMs, frameTimeNs;
@@ -194,7 +196,18 @@ public class GamePanel extends SurfaceView implements Runnable {
     }
 
     private void drawJudges() {
+        manager.getBoard().getJudge().drawAnimation(mCanvas);
 
+        if(judgeAnimationCountdown > 0) {
+            --judgeAnimationCountdown;
+        }
+        else {
+            if(manager.getBoard().getJudge().chooseNextFrame()){
+                judgeAnimationCountdown = COUNTDOWN_VALUE;
+            }
+
+
+        }
     }
 
     private void drawClock() {

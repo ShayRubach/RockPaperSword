@@ -1,5 +1,6 @@
 package com.pwnz.www.rockpapersword.controller;
 
+import android.content.Context;
 import android.content.res.Resources;
 import android.util.Log;
 import android.view.MotionEvent;
@@ -399,5 +400,9 @@ public class GameManager {
 
     public static void setWinningTeam(int winningTeam) {
         GameManager.winningTeam = winningTeam;
+    }
+
+    public Context getPanelContext() {
+        return panel.getContext();
     }
 }
