@@ -228,31 +228,9 @@ public class Board {
         winAnnouncementAnimation = new AnimationHandler();
         loseAnnouncementAnimation = new AnimationHandler();
 
-        canvasH = manager.getAppResources().getDisplayMetrics().heightPixels;
-        canvasW = manager.getAppResources().getDisplayMetrics().widthPixels;
+        winAnnouncementAnimation.initAnimationDetails(manager.getPanelContext(), R.drawable.win_anim, 2, 5);
+        loseAnnouncementAnimation.initAnimationDetails(manager.getPanelContext(), R.drawable.lose_anim, 2, 5);
 
-        winAnnouncementAnimation.spriteId = R.drawable.win_anim;
-        loseAnnouncementAnimation.spriteId = R.drawable.lose_anim;
-
-        winAnnouncementAnimation.spriteSheet = BitmapFactory.decodeResource(manager.getAppResources(), winAnnouncementAnimation.spriteId);
-        loseAnnouncementAnimation.spriteSheet = BitmapFactory.decodeResource(manager.getAppResources(), loseAnnouncementAnimation.spriteId);
-
-        winAnnouncementAnimation.spriteSheetW =  winAnnouncementAnimation.spriteSheet.getWidth();
-        winAnnouncementAnimation.spriteSheetH =  winAnnouncementAnimation.spriteSheet.getHeight();
-
-        loseAnnouncementAnimation.spriteSheetW =  loseAnnouncementAnimation.spriteSheet.getWidth();
-        loseAnnouncementAnimation.spriteSheetH =  loseAnnouncementAnimation.spriteSheet.getHeight();
-
-        winAnnouncementAnimation.numberOfSpriteFrames = 4;
-        loseAnnouncementAnimation.numberOfSpriteFrames = 4;
-
-        winAnnouncementAnimation.spriteFrameSrcH = winAnnouncementAnimation.spriteSheetH / 2;   //2 rows
-        winAnnouncementAnimation.spriteFrameSrcW = winAnnouncementAnimation.spriteSheetW / 5;   //5 columns
-
-        loseAnnouncementAnimation.spriteFrameSrcH = loseAnnouncementAnimation.spriteSheetH / 2;   //2 rows
-        loseAnnouncementAnimation.spriteFrameSrcW = loseAnnouncementAnimation.spriteSheetW / 5;   //5 columns
-
-        loseAnnouncementAnimation.sourceRect = new Rect();
         loseAnnouncementAnimation.destRect = new Rect(0, 0, canvasW, canvasH);
         loseAnnouncementAnimation.resetToFirstFrame();
 
