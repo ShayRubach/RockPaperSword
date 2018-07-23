@@ -2,10 +2,12 @@ package com.pwnz.www.rockpapersword.Activities;
 
 import android.content.Intent;
 import android.media.MediaPlayer;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
+import android.widget.ImageView;
 
 import com.crashlytics.android.Crashlytics;
 import com.pwnz.www.rockpapersword.R;
@@ -18,6 +20,7 @@ public class MainMenuActivity extends AppCompatActivity implements View.OnClickL
     private static MySFxRunnable mSoundEffects = null;
 
     private Button mStartBtn, mSettingsBtn, mInstructionsBtn;
+    private ImageView mAboutImage;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -38,6 +41,9 @@ public class MainMenuActivity extends AppCompatActivity implements View.OnClickL
 
         mInstructionsBtn = findViewById(R.id.btn_instructions);
         mInstructionsBtn.setOnClickListener(this);
+
+        mAboutImage = findViewById(R.id.img_about);
+        mAboutImage.setOnClickListener(this);
 
         mediaPlayer = MediaPlayer.create(this, R.raw.handmade_moments_wanderin_eyes_edited);
         mediaPlayer.setVolume(SettingsActivity.sfxGeneralVolume, SettingsActivity.sfxGeneralVolume);
@@ -77,9 +83,30 @@ public class MainMenuActivity extends AppCompatActivity implements View.OnClickL
             case R.id.btn_instructions:
                 startActivity(new Intent(MainMenuActivity.this, InstructionsActivity.class));
                 break;
+            case R.id.img_about:
+                popUpAboutWindow();
         }
     }
-    
+
+    private void popUpAboutWindow() {
+        AlertDialog.Builder mBuilder = new AlertDialog.Builder(MainMenuActivity.this);
+        View mView = getLayoutInflater().inflate(R.layout.about_the_app, null);
+
+        final Button mBtnGotIt = mView.findViewById(R.id.btnGotIt);
+
+        mBuilder.setView(mView);
+        final AlertDialog dialog = mBuilder.create();
+        dialog.getWindow().setBackgroundDrawableResource(android.R.color.transparent);
+        dialog.show();
+
+        mBtnGotIt.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                dialog.hide();
+            }
+        });
+    }
+
     public static MySFxRunnable getSoundEffects() {
         return mSoundEffects;
     }

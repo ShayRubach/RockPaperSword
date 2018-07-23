@@ -11,4 +11,10 @@
         - Total game play time is 3 minutes. At the buzzer, the team with the highest number of survivors wins\n\n
         - May the force be with you\n\n
     </string>
+    <string name="str_about_the_app">
+        This game was developed by Shay Rubach and Idan Lazimi as
+        final project submission for Android Development course in
+        Shenkar College of Engineering and Design led by Amnon Dekel (Head lecturer)
+        and Amir Uval (Tutor). (C) All right received
+    </string>
 </resources>
