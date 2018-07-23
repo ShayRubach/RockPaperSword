@@ -4,7 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="#755353"
+    android:background="@color/main_menu_bg"
     tools:context=".Activities.MainMenuActivity">
 
     <Button
@@ -79,7 +79,7 @@
         app:srcCompat="@android:drawable/ic_menu_info_details" />
 
     <ImageView
-        android:id="@+id/imageView3"
+        android:id="@+id/img_game_title"
         android:layout_width="312dp"
         android:layout_height="wrap_content"
         android:layout_marginEnd="8dp"
