@@ -11,6 +11,7 @@ import android.support.annotation.RequiresApi;
 import android.view.SurfaceHolder;
 import android.view.SurfaceView;
 
+import com.pwnz.www.rockpapersword.Activities.GameActivity;
 import com.pwnz.www.rockpapersword.controller.GameManager;
 import com.pwnz.www.rockpapersword.model.RPSClock;
 import com.pwnz.www.rockpapersword.model.Soldier;
@@ -40,7 +41,6 @@ public class GamePanel extends SurfaceView implements Runnable {
     private double framePerSecond, frameTimeSeconds ,frameTimeMs, frameTimeNs;
     private double lastFrameTime, endOfRenderTime, deltaTime;
     private RPSClock gameClock;
-    public static final int GAME_IN_PROGRESS = -1;
     private Bitmap bg;
 
     public GamePanel(Context context) {
@@ -90,7 +90,7 @@ public class GamePanel extends SurfaceView implements Runnable {
             if(isInMenuScreen){
                 //todo: pre-game screen place_holder
             }
-            else if(isGameFinished() != GAME_IN_PROGRESS){
+            else if(isGameFinished() != GameActivity.GAME_IN_PROGRESS){
                 drawWinnerAnnouncement(manager.getWinningTeam());
             }
             else {

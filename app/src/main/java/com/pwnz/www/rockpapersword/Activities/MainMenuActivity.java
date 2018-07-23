@@ -79,6 +79,7 @@ public class MainMenuActivity extends AppCompatActivity implements View.OnClickL
         switch (view.getId()){
             case R.id.btn_start:
                 mediaPlayer.pause();
+                isMusicPlaying = false;
                 startActivity(new Intent(MainMenuActivity.this, GameActivity.class));
                 finish();
                 break;

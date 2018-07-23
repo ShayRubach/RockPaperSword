@@ -397,5 +397,7 @@ public class GameManager {
         return winningTeam;
     }
 
-
+    public static void setWinningTeam(int winningTeam) {
+        GameManager.winningTeam = winningTeam;
+    }
 }
