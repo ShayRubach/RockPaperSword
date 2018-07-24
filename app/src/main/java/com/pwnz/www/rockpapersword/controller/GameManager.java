@@ -78,11 +78,13 @@ public class GameManager {
 
         //Player has focused (clicked) a soldier but yet tried to moved
         if(board.getClickedSoldier(x,y) != null) {
+            panel.pause();
             focusedSoldier = board.getClickedSoldier(x, y);
             clearHighlights();
             hasFocusedSoldier = true;
             possibleMatch = false;
             board.displaySoldierPath(focusedSoldier);
+            panel.resume();
         }
 
         //Player has a legit focused soldier and attempted to move to new suggested (arrow) tile

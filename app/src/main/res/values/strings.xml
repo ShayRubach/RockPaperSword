@@ -13,12 +13,11 @@
     </string>
     <string name="str_about_the_app">
         [BETA VERSION]\n\n
-        Rock Paper Sword was developed by: \n\n
+        Developed by: \n\n
         Shay [Toch] Rubach\n
         Idan [Kede] Lazimi\n\n
-        This is the final project submission for Android Development course in
-        Shenkar College of Engineering and Design led by:\n\n
-        Amnon Dekel (Head lecturer)\n
-        Amir Uval (Tutor)\n\n (C) All right received
+        in the Introduction to Mobile Computing Course, 2018.\n\n
+        Instructors: Dr. Amnon Dekel and Amir Uval.\n\n
+        © 2018 - The Dept. of Software Engineering, Shenkar: Engineering. Design. Art
     </string>
 </resources>

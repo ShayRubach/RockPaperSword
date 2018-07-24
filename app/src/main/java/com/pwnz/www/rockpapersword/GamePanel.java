@@ -293,7 +293,8 @@ public class GamePanel extends SurfaceView implements Runnable {
 
         while (true) {
             try {
-                mPlayThread.join();
+                if(mPlayThread != null)
+                    mPlayThread.join();
                 break;
             } catch (InterruptedException e) {
                 e.printStackTrace();
