@@ -287,7 +287,6 @@ public class GameManager {
             //todo: impl this later. LASSO == STONE at the moment - @shay
 
             case LASSO:
-                return RPSMatchResult.TEAM_A_WON_THE_MATCH;
             case STONE:
                 switch (opponent.getSoldierType()){
                     case KING:          return RPSMatchResult.TEAM_A_WINS_THE_GAME;
