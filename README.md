@@ -44,11 +44,7 @@ This is a simple Rock Paper Scissors remake for the ICQ version (with a twist!).
 <br><br>
 Here are some screen shots of the game:
 -     
+ ![rps_mm](https://user-images.githubusercontent.com/21342315/43094503-6bf685b4-8eb3-11e8-9f12-d71e83167329.png)![rps_gplay](https://user-images.githubusercontent.com/21342315/43094537-88245f22-8eb3-11e8-9cca-83c96866c9e3.png)![rps_gplay_match](https://user-images.githubusercontent.com/21342315/43094576-a1d49cc0-8eb3-11e8-9883-0993af930878.png)
 
-![board](https://user-images.githubusercontent.com/21342315/40282515-e53b3886-5c70-11e8-8844-41d27138300c.png) 
-![battle](https://user-images.githubusercontent.com/21342315/40283341-f08ef784-5c7c-11e8-9278-eaa652f22523.png)
 
 <br><br>
-***Temporary Menu & Settings Screens:*** <br><br>
-![menu](https://user-images.githubusercontent.com/21342315/40750712-759705e6-6468-11e8-9ecc-f71f3fb65143.png) ![settings](https://user-images.githubusercontent.com/21342315/40750733-81e286ae-6468-11e8-9e2b-7c0769a62d5e.png)
-

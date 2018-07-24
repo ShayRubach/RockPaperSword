@@ -1,0 +1,51 @@
+﻿Rock Paper Sword
+Shay Rubach & Idan Lazimi
+
+
+Description:
+Rock Paper Sword is a mobile device remake of ICQ’s version of Rock Paper Scissors cult game. 
+The game takes the functionality of the old Rock Paper Scissors game to another level, including new types of weaponry, dynamic environment and adds a strategic, fast-paced feel into it!
+
+
+Architecture:
+The app is based on MVC architecture.
+MVC architecture was chosen in order to utilize separation of concerns design principles, which the app requires due to its graphic demands and the need to enable future modification (i.e AI player replacement, online gaming abilities, etc.).
+
+
+Game Logic:
+Soldiers
+The game features the good old RPS players (and their functionalities)Rock, Paper and Scissors,  represented as Stone,Pepper and SwordMaster accordingly.
+Shieldon
+Shieldon has a big shield that will cause its facing opponent to die, no matter what weapon he used. After a battle, Shieldon will be gone up to heaven, after completing his task!
+King
+Like all Kings, everyone wants to get of piece of this guy! The kings is the team’s most valuable asset, since once the other team gets their hands on him, the game is lost! 
+                        
+Game Play
+The goal of the game is to eliminate the rival’s King!
+The game starts with 2 groups of players facing each other on a chess-like board, as the opponent’s weapons are concealed and the player sees his own team’s weapons.
+On each turn (which is time limited), the player can choose one of his soldiers by tapping on him and moving him to one of the highlighted tiles. 
+When 2 opponent’s are facing each other after moving, both soldiers are staged into a fight, which results depend on their weapons.
+First team to eliminate the opponent’s team’s King wins the game.
+
+
+Missing\Final Submission work topics:
+* New types of soldiers(Ashes, Lasso)
+* Tied match logic
+* Sound effects triggered by AI soldier
+* Game play music  
+* Match related graphics
+* Reveal opponent weapon graphics
+Tasks Assignment:
+Shay
+* Architecture implementation
+* UI
+* Graphics
+* Thread Management
+* Testings & QA
+
+
+Idan
+* Game logic
+* UI
+* Debug
+* Testings & QA
