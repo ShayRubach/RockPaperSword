@@ -12,6 +12,9 @@ This is a simple Rock Paper Scissors remake for the ICQ version (with a twist!).
 ### Disclaimer 
 (c) All graphics were developed by myself with PhotoshopCS6. The project will be soon available for download.
 
+### Google doc with related information for Google Play
+[Rock Paper Scissors](https://docs.google.com/document/d/1TWjrN5aKpjh7Nz05J5uJ0auW0kz8Dr69sh_PMqKd7kQ/edit?usp=sharing)
+
 # Game Instructions:
 ***Disclaimer***:  whatever is striked is currenly not available but in progress.
 - Every player starts with a ~~shuffled team (random positions)~~ on a chess-like board.
