@@ -12,7 +12,6 @@ import com.pwnz.www.rockpapersword.R;
 import com.pwnz.www.rockpapersword.model.Board;
 import com.pwnz.www.rockpapersword.model.RPSMatchResult;
 import com.pwnz.www.rockpapersword.model.Soldier;
-import com.pwnz.www.rockpapersword.model.SoldierType;
 import com.pwnz.www.rockpapersword.model.Tile;
 
 import java.util.ArrayList;
@@ -106,6 +105,7 @@ public class GameManager {
 
             }
             panel.resume();
+            setTurnThinkingTimeSleep(1400);
         }
 
         //look for another potential match after player has made a move
@@ -130,11 +130,22 @@ public class GameManager {
 
         //look for another potential match after AI has made a move
         if(possibleMatch) {
+            setTurnThinkingTimeSleep(1400);
             lookForPotentialMatch(potentialInitiator);
         }
-
     }
 
+    /**
+     * //initiate a fake "thinking time" before next turn. simulate a 'real' game.
+     * @param sleepTime time to wait in milliseconds.
+     */
+    public void setTurnThinkingTimeSleep(int sleepTime){
+        try {
+            Thread.currentThread().sleep(sleepTime);
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
+    }
     /**
      * After a move has been initiated, we wish to check the surrounding soldiers for a possible match.
      * @param potentialInitiator the original initiator who moved and started the match.
@@ -340,6 +351,7 @@ public class GameManager {
     private void playAsAI() {
         AISoldier = board.getRandomSoldier();
         Tile tile = board.getTraversalTile();
+
         moveSoldier(AISoldier, tile);
 
         //todo: add movement sound FX
