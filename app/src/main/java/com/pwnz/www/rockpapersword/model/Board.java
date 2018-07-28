@@ -7,6 +7,7 @@ import android.graphics.Rect;
 import android.util.Log;
 import android.util.Pair;
 import java.util.ArrayList;
+import java.util.Random;
 
 import com.pwnz.www.rockpapersword.R;
 import com.pwnz.www.rockpapersword.controller.GameManager;
@@ -532,5 +533,22 @@ public class Board {
 
     public AnimationHandler getJudge() {
         return judge;
+    }
+
+    /**
+     * Get random soldier from team B (Player) to be eliminated. This is a punishment for
+     * overtime on the clock. (10s)
+     */
+    public void removeRandomSoldier() {
+        Log.d("DBG_CLOCK","removeRandomSoldier called\n");
+        int i = 0 ;
+        Random rand = new Random();
+
+        do {
+            Log.d("DBG_CLOCK","i = " + i + "SoldierType() = " + soldierTeamB.get(i).getSoldierType() + "\n");
+            i  = rand.nextInt(soldierTeamB.size()-1);
+        } while(soldierTeamB.get(i++).getSoldierType() == SoldierType.KING);
+
+        eliminateSoldier(soldierTeamB.get(i));
     }
 }

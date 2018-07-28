@@ -61,7 +61,6 @@ public class MainMenuActivity extends AppCompatActivity implements View.OnClickL
     @Override
     protected void onDestroy() {
         super.onDestroy();
-        mediaPlayer.pause();
     }
 
     @Override

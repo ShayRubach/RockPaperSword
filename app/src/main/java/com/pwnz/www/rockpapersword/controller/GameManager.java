@@ -110,7 +110,6 @@ public class GameManager {
 
         //look for another potential match after player has made a move
         if(possibleMatch) {
-            Log.d("onTouchEvent", "Match Is Possible. turn: " + (teamTurn == Board.TEAM_A ? "A":"B") + '\n');
             lookForPotentialMatch(potentialInitiator);
         }
 
@@ -216,6 +215,7 @@ public class GameManager {
                     eliminateBoth(potentialInitiator, opponent);
             }
 
+            possibleMatch = false;
             panel.resume();
         }
         Log.d("NullPtrDEBUG","\nLook For Pot Ended\n");
@@ -420,4 +420,5 @@ public class GameManager {
     public Context getPanelContext() {
         return panel.getContext();
     }
+
 }

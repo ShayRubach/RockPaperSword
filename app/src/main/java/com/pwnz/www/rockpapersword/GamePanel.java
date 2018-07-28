@@ -8,6 +8,7 @@ import android.graphics.Paint;
 import android.graphics.Rect;
 import android.os.Build;
 import android.support.annotation.RequiresApi;
+import android.util.Log;
 import android.view.SurfaceHolder;
 import android.view.SurfaceView;
 
@@ -128,7 +129,7 @@ public class GamePanel extends SurfaceView implements Runnable {
             //todo: @Idan @shay - impl this
             //if updateTime == true, clock resets and we need to tell GameManager so force a turn swap:
             if(gameClock.updateTime(endTimeSeconds - startTimeSeconds)){
-                //forceTurnSwap()
+                manager.swapTurns();
             }
         }
     }
