@@ -1,5 +1,6 @@
 package com.pwnz.www.rockpapersword.Activities;
 
+import android.content.Context;
 import android.content.Intent;
 import android.media.MediaPlayer;
 import android.support.v7.app.AlertDialog;
@@ -47,15 +48,25 @@ public class MainMenuActivity extends AppCompatActivity implements View.OnClickL
         mAboutImage.setOnClickListener(this);
 
         if(!isMusicPlaying){
-            mediaPlayer = MediaPlayer.create(this, R.raw.handmade_moments_wanderin_eyes_edited);
-            mediaPlayer.setVolume(SettingsActivity.sfxGeneralVolume, SettingsActivity.sfxGeneralVolume);
-            mediaPlayer.start();
-            isMusicPlaying = true;
+            loadSoundAndPlay(this, SettingsActivity.sfxGeneralVolume, R.raw.bp_music_open_campfire);
         }
 
         if (mSoundEffects == null) {
             mSoundEffects = new MySFxRunnable(this);
         }
+    }
+
+    public static void loadSoundAndPlay(Context context, float volume, int sound) {
+        mediaPlayer = MediaPlayer.create(context, sound);
+        mediaPlayer.setLooping(true);
+        mediaPlayer.setVolume(volume, volume);
+        mediaPlayer.start();
+        isMusicPlaying = true;
+    }
+
+    public static void pauseMusic(){
+        mediaPlayer.pause();
+        isMusicPlaying = false;
     }
 
     @Override

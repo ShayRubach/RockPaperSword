@@ -13,6 +13,7 @@ import android.view.SurfaceHolder;
 import android.view.SurfaceView;
 
 import com.pwnz.www.rockpapersword.Activities.GameActivity;
+import com.pwnz.www.rockpapersword.Activities.MainMenuActivity;
 import com.pwnz.www.rockpapersword.controller.GameManager;
 import com.pwnz.www.rockpapersword.model.Board;
 import com.pwnz.www.rockpapersword.model.RPSClock;
@@ -96,6 +97,7 @@ public class GamePanel extends SurfaceView implements Runnable {
             }
             else if(isGameFinished() != GameActivity.GAME_IN_PROGRESS){
                 drawWinnerAnnouncement(manager.getWinningTeam());
+                MainMenuActivity.pauseMusic();
             }
             else {
                 drawBg();
@@ -130,7 +132,7 @@ public class GamePanel extends SurfaceView implements Runnable {
             //todo: @Idan @shay - impl this
             //if updateTime == true, clock resets and we need to tell GameManager so force a turn swap:
             if(gameClock.updateTime(endTimeSeconds - startTimeSeconds)){
-                //manager.swapTurns();
+                manager.swapTurns();
             }
         }
     }

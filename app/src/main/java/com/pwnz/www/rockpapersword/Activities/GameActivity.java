@@ -9,6 +9,7 @@ import android.util.DisplayMetrics;
 import android.view.MotionEvent;
 import android.view.View;
 import com.pwnz.www.rockpapersword.GamePanel;
+import com.pwnz.www.rockpapersword.R;
 import com.pwnz.www.rockpapersword.controller.GameManager;
 import com.pwnz.www.rockpapersword.model.AsyncHandler;
 import com.pwnz.www.rockpapersword.model.Board;
@@ -45,6 +46,7 @@ public class GameActivity extends AppCompatActivity {
         mGamePanel = new GamePanel(this);
         mManager = new GameManager(mBoard, mGamePanel);
         setContentView(mGamePanel);
+        MainMenuActivity.loadSoundAndPlay(this, SettingsActivity.sfxGeneralVolume, R.raw.bp_music_ingame_happy_conty);
 
         //in case we need a pre-game screen after pressing start, this is our placeholder (set to true)
         mGamePanel.setInMenuScreen(false);
