@@ -297,4 +297,8 @@ public class Soldier extends AnimationHandler {
     public int getHighlightedSpriteSource() {
         return highlightedSpriteSource;
     }
+
+    public static ArrayList<SoldierType> getUniqueSoldierTypes() {
+        return uniqueSoldierTypes;
+    }
 }

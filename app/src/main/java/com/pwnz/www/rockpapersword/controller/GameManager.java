@@ -2,7 +2,6 @@ package com.pwnz.www.rockpapersword.controller;
 
 import android.content.Context;
 import android.content.res.Resources;
-import android.graphics.BitmapFactory;
 import android.util.Log;
 import android.view.MotionEvent;
 
@@ -55,8 +54,14 @@ public class GameManager {
         this.panel.setRedraw(true);
         this.board.setManager(this);
         initBoard();
+        shuffleBothTeams();
         randTeamTurn();
 
+    }
+
+    private void shuffleBothTeams() {
+        board.shuffleTeams(board.getSoldierTeamA());
+        board.shuffleTeams(board.getSoldierTeamB());
     }
 
     private void randTeamTurn() {
@@ -156,6 +161,7 @@ public class GameManager {
     private void lookForPotentialMatch(Soldier potentialInitiator) {
 
         RPSMatchResult matchResult;
+        boolean alreadyEliminated = false;
         if(potentialInitiator == null)
             return;
 
@@ -191,21 +197,27 @@ public class GameManager {
                     newTile = opponent.getTile();
                     Log.d("MEGA_DBG", "moving " + potentialInitiator + "\nto" + newTile);
                     eliminateSoldier(opponent);
+                    alreadyEliminated = true;
                     moveSoldier(potentialInitiator, newTile);
                 case REVEAL_TEAM_A:
                     Log.d("MEGA_DBG", "revealing A\n");
                     potentialInitiator.setRevealed(true);
                     potentialInitiator.setSoldierBitmap(potentialInitiator.getSoldierRevealedBitmap());
+                    if(!alreadyEliminated)
+                        eliminateSoldier(opponent);
                     break;
 
                 case TEAM_B_WON_THE_MATCH:
                     newTile = potentialInitiator.getTile();
                     eliminateSoldier(potentialInitiator);
+                    alreadyEliminated = true;
                     moveSoldier(opponent, newTile);
                     Log.d("MEGA_DBG", "moving " + opponent + "\nto\n" + newTile);
                 case REVEAL_TEAM_B:
                     Log.d("MEGA_DBG", "revealing B\n");
                     opponent.setRevealed(true);
+                    if(!alreadyEliminated)
+                        eliminateSoldier(potentialInitiator);
                     break;
 
                 case TEAM_A_WINS_THE_GAME:

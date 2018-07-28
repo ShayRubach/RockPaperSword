@@ -7,6 +7,7 @@ import android.graphics.Rect;
 import android.util.Log;
 import android.util.Pair;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.Random;
 
 import com.pwnz.www.rockpapersword.R;
@@ -38,6 +39,8 @@ public class Board {
     public static final int TEAM_A = 0;
     public static final int TEAM_B = 1;
     public static final int SOLDIERS_TYPES_COUNT = 7;
+    private static final int DEFAULT_SHUFFLE_TIMES = 2;
+
     private GameManager manager;
     private AnimationHandler gameBg;
     private Bitmap revealMark;
@@ -575,5 +578,26 @@ public class Board {
 
     public void setRevealMark(Bitmap revealMark) {
         this.revealMark = revealMark;
+    }
+
+    public void shuffleTeams(ArrayList<Soldier> soldierTeam) {
+        ArrayList<Tile> tempTileList = new ArrayList<>();
+
+        //copy all types into new list
+        for (int i = 0; i < soldierTeam.size() ; i++) {
+            tempTileList.add(soldierTeam.get(i).getTile());
+        }
+
+        //now shuffle it
+        for (int i = 0; i < DEFAULT_SHUFFLE_TIMES ; i++) {
+            Collections.shuffle(tempTileList);
+        }
+
+        //reassign new shuffled tiles to all soldiers and vice versa
+        for (int i = 0; i < soldierTeam.size() ; i++) {
+            soldierTeam.get(i).setTile(tempTileList.get(i));
+            soldierTeam.get(i).getTile().setCurrSoldier(soldierTeam.get(i));
+        }
+
     }
 }
