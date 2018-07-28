@@ -13,15 +13,16 @@ public class Soldier extends AnimationHandler {
 
 
     private static int pickedTypesCount = 0;
-    private Bitmap soldierBitmap;
+    private Bitmap soldierBitmap, soldierNonHighlightedBitmap, soldierHighlightedBitmap, soldierRevealedBitmap;
     private Tile tile;
     private boolean isVisible;
     private boolean isHighlighted = false;
     private SoldierType soldierType;
-    private int nonHighlightedSpriteSource, highlightedSpriteSource;
+    private int nonHighlightedSpriteSource, highlightedSpriteSource, revealedSpriteSource;
     private int animationSprite;
     private int team;
     private int tileOffset;
+    private boolean isRevealed;
 
     public Soldier() {}
 
@@ -37,7 +38,9 @@ public class Soldier extends AnimationHandler {
         allocateType(1, SoldierType.KING, startingSoldierTypes );
         allocateType(1, SoldierType.ASHES, startingSoldierTypes );
         allocateType(1, SoldierType.SHIELDON, startingSoldierTypes );
-        allocateType(1, SoldierType.LASSO, startingSoldierTypes );
+        //todo: implemets laso logic first. meanwhile shieldon is replacing it
+        //allocateType(1, SoldierType.LASSO, startingSoldierTypes );
+        allocateType(1, SoldierType.SHIELDON, startingSoldierTypes);
 
         //todo: add randomed one here instead of this
         allocateType(1, SoldierType.STONE, startingSoldierTypes );
@@ -67,58 +70,54 @@ public class Soldier extends AnimationHandler {
         switch (getSoldierType()){
             case STONE:
                 if(getTeam() == Board.TEAM_A)
-                    setOnAITeam();
+                    setSoldierSprites(R.drawable.soldier_enemy, R.drawable.soldier_enemy, R.drawable.soldier_enemy_revealed_stone);
                 else
-                    setOnPlayerTeam(R.drawable.soldier_stone, R.drawable.attack_1_highlighted);
+                    setSoldierSprites(R.drawable.soldier_stone, R.drawable.soldier_stone_hl, R.drawable.soldier_stone);
                 break;
             case SWORDMASTER:
                 if(getTeam() == Board.TEAM_A)
-                    setOnAITeam();
+                    setSoldierSprites(R.drawable.soldier_enemy, R.drawable.soldier_enemy, R.drawable.soldier_enemy_revealed_sword);
                 else
-                    setOnPlayerTeam(R.drawable.soldier_sword, R.drawable.attack_1_highlighted);
+                    setSoldierSprites(R.drawable.soldier_sword, R.drawable.soldier_sword_hl, R.drawable.soldier_sword);
                 break;
             case PEPPER:
                 if(getTeam() == Board.TEAM_A)
-                    setOnAITeam();
+                    setSoldierSprites(R.drawable.soldier_enemy, R.drawable.soldier_enemy, R.drawable.soldier_enemy_revealed_paper);
                 else
-                    setOnPlayerTeam(R.drawable.pepper, R.drawable.pepper_highlighted);
+                    setSoldierSprites(R.drawable.soldier_paper, R.drawable.soldier_paper_hl, R.drawable.soldier_paper);
                 break;
             case ASHES:
                 if(getTeam() == Board.TEAM_A)
-                    setOnAITeam();
+                    setSoldierSprites(R.drawable.soldier_enemy, R.drawable.soldier_enemy, R.drawable.soldier_enemy);
                 else
-                    setOnPlayerTeam(R.drawable.soldier_ashes, R.drawable.attack_1_highlighted);
+                    setSoldierSprites(R.drawable.soldier_ashes, R.drawable.soldier_ashes_hl, R.drawable.soldier_ashes);
                 break;
             case KING:
                 if(getTeam() == Board.TEAM_A)
-                    setOnAITeam();
+                    setSoldierSprites(R.drawable.soldier_enemy, R.drawable.soldier_enemy, R.drawable.soldier_enemy_revealed_king);
                 else
-                    setOnPlayerTeam(R.drawable.soldier_king, R.drawable.attack_1_highlighted);
+                    setSoldierSprites(R.drawable.soldier_king, R.drawable.soldier_king_hl, R.drawable.soldier_king);
                 break;
             case SHIELDON:
                 if(getTeam() == Board.TEAM_A)
-                    setOnAITeam();
+                    setSoldierSprites(R.drawable.soldier_enemy, R.drawable.soldier_enemy, R.drawable.soldier_enemy_revealed_shield);
                 else
-                    setOnPlayerTeam(R.drawable.shieldon, R.drawable.shieldon_highlighted);
+                    setSoldierSprites(R.drawable.soldier_shieldon, R.drawable.soldier_shieldon_hl, R.drawable.soldier_shieldon);
                 break;
             case LASSO:
                 if(getTeam() == Board.TEAM_A)
-                    setOnAITeam();
+                    setSoldierSprites(R.drawable.soldier_enemy, R.drawable.soldier_enemy, R.drawable.soldier_enemy);
                 else
-                    setOnPlayerTeam(R.drawable.lasso, R.drawable.lasso_highlighted);
+                    setSoldierSprites(R.drawable.soldier_lasso, R.drawable.soldier_lasso_hl, R.drawable.soldier_lasso);
                 break;
         }
 
     }
 
-    private void setOnAITeam() {
-        setNonHighlightedSpriteSource(R.drawable.enemy);
-        setAnimationSprite(getNonHighlightedSpriteSource());
-    }
-
-    private void setOnPlayerTeam(int sprite, int highlightedSprite) {
-        setNonHighlightedSpriteSource(sprite);
+    private void setSoldierSprites(int originalSprite, int highlightedSprite, int revealedSprite) {
+        setNonHighlightedSpriteSource(originalSprite);
         setHighlightedSpriteSource(highlightedSprite);
+        setRevealedSpriteSource(revealedSprite);
         setAnimationSprite(getNonHighlightedSpriteSource());
     }
 
@@ -162,12 +161,11 @@ public class Soldier extends AnimationHandler {
 
     @Override
     public String toString() {
-        return "\n\nSoldier { "+ "\n" +
-                "\tTile = " + tile+ "\n" +
-                "\tisVisible = " + isVisible + "\n" +
-                "\tSoldierType = " + soldierType + "\n" +
-                "\tSoldierTeam = " + (team == Board.TEAM_A ? "A" : "B") + "\n" +
-                '}';
+        return "\n\nSoldier { " +
+                " Type=\" + " + soldierType +
+                " | Team = " + (team == Board.TEAM_A ? "A" : "B") +
+                " | Tile=" + tile +
+                " | isVisible = " + isVisible + " }";
     }
 
     public void setNonHighlightedSpriteSource(int nonHighlightedSpriteSource) {
@@ -187,12 +185,16 @@ public class Soldier extends AnimationHandler {
     }
 
     public void highlight() {
-        setAnimationSprite(highlightedSpriteSource);
+        //setAnimationSprite(highlightedSpriteSource);
+        setSoldierBitmap(getSoldierHighlightedBitmap());
         isHighlighted = true;
     }
 
     public void removeHighlight() {
-        setAnimationSprite(nonHighlightedSpriteSource);
+        if(hasBeenRevealed())
+            setSoldierBitmap(getSoldierRevealedBitmap());
+        else
+            setSoldierBitmap(getSoldierNonHighlightedBitmap());
         isHighlighted = false;
     }
 
@@ -252,4 +254,43 @@ public class Soldier extends AnimationHandler {
         return nonHighlightedSpriteSource;
     }
 
+    public int getRevealedSpriteSource() {
+        return revealedSpriteSource;
+    }
+
+    public void setRevealedSpriteSource(int revealedSpriteSource) {
+        this.revealedSpriteSource = revealedSpriteSource;
+    }
+
+    public Bitmap getSoldierHighlightedBitmap() {
+        return soldierHighlightedBitmap;
+    }
+
+    public void setSoldierHighlightedBitmap(Bitmap soldierHighlightedBitmap) {
+        this.soldierHighlightedBitmap = soldierHighlightedBitmap;
+    }
+
+    public Bitmap getSoldierRevealedBitmap() {
+        return soldierRevealedBitmap;
+    }
+
+    public void setSoldierRevealedBitmap(Bitmap soldierRevealedBitmap) {
+        this.soldierRevealedBitmap = soldierRevealedBitmap;
+    }
+
+    public Bitmap getSoldierNonHighlightedBitmap() {
+        return soldierNonHighlightedBitmap;
+    }
+
+    public void setSoldierNonHighlightedBitmap(Bitmap soldierNonHighlightedBitmap) {
+        this.soldierNonHighlightedBitmap = soldierNonHighlightedBitmap;
+    }
+
+    public boolean hasBeenRevealed() {
+        return isRevealed;
+    }
+
+    public void setRevealed(boolean revealed) {
+        isRevealed = revealed;
+    }
 }

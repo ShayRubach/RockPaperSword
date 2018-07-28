@@ -14,6 +14,7 @@ import android.view.SurfaceView;
 
 import com.pwnz.www.rockpapersword.Activities.GameActivity;
 import com.pwnz.www.rockpapersword.controller.GameManager;
+import com.pwnz.www.rockpapersword.model.Board;
 import com.pwnz.www.rockpapersword.model.RPSClock;
 import com.pwnz.www.rockpapersword.model.Soldier;
 import com.pwnz.www.rockpapersword.model.SoldierMovement;
@@ -129,7 +130,7 @@ public class GamePanel extends SurfaceView implements Runnable {
             //todo: @Idan @shay - impl this
             //if updateTime == true, clock resets and we need to tell GameManager so force a turn swap:
             if(gameClock.updateTime(endTimeSeconds - startTimeSeconds)){
-                manager.swapTurns();
+                //manager.swapTurns();
             }
         }
     }
@@ -275,10 +276,15 @@ public class GamePanel extends SurfaceView implements Runnable {
     private void drawSoldiersTeam(ArrayList<Soldier> soldierTeam) {
         synchronized (soldierTeam){
             for(Soldier soldier: soldierTeam){
-                if(soldier != null){
+                if(soldier != null && soldier.isVisible()){
                     changeOffset(soldier.getTile().getRect(), soldier.getTileOffset()*(-1));
                     mCanvas.drawBitmap(soldier.getSoldierBitmap(), null, soldier.getTile().getRect(), null);
                     changeOffset(soldier.getTile().getRect(), soldier.getTileOffset());
+
+                    //if this soldier is from team B and has been revealed, mark it with a reveal mark:
+                    if(soldier.hasBeenRevealed() && soldier.getTeam() != Board.TEAM_A){
+                        mCanvas.drawBitmap(manager.getBoard().getRevealMark(), null, soldier.getTile().getRect(), null);
+                    }
                 }
             }
         }

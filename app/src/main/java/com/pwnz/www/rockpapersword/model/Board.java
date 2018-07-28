@@ -40,6 +40,7 @@ public class Board {
     public static final int SOLDIERS_TYPES_COUNT = 7;
     private GameManager manager;
     private AnimationHandler gameBg;
+    private Bitmap revealMark;
 
     public Board(int cols, int rows, int canvasW, int canvasH, int brightColor, int darkColor) {
         this.cols = cols;
@@ -156,7 +157,7 @@ public class Board {
         }
 
 
-        return R.drawable.shieldon;
+        return R.drawable.soldier_shieldon;
     }
 
     private void allocateSoldierTeam(ArrayList<Soldier> soldierTeam, int size) {
@@ -199,6 +200,7 @@ public class Board {
         initSoldierMatchTeam(TEAM_B, matchSoldierTeamB, SOLDIERS_TYPES_COUNT);
         initJudge(R.drawable.judge_nutral_sprite);
         initWinningTeamAnnouncementAnimation();
+        setRevealMark(BitmapFactory.decodeResource(manager.getAppResources(), R.drawable.reveal_mark));
     }
 
     private void initJudge(int spriteId) {
@@ -262,7 +264,7 @@ public class Board {
     }
 
     public void eliminateSoldier(Soldier soldier){
-        Log.d("NullPtrDEBUG","\nEliminated: " + soldier);
+        Log.d("MEGA_DBG","\n eliminating: \n" + soldier);
         ArrayList<Soldier> removeFrom = soldier.getTeam() == Board.TEAM_A ? soldierTeamA : soldierTeamB;
         synchronized (removeFrom){
             soldier.setVisible(false);
@@ -283,7 +285,12 @@ public class Board {
             soldiersTeam.get(i).setTeam(team);
             soldiersTeam.get(i).setSoldierType(pickAvailableSoldierType());
             soldiersTeam.get(i).setSoldierAnimationSpriteByType();
-            soldiersTeam.get(i).setSoldierBitmap(BitmapFactory.decodeResource(manager.getAppResources(), soldiersTeam.get(i).getAnimationSprite()));
+            soldiersTeam.get(i).setSoldierHighlightedBitmap(BitmapFactory.decodeResource(manager.getAppResources(), soldiersTeam.get(i).getNonHighlightedSpriteSource()));
+            soldiersTeam.get(i).setSoldierRevealedBitmap(BitmapFactory.decodeResource(manager.getAppResources(), soldiersTeam.get(i).getRevealedSpriteSource()));
+            soldiersTeam.get(i).setSoldierNonHighlightedBitmap(BitmapFactory.decodeResource(manager.getAppResources(), soldiersTeam.get(i).getNonHighlightedSpriteSource()));
+            soldiersTeam.get(i).setSoldierBitmap(soldiersTeam.get(i).getSoldierNonHighlightedBitmap());
+
+            soldiersTeam.get(i).setRevealed(false);
             soldiersTeam.get(i).setVisible(true);
             tiles[k % cols][j].setOccupied(true);
             tiles[k % cols][j].setCurrSoldier(soldiersTeam.get(i));
@@ -307,7 +314,7 @@ public class Board {
         //find clicked soldier on self team
         for (Soldier soldier : soldierTeamB){
             if(isInside(soldier.getTile().getRect(), x,y) == true)
-                return soldier;
+                return soldier.isVisible() ? soldier : null;
         }
         return null;
     }
@@ -432,12 +439,13 @@ public class Board {
         getTileIndex(initiator.getTile(), xyPos);
         int newX, newY;
 
-        Log.d("GFSO", initiator.toString());
         //potential opponent to the left
         if(xyPos[0]-1 > -1){
             newX = xyPos[0]-1;
             newY = xyPos[1];
             if(isValidOpponent(newX, newY, initiator)) {
+                Log.d("MEGA_DBG", "getFirstSurroundingOpponent: FOUND LEFT.\n");
+                Log.d("MEGA_DBG", getTiles()[newX][newY].getCurrSoldier().toString());
                 return getTiles()[newX][newY].getCurrSoldier();
             }
         }
@@ -446,6 +454,8 @@ public class Board {
             newX = xyPos[0]+1;
             newY = xyPos[1];
             if (isValidOpponent(newX, newY, initiator)){
+                Log.d("MEGA_DBG", "getFirstSurroundingOpponent: FOUND RIGHT.\n");
+                Log.d("MEGA_DBG", getTiles()[newX][newY].getCurrSoldier().toString());
                 return getTiles()[newX][newY].getCurrSoldier();
             }
 
@@ -455,6 +465,8 @@ public class Board {
             newX = xyPos[0];
             newY = xyPos[1]-1;
             if (isValidOpponent(newX, newY, initiator)) {
+                Log.d("MEGA_DBG", "getFirstSurroundingOpponent: FOUND TOP.\n");
+                Log.d("MEGA_DBG", getTiles()[newX][newY].getCurrSoldier().toString());
                 return getTiles()[newX][newY].getCurrSoldier();
             }
         }
@@ -463,9 +475,12 @@ public class Board {
             newX = xyPos[0];
             newY = xyPos[1]+1;
             if (isValidOpponent(newX, newY, initiator)) {
+                Log.d("MEGA_DBG", "getFirstSurroundingOpponent: FOUND BOTTOM.\n");
+                Log.d("MEGA_DBG", getTiles()[newX][newY].getCurrSoldier().toString());
                 return getTiles()[newX][newY].getCurrSoldier();
             }
         }
+        Log.d("MEGA_DBG", "getFirstSurroundingOpponent: FOUND NO ONE.\n");
         return null;
     }
 
@@ -550,5 +565,13 @@ public class Board {
         } while(soldierTeamB.get(i++).getSoldierType() == SoldierType.KING);
 
         eliminateSoldier(soldierTeamB.get(i));
+    }
+
+    public Bitmap getRevealMark() {
+        return revealMark;
+    }
+
+    public void setRevealMark(Bitmap revealMark) {
+        this.revealMark = revealMark;
     }
 }

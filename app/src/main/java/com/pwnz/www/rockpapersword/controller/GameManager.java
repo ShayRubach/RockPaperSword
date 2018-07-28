@@ -2,6 +2,7 @@ package com.pwnz.www.rockpapersword.controller;
 
 import android.content.Context;
 import android.content.res.Resources;
+import android.graphics.BitmapFactory;
 import android.util.Log;
 import android.view.MotionEvent;
 
@@ -155,29 +156,18 @@ public class GameManager {
     private void lookForPotentialMatch(Soldier potentialInitiator) {
 
         RPSMatchResult matchResult;
-
         if(potentialInitiator == null)
             return;
-
-        Log.d("NullPtrDEBUG","\nLook For Pot Started\n");
-        Log.d("NullPtrDEBUG","--\nPotentialInitiator " + potentialInitiator);
 
         opponent = board.getFirstSurroundingOpponent(potentialInitiator);
 
         if(opponent != null) {
-            Log.d("NullPtrDEBUG","--\nopponent " + opponent);
-
-
 
             if( potentialInitiator.getTeam() != Board.TEAM_A){
-                Log.d("NullPtrDEBUG","BEFORE SWAPPING: \n");
-                Log.d("NullPtrDEBUG","POT: " + potentialInitiator + "\n");
                 //swap refrences
                 Soldier temp = potentialInitiator;
                 potentialInitiator = opponent;
                 opponent = temp;
-                Log.d("NullPtrDEBUG","AFTER SWAPPING: \n");
-                Log.d("NullPtrDEBUG","POT: " + potentialInitiator + "\n");
             }
             panel.pause();
             panel.stopClock();
@@ -185,40 +175,50 @@ public class GameManager {
             updateMatchSoldiersList(potentialInitiator, opponent);
             matchResult = match(potentialInitiator, opponent);
 
+            Log.d("MEGA_DBG","matchResult: " + matchResult + "\n");
+
             Tile newTile;
             switch (matchResult){
                 case TIE:
-//                    rematch(potentialInitiator, opponent);    //TODO: remove when implemented
+                    //TODO: remove when implemented
+//                    rematch(potentialInitiator, opponent);
 //                    break;
                 case BOTH_ELIMINATED:
                     eliminateBoth(potentialInitiator, opponent);
                     break;
+
                 case TEAM_A_WON_THE_MATCH:
                     newTile = opponent.getTile();
-                    eliminateSoldier(opponent);
                     moveSoldier(potentialInitiator, newTile);
+                case REVEAL_TEAM_A:
+                    Log.d("MEGA_DBG", "revealing A\n");
+                    potentialInitiator.setRevealed(true);
+                    potentialInitiator.setSoldierBitmap(potentialInitiator.getSoldierRevealedBitmap());
+                    eliminateSoldier(opponent);
                     break;
+
                 case TEAM_B_WON_THE_MATCH:
                     newTile = potentialInitiator.getTile();
-                    eliminateSoldier(potentialInitiator);
                     moveSoldier(opponent, newTile);
+                case REVEAL_TEAM_B:
+                    Log.d("MEGA_DBG", "revealing B\n");
+                    opponent.setRevealed(true);
+                    eliminateSoldier(potentialInitiator);
                     break;
+
                 case TEAM_A_WINS_THE_GAME:
                     finishGame(Board.TEAM_A);
                     break;
                 case TEAM_B_WINS_THE_GAME:
                     finishGame(Board.TEAM_B);
                     break;
-                case REVEAL_TEAM_A:
-                case REVEAL_TEAM_B:
-                    //todo: change this logic, this is temporarily.
-                    eliminateBoth(potentialInitiator, opponent);
+
+
             }
 
             possibleMatch = false;
             panel.resume();
         }
-        Log.d("NullPtrDEBUG","\nLook For Pot Ended\n");
     }
 
     /**
@@ -281,7 +281,7 @@ public class GameManager {
      * @return the result of the match
      */
     private RPSMatchResult match(Soldier potentialInitiator, Soldier opponent) {
-        Log.d("NullPtrDEBUG","\nMatch Func:\n potInit team: " + potentialInitiator.getTeam() + " opponent team:" + opponent.getTeam());
+        Log.d("MEGA_DBG","\n match:  " +  potentialInitiator + "\nVS.\n" + opponent + "\n");
 
         switch (potentialInitiator.getSoldierType()){
             //todo: impl this later. LASSO == STONE at the moment - @shay
@@ -360,12 +360,12 @@ public class GameManager {
     }
 
     private void moveSoldier(Soldier focusedSoldier, Tile tile) {
+//        Log.d("MEGA_DBG", "MOVING " + focusedSoldier + " FROM " + focusedSoldier.getTile() + " TO " + tile);
         focusedSoldier.getTile().setOccupied(false);
         focusedSoldier.getTile().setCurrSoldier(null);
         focusedSoldier.setTile(tile);
         focusedSoldier.getTile().setOccupied(true);
         focusedSoldier.getTile().setCurrSoldier(focusedSoldier);
-        //Log.d("NullPtrDEBUG","\nMoved " + focusedSoldier);
     }
 
     /**
