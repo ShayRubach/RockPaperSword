@@ -285,7 +285,7 @@ public class Board {
             soldiersTeam.get(i).setTeam(team);
             soldiersTeam.get(i).setSoldierType(pickAvailableSoldierType());
             soldiersTeam.get(i).setSoldierAnimationSpriteByType();
-            soldiersTeam.get(i).setSoldierHighlightedBitmap(BitmapFactory.decodeResource(manager.getAppResources(), soldiersTeam.get(i).getNonHighlightedSpriteSource()));
+            soldiersTeam.get(i).setSoldierHighlightedBitmap(BitmapFactory.decodeResource(manager.getAppResources(), soldiersTeam.get(i).getHighlightedSpriteSource()));
             soldiersTeam.get(i).setSoldierRevealedBitmap(BitmapFactory.decodeResource(manager.getAppResources(), soldiersTeam.get(i).getRevealedSpriteSource()));
             soldiersTeam.get(i).setSoldierNonHighlightedBitmap(BitmapFactory.decodeResource(manager.getAppResources(), soldiersTeam.get(i).getNonHighlightedSpriteSource()));
             soldiersTeam.get(i).setSoldierBitmap(soldiersTeam.get(i).getSoldierNonHighlightedBitmap());
@@ -351,7 +351,9 @@ public class Board {
     private void highlightPathArrows(Soldier focusedSoldier) {
         Tile tile = null;
         Integer[] xyPos = new Integer[2];
-        getTileIndex(focusedSoldier.getTile(), xyPos);
+
+        if(focusedSoldier != null)
+            getTileIndex(focusedSoldier.getTile(), xyPos);
 
         //is left neighbor exist and unoccupied?
         if(xyPos[0]-1 > -1 )

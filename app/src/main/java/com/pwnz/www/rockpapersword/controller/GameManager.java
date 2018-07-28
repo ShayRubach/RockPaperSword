@@ -189,21 +189,23 @@ public class GameManager {
 
                 case TEAM_A_WON_THE_MATCH:
                     newTile = opponent.getTile();
+                    Log.d("MEGA_DBG", "moving " + potentialInitiator + "\nto" + newTile);
+                    eliminateSoldier(opponent);
                     moveSoldier(potentialInitiator, newTile);
                 case REVEAL_TEAM_A:
                     Log.d("MEGA_DBG", "revealing A\n");
                     potentialInitiator.setRevealed(true);
                     potentialInitiator.setSoldierBitmap(potentialInitiator.getSoldierRevealedBitmap());
-                    eliminateSoldier(opponent);
                     break;
 
                 case TEAM_B_WON_THE_MATCH:
                     newTile = potentialInitiator.getTile();
+                    eliminateSoldier(potentialInitiator);
                     moveSoldier(opponent, newTile);
+                    Log.d("MEGA_DBG", "moving " + opponent + "\nto\n" + newTile);
                 case REVEAL_TEAM_B:
                     Log.d("MEGA_DBG", "revealing B\n");
                     opponent.setRevealed(true);
-                    eliminateSoldier(potentialInitiator);
                     break;
 
                 case TEAM_A_WINS_THE_GAME:

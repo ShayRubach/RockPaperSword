@@ -1,6 +1,7 @@
 package com.pwnz.www.rockpapersword.model;
 
 import android.graphics.Bitmap;
+import android.util.Log;
 
 import com.pwnz.www.rockpapersword.R;
 
@@ -185,7 +186,6 @@ public class Soldier extends AnimationHandler {
     }
 
     public void highlight() {
-        //setAnimationSprite(highlightedSpriteSource);
         setSoldierBitmap(getSoldierHighlightedBitmap());
         isHighlighted = true;
     }
@@ -292,5 +292,9 @@ public class Soldier extends AnimationHandler {
 
     public void setRevealed(boolean revealed) {
         isRevealed = revealed;
+    }
+
+    public int getHighlightedSpriteSource() {
+        return highlightedSpriteSource;
     }
 }
