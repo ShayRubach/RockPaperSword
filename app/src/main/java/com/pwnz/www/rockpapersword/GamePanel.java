@@ -105,15 +105,21 @@ public class GamePanel extends SurfaceView implements Runnable {
                 drawSoldiers();
                 drawPathArrows();
                 drawClock();
-                drawJudges();
                 drawMenuButtonIngame();
 
-                if(isMenuOpen()){
+                if(inTie()) {
+                    //reset timer and let the user choose a new weapon
+                    gameClock.resetToFirstFrame();
+                    drawTieOptions();
+                }
+                else
+                    drawJudges();
+
+                if(isMenuOpen())
                    drawMenu();
-                }
-                else if(isMatchOn()){
+                else if(isMatchOn())
                     drawMatch();
-                }
+
             }
             mSurfaceHolder.unlockCanvasAndPost(mCanvas);
             setRedraw(false);
@@ -139,6 +145,23 @@ public class GamePanel extends SurfaceView implements Runnable {
                 manager.swapTurns();
             }
         }
+    }
+
+    private void drawTieOptions() {
+        //Log.d("TIE_DBG","drawing tie options\n");
+        manager.getBoard().getNewWeaponPaper().drawAnimation(mCanvas);
+        manager.getBoard().getNewWeaponRock().drawAnimation(mCanvas);
+        manager.getBoard().getNewWeaponSword().drawAnimation(mCanvas);
+
+        manager.getBoard().getNewWeaponPaper().chooseNextFrame();
+        manager.getBoard().getNewWeaponRock().chooseNextFrame();
+        manager.getBoard().getNewWeaponSword().chooseNextFrame();
+
+
+    }
+
+    private boolean inTie() {
+        return manager.isInTie();
     }
 
     private void drawMenu() {

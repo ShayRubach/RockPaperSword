@@ -1,6 +1,9 @@
 package com.pwnz.www.rockpapersword.model;
 
+import android.content.Context;
+import android.content.res.Resources;
 import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.util.Log;
 
 import com.pwnz.www.rockpapersword.R;
@@ -19,6 +22,8 @@ public class Soldier extends AnimationHandler {
     private boolean isVisible;
     private boolean isHighlighted = false;
     private SoldierType soldierType;
+    //todo: change this to non-instantiated objects. only hold reference to premade bitmap list.
+    //todo: remove revealedSprites and bitmaps - not used
     private int nonHighlightedSpriteSource, highlightedSpriteSource, revealedSpriteSource;
     private int animationSprite;
     private int team;
@@ -162,8 +167,8 @@ public class Soldier extends AnimationHandler {
 
     @Override
     public String toString() {
-        return "\n\nSoldier { " +
-                " Type=\" + " + soldierType +
+        return "Soldier { " +
+                " Type=" + soldierType +
                 " | Team = " + (team == Board.TEAM_A ? "A" : "B") +
                 " | Tile=" + tile +
                 " | isVisible = " + isVisible + " }";
@@ -300,5 +305,30 @@ public class Soldier extends AnimationHandler {
 
     public static ArrayList<SoldierType> getUniqueSoldierTypes() {
         return uniqueSoldierTypes;
+    }
+
+    //todo: add more types and use this on initSoldiers
+    public void initBitmapsByType(Resources res) {
+        switch (getSoldierType()){
+            case STONE:
+                setSoldierSprites(R.drawable.soldier_stone, R.drawable.soldier_stone_hl, R.drawable.soldier_stone);
+                setSoldierNonHighlightedBitmap(BitmapFactory.decodeResource(res, nonHighlightedSpriteSource));
+                setSoldierHighlightedBitmap(BitmapFactory.decodeResource(res, highlightedSpriteSource));
+                setSoldierRevealedBitmap(BitmapFactory.decodeResource(res, revealedSpriteSource));
+                break;
+            case PEPPER:
+                setSoldierSprites(R.drawable.soldier_paper, R.drawable.soldier_paper_hl, R.drawable.soldier_paper);
+                setSoldierNonHighlightedBitmap(BitmapFactory.decodeResource(res, nonHighlightedSpriteSource));
+                setSoldierHighlightedBitmap(BitmapFactory.decodeResource(res, highlightedSpriteSource));
+                setSoldierRevealedBitmap(BitmapFactory.decodeResource(res, revealedSpriteSource));
+                break;
+            case SWORDMASTER:
+                setSoldierSprites(R.drawable.soldier_sword, R.drawable.soldier_sword_hl, R.drawable.soldier_sword);
+                setSoldierNonHighlightedBitmap(BitmapFactory.decodeResource(res, nonHighlightedSpriteSource));
+                setSoldierHighlightedBitmap(BitmapFactory.decodeResource(res, highlightedSpriteSource));
+                setSoldierRevealedBitmap(BitmapFactory.decodeResource(res, revealedSpriteSource));
+                break;
+        }
+        setSoldierBitmap(soldierNonHighlightedBitmap);
     }
 }

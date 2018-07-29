@@ -14,11 +14,13 @@ import com.pwnz.www.rockpapersword.R;
 import com.pwnz.www.rockpapersword.model.Board;
 import com.pwnz.www.rockpapersword.model.RPSMatchResult;
 import com.pwnz.www.rockpapersword.model.Soldier;
+import com.pwnz.www.rockpapersword.model.SoldierType;
 import com.pwnz.www.rockpapersword.model.Tile;
 
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Random;
+import java.util.concurrent.ThreadLocalRandom;
 
 /**
  * Managing the game logic and decisions. Fetches data from Board and deliver to GamePanel (UI Thread).
@@ -43,6 +45,8 @@ public class GameManager {
     private boolean possibleMatch = false;
     private boolean isMatchOn = false;
     private boolean isMenuOpen = false;
+    private boolean inTie= false;
+    private SoldierType newWeaponChoice = null;
     private int teamTurn;
     public int canvasW, canvasH;
 
@@ -85,6 +89,30 @@ public class GameManager {
         float y = event.getY();
         panel.setRedraw(true);
 
+        if(isInTie()){
+            Log.d("TIE_DBG", "handling click after tie.\n");
+            Log.d("TIE_DBG", "BEFORE REFRESHING WEAPONS.\n");
+            Log.d("TIE_DBG", "potential = " + potentialInitiator + "\n");
+            Log.d("TIE_DBG", "opponent  = " + opponent + "\n");
+            panel.pause();
+            Log.d("TIE_DBG", "picking new weapon..\n");
+            newWeaponChoice = board.getNewPickedWeapon(event.getX(), event.getY());
+            Log.d("TIE_DBG", "picked = " + newWeaponChoice + "\n");
+
+            refreshSoldierType(opponent, newWeaponChoice);
+            refreshSoldierType(potentialInitiator, randWeapon(newWeaponChoice));
+
+            Log.d("TIE_DBG", "AFTER REFRESHING WEAPONS.\n");
+            Log.d("TIE_DBG", "potential = " + potentialInitiator + "\n");
+            Log.d("TIE_DBG", "opponent  = " + opponent + "\n");
+
+            possibleMatch = true;   //this will proc another fight
+            setInTie(false);
+            panel.resume();
+
+            lookForPotentialMatch(potentialInitiator);
+            return;
+        }
         //Player has focused (clicked) a soldier but yet tried to moved
         if(board.getClickedSoldier(x,y) != null) {
             panel.pause();
@@ -104,7 +132,6 @@ public class GameManager {
                 setMenuOpen(false);
             }
             if(backToMenuWasPressed(x, y)){
-
                 setMenuOpen(false);
             }
             panel.resume();
@@ -133,6 +160,12 @@ public class GameManager {
         //look for another potential match after player has made a move
         if(possibleMatch) {
             lookForPotentialMatch(potentialInitiator);
+
+            if(isInTie()){
+                Log.d("TIE_DBG", "in tie after lookForPotentialMatch.. returning\n");
+                return;
+            }
+
         }
 
         //A.I will instantly play after Player's turn
@@ -154,6 +187,13 @@ public class GameManager {
             setTurnThinkingTimeSleep(500);
             lookForPotentialMatch(potentialInitiator);
         }
+    }
+
+    private void refreshSoldierType(Soldier soldier, SoldierType newWeaponChoice) {
+        soldier.setSoldierType(newWeaponChoice);
+        //soldier.setSoldierAnimationSpriteByType();
+        //soldier.initBitmapsByType(getAppResources());
+        //soldier.setSoldierBitmap(soldier.getSoldierRevealedBitmap());
     }
 
     private boolean resumeWasPressed(float x, float y) {
@@ -186,28 +226,35 @@ public class GameManager {
      *                           to simplify the switch cases on match. this doesn't change logic.
      * @return none
      */
-    private void lookForPotentialMatch(Soldier potentialInitiator) {
-
+    private void lookForPotentialMatch(Soldier initiator) {
+        Log.d("TIE_DBG", "lookForPotentialMatch called");
         RPSMatchResult matchResult;
         boolean alreadyEliminated = false;
-        if(potentialInitiator == null)
+        if(initiator == null) {
             return;
+        }
 
-        opponent = board.getFirstSurroundingOpponent(potentialInitiator);
+        if(!isInTie())
+            opponent = board.getFirstSurroundingOpponent(initiator);
 
         if(opponent != null) {
 
-            if( potentialInitiator.getTeam() != Board.TEAM_A){
+            if( initiator.getTeam() != Board.TEAM_A){
                 //swap refrences
-                Soldier temp = potentialInitiator;
-                potentialInitiator = opponent;
+                Soldier temp = initiator;
+                initiator = opponent;
                 opponent = temp;
             }
+
+            Log.d("TIE_DBG", "POT = " + initiator + "\n");
+            Log.d("TIE_DBG", "VS. \n");
+            Log.d("TIE_DBG", "OPP =" + opponent + "\n");
+
             panel.pause();
             panel.stopClock();
             setMatchOn(true);
-            updateMatchSoldiersList(potentialInitiator, opponent);
-            matchResult = match(potentialInitiator, opponent);
+            updateMatchSoldiersList(initiator, opponent);
+            matchResult = match(initiator, opponent);
 
             Log.d("MEGA_DBG","matchResult: " + matchResult + "\n");
 
@@ -215,29 +262,30 @@ public class GameManager {
             switch (matchResult){
                 case TIE:
                     //TODO: remove when implemented
-//                    rematch(potentialInitiator, opponent);
-//                    break;
+                    Log.d("TIE_DBG", "calling rematch.\n");
+                    setInTie(true);
+                    break;
                 case BOTH_ELIMINATED:
-                    eliminateBoth(potentialInitiator, opponent);
+                    eliminateBoth(initiator, opponent);
                     break;
 
                 case TEAM_A_WON_THE_MATCH:
                     newTile = opponent.getTile();
-                    Log.d("MEGA_DBG", "moving " + potentialInitiator + "\nto" + newTile);
+                    Log.d("MEGA_DBG", "moving " + initiator + "\nto" + newTile);
                     eliminateSoldier(opponent);
                     alreadyEliminated = true;
-                    moveSoldier(potentialInitiator, newTile);
+                    moveSoldier(initiator, newTile);
                 case REVEAL_TEAM_A:
                     Log.d("MEGA_DBG", "revealing A\n");
-                    potentialInitiator.setRevealed(true);
-                    potentialInitiator.setSoldierBitmap(potentialInitiator.getSoldierRevealedBitmap());
+                    initiator.setRevealed(true);
+                    initiator.setSoldierBitmap(initiator.getSoldierRevealedBitmap());
                     if(!alreadyEliminated)
                         eliminateSoldier(opponent);
                     break;
 
                 case TEAM_B_WON_THE_MATCH:
-                    newTile = potentialInitiator.getTile();
-                    eliminateSoldier(potentialInitiator);
+                    newTile = initiator.getTile();
+                    eliminateSoldier(initiator);
                     alreadyEliminated = true;
                     moveSoldier(opponent, newTile);
                     Log.d("MEGA_DBG", "moving " + opponent + "\nto\n" + newTile);
@@ -245,7 +293,7 @@ public class GameManager {
                     Log.d("MEGA_DBG", "revealing B\n");
                     opponent.setRevealed(true);
                     if(!alreadyEliminated)
-                        eliminateSoldier(potentialInitiator);
+                        eliminateSoldier(initiator);
                     break;
 
                 case TEAM_A_WINS_THE_GAME:
@@ -258,6 +306,7 @@ public class GameManager {
 
             }
 
+            potentialInitiator = initiator;
             possibleMatch = false;
             panel.resume();
         }
@@ -298,21 +347,17 @@ public class GameManager {
         winningTeam = team;
     }
 
-    /**
-     * in case of a TIE, this will determine the winner. match result should be final.
-     * @param potentialInitiator    AI soldier
-     * @param opponent              Player soldier
-     */
-    private void rematch(Soldier potentialInitiator, Soldier opponent){
-        //TODO: temporarily returns BOTH_ELIMINATED . Implement this shit later
+    private SoldierType randWeapon(SoldierType playerChosenWeapon){
         Random rand = new Random();
-        int i  = rand.nextInt(board.getSoldierTeamA().size()-1);
+        SoldierType type;
+        int i;
 
-        //set random weapon type for the AI soldier
-        potentialInitiator.setSoldierType(Soldier.getUniqueSoldierTypes().get(i));
+        do {
+            i = rand.nextInt(Soldier.getUniqueSoldierTypes().size() - 1);
+            type = Soldier.getUniqueSoldierTypes().get(i);
+        } while(type == SoldierType.KING || type == SoldierType.SHIELDON || type == SoldierType.ASHES || type == playerChosenWeapon );
 
-
-        //eliminateBoth(potentialInitiator, opponent);
+        return Soldier.getUniqueSoldierTypes().get(i);
     }
 
     private void eliminateBoth(Soldier potentialInitiator, Soldier opponent){
@@ -475,5 +520,21 @@ public class GameManager {
 
     public void setMenuOpen(boolean menuOpen) {
         isMenuOpen = menuOpen;
+    }
+
+    public boolean isInTie() {
+        return inTie;
+    }
+
+    public void setInTie(boolean inTie) {
+        this.inTie = inTie;
+    }
+
+    public SoldierType getNewWeaponChoice() {
+        return newWeaponChoice;
+    }
+
+    public void setNewWeaponChoice(SoldierType newWeaponChoice) {
+        this.newWeaponChoice = newWeaponChoice;
     }
 }

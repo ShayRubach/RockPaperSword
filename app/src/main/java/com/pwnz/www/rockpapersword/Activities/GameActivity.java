@@ -65,17 +65,16 @@ public class GameActivity extends AppCompatActivity {
         //ignore double actions (UP & DOWN)
         switch (event.getAction()){
             case MotionEvent.ACTION_UP:
+
                 //if game has ended
-                if(mManager.getWinningTeam() > GAME_IN_PROGRESS || mainMenuWasPressed(event.getX(), event.getY())){
+                if(mainMenuWasPressed(event.getX(), event.getY()) || mManager.getWinningTeam() > GAME_IN_PROGRESS){
                     returnToMainMenuScreen();
                 }
-
                 mManager.onTouchEvent(event);
                 break;
             default:
                 break;
         }
-
         return super.onTouchEvent(event);
     }
 

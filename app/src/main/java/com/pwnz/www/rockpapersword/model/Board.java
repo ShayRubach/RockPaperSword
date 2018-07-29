@@ -31,6 +31,8 @@ public class Board {
     ArrayList<Pair<Tile, SoldierMovement>> pathArrows = new ArrayList<>();
     AnimationHandler winAnnouncementAnimation, loseAnnouncementAnimation, judge;
     AnimationHandler openMenuIngameBtn, resumeGameBtn, backToMenuBtn;
+    AnimationHandler newWeaponSword, newWeaponRock, newWeaponPaper;
+
 
     int cols, rows;
     int canvasW, canvasH;
@@ -205,13 +207,57 @@ public class Board {
         initJudge(R.drawable.judge_nutral_sprite);
         initWinningTeamAnnouncementAnimation();
         initInGameMenu();
+        initNewWeaponsChoiceOnTie();
         setRevealMark(BitmapFactory.decodeResource(manager.getAppResources(), R.drawable.reveal_mark));
+    }
+
+    private void initNewWeaponsChoiceOnTie() {
+        initNewWeaponSword();
+        initNewWeaponRock();
+        initNewWeaponPaper();
+
     }
 
     private void initInGameMenu() {
         initMenuIngameButton();
         initResumeIngameButton();
         initBackToMenuButton();
+    }
+
+    private void initNewWeaponPaper() {
+        newWeaponPaper = new AnimationHandler();
+        newWeaponPaper.initAnimationDetails(manager.getPanelContext(), R.drawable.paper_solo, 1, 1);
+        int left = (canvasW/2) + (newWeaponPaper.spriteFrameSrcW/2)*3;
+        int right = (canvasW/2) + (newWeaponPaper.spriteFrameSrcW/2)*6;
+        int top = 0;
+        int bot = (int) ((canvasH/10) * 1.5);
+
+        newWeaponPaper.destRect = new Rect (left, top, right, bot);
+        newWeaponPaper.resetToFirstFrame();
+    }
+
+    private void initNewWeaponRock() {
+        newWeaponRock = new AnimationHandler();
+        newWeaponRock.initAnimationDetails(manager.getPanelContext(), R.drawable.stone_solo, 1, 1);
+        int left = (canvasW/2) - (newWeaponSword.spriteFrameSrcW/2)*6;
+        int right = (canvasW/2) - (newWeaponSword.spriteFrameSrcW/2)*3;
+        int top = 0;
+        int bot = (int) ((canvasH/10) * 1.5);
+
+        newWeaponRock.destRect = new Rect (left, top, right, bot);
+        newWeaponRock.resetToFirstFrame();
+    }
+
+    private void initNewWeaponSword() {
+        newWeaponSword = new AnimationHandler();
+        newWeaponSword.initAnimationDetails(manager.getPanelContext(), R.drawable.sword_solo_sprite, 3, 5);
+        int left = (canvasW/2) - (newWeaponSword.spriteFrameSrcW/2);
+        int right = (canvasW/2) + (newWeaponSword.spriteFrameSrcW/2);
+        int top = 0;
+        int bot = (int) ((canvasH/10) * 1.5);
+
+        newWeaponSword.destRect = new Rect (left, top, right, bot);
+        newWeaponSword.resetToFirstFrame();
     }
 
     private void initBackToMenuButton() {
@@ -329,22 +375,24 @@ public class Board {
     }
 
     private void initSoldiers(ArrayList<Soldier> soldiersTeam, int team, int SOLDIERS_START_ROW) {
-
+        Soldier currSoldier;
+        //todo: let every soldier hold reference to already made Bitmap (3 kinds) by type. no need to individually hold a new one.
         for (int i = 0, j = SOLDIERS_START_ROW, k = 0; i < soldiersTeam.size() ; i++, k++) {
-            soldiersTeam.get(i).setTeam(team);
-            soldiersTeam.get(i).setSoldierType(pickAvailableSoldierType());
-            soldiersTeam.get(i).setSoldierAnimationSpriteByType();
-            soldiersTeam.get(i).setSoldierHighlightedBitmap(BitmapFactory.decodeResource(manager.getAppResources(), soldiersTeam.get(i).getHighlightedSpriteSource()));
-            soldiersTeam.get(i).setSoldierRevealedBitmap(BitmapFactory.decodeResource(manager.getAppResources(), soldiersTeam.get(i).getRevealedSpriteSource()));
-            soldiersTeam.get(i).setSoldierNonHighlightedBitmap(BitmapFactory.decodeResource(manager.getAppResources(), soldiersTeam.get(i).getNonHighlightedSpriteSource()));
-            soldiersTeam.get(i).setSoldierBitmap(soldiersTeam.get(i).getSoldierNonHighlightedBitmap());
+            currSoldier = soldiersTeam.get(i);
+            currSoldier.setTeam(team);
+            currSoldier.setSoldierType(pickAvailableSoldierType());
+            currSoldier.setSoldierAnimationSpriteByType();
+            currSoldier.setSoldierHighlightedBitmap(BitmapFactory.decodeResource(manager.getAppResources(), currSoldier.getHighlightedSpriteSource()));
+            currSoldier.setSoldierRevealedBitmap(BitmapFactory.decodeResource(manager.getAppResources(), currSoldier.getRevealedSpriteSource()));
+            currSoldier.setSoldierNonHighlightedBitmap(BitmapFactory.decodeResource(manager.getAppResources(), currSoldier.getNonHighlightedSpriteSource()));
+            currSoldier.setSoldierBitmap(currSoldier.getSoldierNonHighlightedBitmap());
 
-            soldiersTeam.get(i).setRevealed(false);
-            soldiersTeam.get(i).setVisible(true);
+            currSoldier.setRevealed(false);
+            currSoldier.setVisible(true);
             tiles[k % cols][j].setOccupied(true);
-            tiles[k % cols][j].setCurrSoldier(soldiersTeam.get(i));
-            soldiersTeam.get(i).setTile(tiles[k % cols][j]);
-            soldiersTeam.get(i).setTileOffset(tileW / TILE_OFFSET_PERCENTAGE);
+            tiles[k % cols][j].setCurrSoldier(currSoldier);
+            currSoldier.setTile(tiles[k % cols][j]);
+            currSoldier.setTileOffset(tileW / TILE_OFFSET_PERCENTAGE);
 
             //stop over the the next tile row
             if(i == (soldiersTeam.size()-1) / 2)
@@ -670,5 +718,31 @@ public class Board {
     public boolean backToMenuWasPressed(float x, float y) {
         Log.d("MENU_DBG", "menuButtonWasPressed called with {"+x+","+y+"}");
         return isInside(getBackToMenuBtn().getDestRect(), x, y);
+    }
+
+    public SoldierType getNewPickedWeapon(float x, float y) {
+        SoldierType newWeapon = null;
+        if(isInside(newWeaponSword.getDestRect(), x, y)){
+            newWeapon = SoldierType.SWORDMASTER;
+        }
+        else if(isInside(newWeaponRock.getDestRect(), x, y)){
+            newWeapon = SoldierType.STONE;
+        }
+        else if(isInside(newWeaponPaper.getDestRect(), x, y)){
+            newWeapon = SoldierType.PEPPER;
+        }
+        return newWeapon;
+    }
+
+    public AnimationHandler getNewWeaponSword() {
+        return newWeaponSword;
+    }
+
+    public AnimationHandler getNewWeaponRock() {
+        return newWeaponRock;
+    }
+
+    public AnimationHandler getNewWeaponPaper() {
+        return newWeaponPaper;
     }
 }
