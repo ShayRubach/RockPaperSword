@@ -191,9 +191,9 @@ public class GameManager {
 
     private void refreshSoldierType(Soldier soldier, SoldierType newWeaponChoice) {
         soldier.setSoldierType(newWeaponChoice);
-        //soldier.setSoldierAnimationSpriteByType();
-        //soldier.initBitmapsByType(getAppResources());
-        //soldier.setSoldierBitmap(soldier.getSoldierRevealedBitmap());
+        soldier.setSoldierAnimationSpriteByType();
+        soldier.initBitmapsByType(getAppResources());
+        soldier.setSoldierBitmap(soldier.getSoldierRevealedBitmap());
     }
 
     private boolean resumeWasPressed(float x, float y) {
@@ -221,7 +221,7 @@ public class GameManager {
     }
     /**
      * After a move has been initiated, we wish to check the surrounding soldiers for a possible match.
-     * @param potentialInitiator the original initiator who moved and started the match.
+     * @param initiator the original initiator who moved and started the match.
      *                           if it is not the AI, we force swap it with the @opponent to be able
      *                           to simplify the switch cases on match. this doesn't change logic.
      * @return none
@@ -306,6 +306,7 @@ public class GameManager {
 
             }
 
+            //safely reassign potentialInitiator to its initiator reference. this was a bug for some reason.
             potentialInitiator = initiator;
             possibleMatch = false;
             panel.resume();

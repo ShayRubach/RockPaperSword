@@ -223,6 +223,7 @@ public class GamePanel extends SurfaceView implements Runnable {
 
         //if animation ended, set match off & remove match animation from screen:
         if(aAnimationEnded && bAnimationEnded){
+            gameClock.resetToFirstFrame();
             manager.setMatchOn(false);
         }
 

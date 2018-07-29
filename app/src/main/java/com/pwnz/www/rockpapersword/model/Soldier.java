@@ -309,26 +309,32 @@ public class Soldier extends AnimationHandler {
 
     //todo: add more types and use this on initSoldiers
     public void initBitmapsByType(Resources res) {
+        int nonHighlightedSprite = 0;
+        int highlightedSprite = 0;
+        int revealedSprite = 0;
+
         switch (getSoldierType()){
             case STONE:
-                setSoldierSprites(R.drawable.soldier_stone, R.drawable.soldier_stone_hl, R.drawable.soldier_stone);
-                setSoldierNonHighlightedBitmap(BitmapFactory.decodeResource(res, nonHighlightedSpriteSource));
-                setSoldierHighlightedBitmap(BitmapFactory.decodeResource(res, highlightedSpriteSource));
-                setSoldierRevealedBitmap(BitmapFactory.decodeResource(res, revealedSpriteSource));
+                nonHighlightedSprite = (team == Board.TEAM_A) ? R.drawable.soldier_enemy : R.drawable.soldier_stone ;
+                highlightedSprite = (team == Board.TEAM_A) ? R.drawable.soldier_enemy : R.drawable.soldier_stone_hl;
+                revealedSprite = (team == Board.TEAM_A) ? R.drawable.soldier_enemy_revealed_stone : R.drawable.soldier_stone ;
                 break;
             case PEPPER:
-                setSoldierSprites(R.drawable.soldier_paper, R.drawable.soldier_paper_hl, R.drawable.soldier_paper);
-                setSoldierNonHighlightedBitmap(BitmapFactory.decodeResource(res, nonHighlightedSpriteSource));
-                setSoldierHighlightedBitmap(BitmapFactory.decodeResource(res, highlightedSpriteSource));
-                setSoldierRevealedBitmap(BitmapFactory.decodeResource(res, revealedSpriteSource));
+                nonHighlightedSprite = (team == Board.TEAM_A) ? R.drawable.soldier_enemy : R.drawable.soldier_paper;
+                highlightedSprite = (team == Board.TEAM_A) ? R.drawable.soldier_enemy : R.drawable.soldier_paper_hl;
+                revealedSprite = (team == Board.TEAM_A) ? R.drawable.soldier_enemy_revealed_paper: R.drawable.soldier_paper;
                 break;
             case SWORDMASTER:
-                setSoldierSprites(R.drawable.soldier_sword, R.drawable.soldier_sword_hl, R.drawable.soldier_sword);
-                setSoldierNonHighlightedBitmap(BitmapFactory.decodeResource(res, nonHighlightedSpriteSource));
-                setSoldierHighlightedBitmap(BitmapFactory.decodeResource(res, highlightedSpriteSource));
-                setSoldierRevealedBitmap(BitmapFactory.decodeResource(res, revealedSpriteSource));
+                nonHighlightedSprite = (team == Board.TEAM_A) ? R.drawable.soldier_enemy: R.drawable.soldier_sword ;
+                highlightedSprite = (team == Board.TEAM_A) ? R.drawable.soldier_enemy : R.drawable.soldier_sword_hl;
+                revealedSprite = (team == Board.TEAM_A) ? R.drawable.soldier_enemy_revealed_sword: R.drawable.soldier_sword ;
                 break;
         }
+
+        setSoldierSprites(nonHighlightedSprite , highlightedSprite, revealedSprite );
+        setSoldierNonHighlightedBitmap(BitmapFactory.decodeResource(res, nonHighlightedSprite));
+        setSoldierHighlightedBitmap(BitmapFactory.decodeResource(res, highlightedSprite));
+        setSoldierRevealedBitmap(BitmapFactory.decodeResource(res, revealedSprite));
         setSoldierBitmap(soldierNonHighlightedBitmap);
     }
 }
