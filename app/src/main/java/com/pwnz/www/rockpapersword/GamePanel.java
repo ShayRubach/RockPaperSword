@@ -106,7 +106,12 @@ public class GamePanel extends SurfaceView implements Runnable {
                 drawPathArrows();
                 drawClock();
                 drawJudges();
-                if(isMatchOn()){
+                drawMenuButtonIngame();
+
+                if(isMenuOpen()){
+                   drawMenu();
+                }
+                else if(isMatchOn()){
                     drawMatch();
                 }
             }
@@ -129,12 +134,22 @@ public class GamePanel extends SurfaceView implements Runnable {
             timeMillis = System.currentTimeMillis();
             endTimeSeconds = TimeUnit.MILLISECONDS.toSeconds(timeMillis);
 
-            //todo: @Idan @shay - impl this
             //if updateTime == true, clock resets and we need to tell GameManager so force a turn swap:
-            if(gameClock.updateTime(endTimeSeconds - startTimeSeconds)){
+            if(!isMenuOpen() && gameClock.updateTime(endTimeSeconds - startTimeSeconds)){
                 manager.swapTurns();
             }
         }
+    }
+
+    private void drawMenu() {
+        manager.getBoard().getResumeGameBtn().drawAnimation(mCanvas);
+        manager.getBoard().getBackToMenuBtn().drawAnimation(mCanvas);
+
+    }
+
+    private void drawMenuButtonIngame() {
+        manager.getBoard().getMenuIngameBtn().drawAnimation(mCanvas);
+        manager.getBoard().getMenuIngameBtn().chooseNextFrame();
     }
 
     /**
@@ -342,4 +357,7 @@ public class GamePanel extends SurfaceView implements Runnable {
         shouldDrawClock = true;
     }
 
+    public boolean isMenuOpen() {
+        return manager.menuOpen();
+    }
 }

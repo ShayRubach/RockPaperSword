@@ -30,6 +30,7 @@ public class Board {
 
     ArrayList<Pair<Tile, SoldierMovement>> pathArrows = new ArrayList<>();
     AnimationHandler winAnnouncementAnimation, loseAnnouncementAnimation, judge;
+    AnimationHandler openMenuIngameBtn, resumeGameBtn, backToMenuBtn;
 
     int cols, rows;
     int canvasW, canvasH;
@@ -203,7 +204,52 @@ public class Board {
         initSoldierMatchTeam(TEAM_B, matchSoldierTeamB, SOLDIERS_TYPES_COUNT);
         initJudge(R.drawable.judge_nutral_sprite);
         initWinningTeamAnnouncementAnimation();
+        initInGameMenu();
         setRevealMark(BitmapFactory.decodeResource(manager.getAppResources(), R.drawable.reveal_mark));
+    }
+
+    private void initInGameMenu() {
+        initMenuIngameButton();
+        initResumeIngameButton();
+        initBackToMenuButton();
+    }
+
+    private void initBackToMenuButton() {
+        backToMenuBtn = new AnimationHandler();
+        backToMenuBtn.initAnimationDetails(manager.getPanelContext(), R.drawable.back_to_main_menu, 1, 1);
+        int left = (canvasW/2) - (backToMenuBtn.spriteFrameSrcW/2);
+        int right = (canvasW/2) + (backToMenuBtn.spriteFrameSrcW/2);
+        int top = (canvasH/2) - (backToMenuBtn.spriteFrameSrcH);
+        int bot = (canvasH/2);
+
+        backToMenuBtn.destRect = new Rect (left, top, right, bot);
+        backToMenuBtn.resetToFirstFrame();
+
+    }
+
+    private void initResumeIngameButton() {
+        resumeGameBtn = new AnimationHandler();
+        resumeGameBtn.initAnimationDetails(manager.getPanelContext(), R.drawable.resume_game, 1, 1);
+
+        int left = (canvasW/2) - (resumeGameBtn.spriteFrameSrcW/2);
+        int right = (canvasW/2) + (resumeGameBtn.spriteFrameSrcW/2);
+        int top = (canvasH/2);
+        int bot = (canvasH/2) + (resumeGameBtn.spriteFrameSrcH);
+
+        resumeGameBtn.destRect = new Rect (left, top, right, bot);
+        resumeGameBtn.resetToFirstFrame();
+    }
+
+    private void initMenuIngameButton() {
+        openMenuIngameBtn = new AnimationHandler();
+        openMenuIngameBtn.initAnimationDetails(manager.getPanelContext(), R.drawable.open_menu_ingame, 1, 1);
+        int left = (openMenuIngameBtn.canvasW/2) - (openMenuIngameBtn.spriteFrameSrcW/2);
+        int top = canvasH - openMenuIngameBtn.spriteSheetH;
+        int right = (openMenuIngameBtn.canvasW/2) + (openMenuIngameBtn.spriteFrameSrcW/2);
+        int bot = canvasH;
+
+        openMenuIngameBtn.destRect = new Rect(left, top, right, bot);
+        openMenuIngameBtn.resetToFirstFrame();
     }
 
     private void initJudge(int spriteId) {
@@ -599,5 +645,30 @@ public class Board {
             soldierTeam.get(i).getTile().setCurrSoldier(soldierTeam.get(i));
         }
 
+    }
+
+    public AnimationHandler getMenuIngameBtn() {
+        return openMenuIngameBtn;
+    }
+
+    public boolean menuButtonWasPressed(float x, float y) {
+        return isInside(getMenuIngameBtn().getDestRect() ,x ,y);
+    }
+
+    public AnimationHandler getResumeGameBtn() {
+        return resumeGameBtn;
+    }
+
+    public AnimationHandler getBackToMenuBtn() {
+        return backToMenuBtn;
+    }
+
+    public boolean resumeWasPressed(float x, float y) {
+        return isInside(getResumeGameBtn().getDestRect(), x, y);
+    }
+
+    public boolean backToMenuWasPressed(float x, float y) {
+        Log.d("MENU_DBG", "menuButtonWasPressed called with {"+x+","+y+"}");
+        return isInside(getBackToMenuBtn().getDestRect(), x, y);
     }
 }

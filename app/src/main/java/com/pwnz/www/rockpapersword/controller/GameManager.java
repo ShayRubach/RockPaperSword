@@ -4,7 +4,9 @@ import android.content.Context;
 import android.content.res.Resources;
 import android.util.Log;
 import android.view.MotionEvent;
+import android.widget.Toast;
 
+import com.pwnz.www.rockpapersword.Activities.GameActivity;
 import com.pwnz.www.rockpapersword.Activities.MainMenuActivity;
 import com.pwnz.www.rockpapersword.Activities.SettingsActivity;
 import com.pwnz.www.rockpapersword.GamePanel;
@@ -16,6 +18,7 @@ import com.pwnz.www.rockpapersword.model.Tile;
 
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.Random;
 
 /**
  * Managing the game logic and decisions. Fetches data from Board and deliver to GamePanel (UI Thread).
@@ -39,6 +42,7 @@ public class GameManager {
     private boolean hasFocusedSoldier = false;
     private boolean possibleMatch = false;
     private boolean isMatchOn = false;
+    private boolean isMenuOpen = false;
     private int teamTurn;
     public int canvasW, canvasH;
 
@@ -91,9 +95,22 @@ public class GameManager {
             board.displaySoldierPath(focusedSoldier);
             panel.resume();
         }
+        else if(menuButtonWasPressed(x, y)){
+            setMenuOpen(true);
+        }
+        else if(menuOpen()){
+            panel.pause();
+            if(resumeWasPressed(x, y)){
+                setMenuOpen(false);
+            }
+            if(backToMenuWasPressed(x, y)){
 
+                setMenuOpen(false);
+            }
+            panel.resume();
+        }
         //Player has a legit focused soldier and attempted to move to new suggested (arrow) tile
-        else if(hasFocusedSoldier){
+        else if(hasFocusedSoldier && !menuOpen()){
             panel.pause();
 
             Tile newTile = board.getTileAt(x, y);
@@ -101,7 +118,6 @@ public class GameManager {
             //make sure tile is traversal and in legit location on screen
             if(newTile != null){
                 clearHighlights();
-                Log.d("NullPtrDEBUG","new tile isOccupied:" + newTile.isOccupied() + " new tile soldier:" + (newTile.getCurrSoldier()!=null ? "present":"not present"));
                 moveSoldier(focusedSoldier, newTile);
                 MainMenuActivity.getSoundEffects().play(R.raw.move_self, SettingsActivity.sfxGeneralVolume, SettingsActivity.sfxGeneralVolume);
                 potentialInitiator = focusedSoldier;
@@ -120,7 +136,7 @@ public class GameManager {
         }
 
         //A.I will instantly play after Player's turn
-        if(teamTurn == TEAM_A_TURN){
+        if(teamTurn == TEAM_A_TURN && !menuOpen()){
             panel.pause();
 
             clearHighlights();
@@ -138,6 +154,18 @@ public class GameManager {
             setTurnThinkingTimeSleep(500);
             lookForPotentialMatch(potentialInitiator);
         }
+    }
+
+    private boolean resumeWasPressed(float x, float y) {
+        return board.resumeWasPressed(x, y);
+    }
+
+    private boolean backToMenuWasPressed(float x, float y) {
+        return board.backToMenuWasPressed(x, y);
+    }
+
+    private boolean menuButtonWasPressed(float x, float y) {
+        return board.menuButtonWasPressed(x, y);
     }
 
     /**
@@ -277,7 +305,14 @@ public class GameManager {
      */
     private void rematch(Soldier potentialInitiator, Soldier opponent){
         //TODO: temporarily returns BOTH_ELIMINATED . Implement this shit later
-        eliminateBoth(potentialInitiator, opponent);
+        Random rand = new Random();
+        int i  = rand.nextInt(board.getSoldierTeamA().size()-1);
+
+        //set random weapon type for the AI soldier
+        potentialInitiator.setSoldierType(Soldier.getUniqueSoldierTypes().get(i));
+
+
+        //eliminateBoth(potentialInitiator, opponent);
     }
 
     private void eliminateBoth(Soldier potentialInitiator, Soldier opponent){
@@ -296,7 +331,6 @@ public class GameManager {
      */
     private RPSMatchResult match(Soldier potentialInitiator, Soldier opponent) {
         Log.d("MEGA_DBG","\n match:  " +  potentialInitiator + "\nVS.\n" + opponent + "\n");
-
         switch (potentialInitiator.getSoldierType()){
             //todo: impl this later. LASSO == STONE at the moment - @shay
 
@@ -435,4 +469,11 @@ public class GameManager {
         return panel.getContext();
     }
 
+    public boolean menuOpen() {
+        return isMenuOpen;
+    }
+
+    public void setMenuOpen(boolean menuOpen) {
+        isMenuOpen = menuOpen;
+    }
 }

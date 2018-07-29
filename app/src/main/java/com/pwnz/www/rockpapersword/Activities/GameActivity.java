@@ -66,11 +66,10 @@ public class GameActivity extends AppCompatActivity {
         switch (event.getAction()){
             case MotionEvent.ACTION_UP:
                 //if game has ended
-                if(mManager.getWinningTeam() > GAME_IN_PROGRESS){
-                    startActivity(new Intent(GameActivity.this, MainMenuActivity.class));
-                    finish();
-                    mManager.setWinningTeam(GAME_IN_PROGRESS);
+                if(mManager.getWinningTeam() > GAME_IN_PROGRESS || mainMenuWasPressed(event.getX(), event.getY())){
+                    returnToMainMenuScreen();
                 }
+
                 mManager.onTouchEvent(event);
                 break;
             default:
@@ -90,5 +89,16 @@ public class GameActivity extends AppCompatActivity {
     protected void onResume() {
         super.onResume();
         mGamePanel.resume();
+    }
+
+    private void returnToMainMenuScreen() {
+        MainMenuActivity.pauseMusic();
+        startActivity(new Intent(GameActivity.this, MainMenuActivity.class));
+        finish();
+        mManager.setWinningTeam(GAME_IN_PROGRESS);
+    }
+
+    private boolean mainMenuWasPressed(float x, float y) {
+        return mManager.getBoard().backToMenuWasPressed(x, y) && mManager.menuOpen();
     }
 }

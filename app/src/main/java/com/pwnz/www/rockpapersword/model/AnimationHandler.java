@@ -5,6 +5,7 @@ import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Canvas;
 import android.graphics.Rect;
+import android.util.Log;
 
 import com.pwnz.www.rockpapersword.R;
 
@@ -38,23 +39,28 @@ public class AnimationHandler {
 
 
     public void initAnimationDetails(Context context, int spriteId, int rowsCnt, int colsCnt){
+        //todo: add this = new AnimationButton() and lose the instantiation on the objects
         this.spriteId = spriteId;
 
         spriteSheet = BitmapFactory.decodeResource(context.getResources(), spriteId);
         spriteSheetH = spriteSheet.getHeight();
         spriteSheetW = spriteSheet.getWidth();
         numberOfSpriteFrames = 4;
-        spriteFrameSrcH = spriteSheetH / rowsCnt;     //2 rows
-        spriteFrameSrcW = spriteSheetW / colsCnt ;    //5 columns
+        spriteFrameSrcH = spriteSheetH / rowsCnt;     // how many rows
+        spriteFrameSrcW = spriteSheetW / colsCnt ;    // how many columns
 
         canvasH = context.getResources().getDisplayMetrics().heightPixels;
         canvasW = context.getResources().getDisplayMetrics().widthPixels;
 
         sourceRect = new Rect();
+        //todo: move the Rect assignment to here insead of outside this method
     }
 
     public void drawAnimation(Canvas canvas){
-        canvas.drawBitmap(spriteSheet, sourceRect, destRect,null);
+        if(this == null)
+            Log.d("ANIM_DBG", "AnimationHandler is null\n");
+        else
+            canvas.drawBitmap(spriteSheet, sourceRect, destRect,null);
     }
 
     public void resetToFirstFrame(){
