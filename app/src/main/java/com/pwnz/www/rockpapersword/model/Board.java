@@ -238,7 +238,7 @@ public class Board {
 
     private void initNewWeaponRock() {
         newWeaponRock = new AnimationHandler();
-        newWeaponRock.initAnimationDetails(manager.getPanelContext(), R.drawable.stone_solo, 1, 1);
+        newWeaponRock.initAnimationDetails(manager.getPanelContext(), R.drawable.stone_solo_sprite, 3, 5);
         int left = (canvasW/2) - (newWeaponSword.spriteFrameSrcW/2)*6;
         int right = (canvasW/2) - (newWeaponSword.spriteFrameSrcW/2)*3;
         int top = 0;

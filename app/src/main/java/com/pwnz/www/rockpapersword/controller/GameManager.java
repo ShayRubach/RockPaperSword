@@ -261,9 +261,10 @@ public class GameManager {
             Tile newTile;
             switch (matchResult){
                 case TIE:
-                    //TODO: remove when implemented
                     Log.d("TIE_DBG", "calling rematch.\n");
                     setInTie(true);
+                    initiator.setRevealed(true);
+                    initiator.setSoldierBitmap(initiator.getSoldierRevealedBitmap());
                     break;
                 case BOTH_ELIMINATED:
                     eliminateBoth(initiator, opponent);
