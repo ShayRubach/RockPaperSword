@@ -71,6 +71,8 @@ public class Soldier extends AnimationHandler {
 
 
     public void setSoldierAnimationSpriteByType() {
+        if(getSoldierType() == null)
+            return;
 
         switch (getSoldierType()){
             case STONE:

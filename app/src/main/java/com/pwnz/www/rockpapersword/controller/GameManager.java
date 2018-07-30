@@ -87,26 +87,7 @@ public class GameManager {
         panel.setRedraw(true);
 
         if(isInTie()){
-            Log.d("TIE_DBG", "handling click after tie.\n");
-            Log.d("TIE_DBG", "BEFORE REFRESHING WEAPONS.\n");
-            Log.d("TIE_DBG", "potential = " + potentialInitiator + "\n");
-            Log.d("TIE_DBG", "opponent  = " + opponent + "\n");
-            panel.pause();
-            Log.d("TIE_DBG", "picking new weapon..\n");
-            newWeaponChoice = board.getNewPickedWeapon(event.getX(), event.getY());
-            Log.d("TIE_DBG", "picked = " + newWeaponChoice + "\n");
-
-            refreshSoldierType(opponent, newWeaponChoice);
-            refreshSoldierType(potentialInitiator, randWeapon(newWeaponChoice));
-
-            Log.d("TIE_DBG", "AFTER REFRESHING WEAPONS.\n");
-            Log.d("TIE_DBG", "potential = " + potentialInitiator + "\n");
-            Log.d("TIE_DBG", "opponent  = " + opponent + "\n");
-
-            possibleMatch = true;   //this will proc another fight
-            setInTie(false);
-            panel.resume();
-
+            handleTie(event.getX(), event.getY());
             lookForPotentialMatch(potentialInitiator);
             return;
         }
@@ -129,34 +110,20 @@ public class GameManager {
         }
         //Player has a legit focused soldier and attempted to move to new suggested (arrow) tile
         else if(hasFocusedSoldier && !menuOpen()){
-            handleSoldierMove(event.getX(), event.getY());
+            handlePlayerMovementRequest(event.getX(), event.getY());
             setTurnThinkingTimeSleep(900);
         }
 
         //look for another potential match after player has made a move
         if(possibleMatch) {
             lookForPotentialMatch(potentialInitiator);
-
-            if(isInTie()){
-                Log.d("TIE_DBG", "in tie after lookForPotentialMatch.. returning\n");
+            if(isInTie())
                 return;
-            }
-
         }
 
         //A.I will instantly play after Player's turn
         if(teamTurn == TEAM_A_TURN && !menuOpen()){
-            panel.pause();
-
-            clearHighlights();
-            playAsAI();
-            potentialInitiator = AISoldier;
-            possibleMatch = true;
-            teamTurn = TEAM_B_TURN;
-            panel.resetClock();
-
-            panel.resume();
-            MainMenuActivity.getSoundEffects().play(R.raw.move_enemy, SettingsActivity.sfxGeneralVolume, SettingsActivity.sfxGeneralVolume);
+            handleAIMovementRequest();
         }
 
         //look for another potential match after AI has made a move
@@ -166,7 +133,44 @@ public class GameManager {
         }
     }
 
-    private void handleSoldierMove(float x, float y) {
+    private void handleTie(float x, float y) {
+        //todo: remove debug prints eventually.
+        Log.d("TIE_DBG", "handling click after tie.\n");
+        Log.d("TIE_DBG", "BEFORE REFRESHING WEAPONS.\n");
+        Log.d("TIE_DBG", "potential = " + potentialInitiator + "\n");
+        Log.d("TIE_DBG", "opponent  = " + opponent + "\n");
+        panel.pause();
+        Log.d("TIE_DBG", "picking new weapon..\n");
+        newWeaponChoice = board.getNewPickedWeapon(x, y);
+        Log.d("TIE_DBG", "picked = " + newWeaponChoice + "\n");
+
+        refreshSoldierType(opponent, newWeaponChoice);
+        refreshSoldierType(potentialInitiator, randWeapon(newWeaponChoice));
+
+        Log.d("TIE_DBG", "AFTER REFRESHING WEAPONS.\n");
+        Log.d("TIE_DBG", "potential = " + potentialInitiator + "\n");
+        Log.d("TIE_DBG", "opponent  = " + opponent + "\n");
+
+        possibleMatch = true;   //this will proc another fight
+        setInTie(false);
+        panel.resume();
+    }
+
+    private void handleAIMovementRequest() {
+        panel.pause();
+
+        clearHighlights();
+        playAsAI();
+        potentialInitiator = AISoldier;
+        possibleMatch = true;
+        teamTurn = TEAM_B_TURN;
+        panel.resetClock();
+
+        panel.resume();
+        MainMenuActivity.getSoundEffects().play(R.raw.move_enemy, SettingsActivity.sfxGeneralVolume, SettingsActivity.sfxGeneralVolume);
+    }
+
+    private void handlePlayerMovementRequest(float x, float y) {
         panel.pause();
 
         Tile newTile = board.getTileAt(x, y);
