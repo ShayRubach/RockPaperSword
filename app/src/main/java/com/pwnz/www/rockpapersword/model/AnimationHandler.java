@@ -39,7 +39,7 @@ public class AnimationHandler {
 
 
     public void initAnimationDetails(Context context, int spriteId, int rowsCnt, int colsCnt){
-        //todo: add this = new AnimationButton() and lose the instantiation on the objects
+
         this.spriteId = spriteId;
 
         spriteSheet = BitmapFactory.decodeResource(context.getResources(), spriteId);

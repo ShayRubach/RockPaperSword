@@ -4,9 +4,7 @@ import android.content.Context;
 import android.content.res.Resources;
 import android.util.Log;
 import android.view.MotionEvent;
-import android.widget.Toast;
 
-import com.pwnz.www.rockpapersword.Activities.GameActivity;
 import com.pwnz.www.rockpapersword.Activities.MainMenuActivity;
 import com.pwnz.www.rockpapersword.Activities.SettingsActivity;
 import com.pwnz.www.rockpapersword.GamePanel;
@@ -20,7 +18,6 @@ import com.pwnz.www.rockpapersword.model.Tile;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Random;
-import java.util.concurrent.ThreadLocalRandom;
 
 /**
  * Managing the game logic and decisions. Fetches data from Board and deliver to GamePanel (UI Thread).
@@ -115,13 +112,7 @@ public class GameManager {
         }
         //Player has focused (clicked) a soldier but yet tried to moved
         if(board.getClickedSoldier(x,y) != null) {
-            panel.pause();
-            focusedSoldier = board.getClickedSoldier(x, y);
-            clearHighlights();
-            hasFocusedSoldier = true;
-            possibleMatch = false;
-            board.displaySoldierPath(focusedSoldier);
-            panel.resume();
+            markSelectedSoldier(event.getX(), event.getY());
         }
         else if(menuButtonWasPressed(x, y)){
             setMenuOpen(true);
@@ -138,22 +129,7 @@ public class GameManager {
         }
         //Player has a legit focused soldier and attempted to move to new suggested (arrow) tile
         else if(hasFocusedSoldier && !menuOpen()){
-            panel.pause();
-
-            Tile newTile = board.getTileAt(x, y);
-
-            //make sure tile is traversal and in legit location on screen
-            if(newTile != null){
-                clearHighlights();
-                moveSoldier(focusedSoldier, newTile);
-                MainMenuActivity.getSoundEffects().play(R.raw.move_self, SettingsActivity.sfxGeneralVolume, SettingsActivity.sfxGeneralVolume);
-                potentialInitiator = focusedSoldier;
-                hasFocusedSoldier = false;
-                possibleMatch = true;
-                teamTurn = TEAM_A_TURN;
-
-            }
-            panel.resume();
+            foo(event.getX(), event.getY());
             setTurnThinkingTimeSleep(900);
         }
 
@@ -187,6 +163,35 @@ public class GameManager {
             setTurnThinkingTimeSleep(500);
             lookForPotentialMatch(potentialInitiator);
         }
+    }
+
+    private void foo(float x, float y) {
+        panel.pause();
+
+        Tile newTile = board.getTileAt(x, y);
+
+        //make sure tile is traversal and in legit location on screen
+        if(newTile != null){
+            clearHighlights();
+            moveSoldier(focusedSoldier, newTile);
+            MainMenuActivity.getSoundEffects().play(R.raw.move_self, SettingsActivity.sfxGeneralVolume, SettingsActivity.sfxGeneralVolume);
+            potentialInitiator = focusedSoldier;
+            hasFocusedSoldier = false;
+            possibleMatch = true;
+            teamTurn = TEAM_A_TURN;
+
+        }
+        panel.resume();
+    }
+
+    private void markSelectedSoldier(float x, float y) {
+        panel.pause();
+        focusedSoldier = board.getClickedSoldier(x, y);
+        clearHighlights();
+        hasFocusedSoldier = true;
+        possibleMatch = false;
+        board.displaySoldierPath(focusedSoldier);
+        panel.resume();
     }
 
     private void refreshSoldierType(Soldier soldier, SoldierType newWeaponChoice) {
@@ -229,7 +234,7 @@ public class GameManager {
     private void lookForPotentialMatch(Soldier initiator) {
         Log.d("TIE_DBG", "lookForPotentialMatch called");
         RPSMatchResult matchResult;
-        boolean alreadyEliminated = false;
+
         if(initiator == null) {
             return;
         }
@@ -258,59 +263,62 @@ public class GameManager {
 
             Log.d("MEGA_DBG","matchResult: " + matchResult + "\n");
 
-            Tile newTile;
-            switch (matchResult){
-                case TIE:
-                    Log.d("TIE_DBG", "calling rematch.\n");
-                    setInTie(true);
-                    initiator.setRevealed(true);
-                    initiator.setSoldierBitmap(initiator.getSoldierRevealedBitmap());
-                    break;
-                case BOTH_ELIMINATED:
-                    eliminateBoth(initiator, opponent);
-                    break;
-
-                case TEAM_A_WON_THE_MATCH:
-                    newTile = opponent.getTile();
-                    Log.d("MEGA_DBG", "moving " + initiator + "\nto" + newTile);
-                    eliminateSoldier(opponent);
-                    alreadyEliminated = true;
-                    moveSoldier(initiator, newTile);
-                case REVEAL_TEAM_A:
-                    Log.d("MEGA_DBG", "revealing A\n");
-                    initiator.setRevealed(true);
-                    initiator.setSoldierBitmap(initiator.getSoldierRevealedBitmap());
-                    if(!alreadyEliminated)
-                        eliminateSoldier(opponent);
-                    break;
-
-                case TEAM_B_WON_THE_MATCH:
-                    newTile = initiator.getTile();
-                    eliminateSoldier(initiator);
-                    alreadyEliminated = true;
-                    moveSoldier(opponent, newTile);
-                    Log.d("MEGA_DBG", "moving " + opponent + "\nto\n" + newTile);
-                case REVEAL_TEAM_B:
-                    Log.d("MEGA_DBG", "revealing B\n");
-                    opponent.setRevealed(true);
-                    if(!alreadyEliminated)
-                        eliminateSoldier(initiator);
-                    break;
-
-                case TEAM_A_WINS_THE_GAME:
-                    finishGame(Board.TEAM_A);
-                    break;
-                case TEAM_B_WINS_THE_GAME:
-                    finishGame(Board.TEAM_B);
-                    break;
-
-
-            }
+            handleMatchResult(matchResult, initiator);
 
             //safely reassign potentialInitiator to its initiator reference. this was a bug for some reason.
             potentialInitiator = initiator;
             possibleMatch = false;
             panel.resume();
+        }
+    }
+
+    private void handleMatchResult(RPSMatchResult matchResult, Soldier initiator) {
+        Tile newTile;
+        boolean alreadyEliminated = false;
+        switch (matchResult){
+            case TIE:
+                Log.d("TIE_DBG", "calling rematch.\n");
+                setInTie(true);
+                initiator.setRevealed(true);
+                initiator.setSoldierBitmap(initiator.getSoldierRevealedBitmap());
+                break;
+            case BOTH_ELIMINATED:
+                eliminateBoth(initiator, opponent);
+                break;
+
+            case TEAM_A_WON_THE_MATCH:
+                newTile = opponent.getTile();
+                Log.d("MEGA_DBG", "moving " + initiator + "\nto" + newTile);
+                eliminateSoldier(opponent);
+                alreadyEliminated = true;
+                moveSoldier(initiator, newTile);
+            case REVEAL_TEAM_A:
+                Log.d("MEGA_DBG", "revealing A\n");
+                initiator.setRevealed(true);
+                initiator.setSoldierBitmap(initiator.getSoldierRevealedBitmap());
+                if(!alreadyEliminated)
+                    eliminateSoldier(opponent);
+                break;
+
+            case TEAM_B_WON_THE_MATCH:
+                newTile = initiator.getTile();
+                eliminateSoldier(initiator);
+                alreadyEliminated = true;
+                moveSoldier(opponent, newTile);
+                Log.d("MEGA_DBG", "moving " + opponent + "\nto\n" + newTile);
+            case REVEAL_TEAM_B:
+                Log.d("MEGA_DBG", "revealing B\n");
+                opponent.setRevealed(true);
+                if(!alreadyEliminated)
+                    eliminateSoldier(initiator);
+                break;
+
+            case TEAM_A_WINS_THE_GAME:
+                finishGame(Board.TEAM_A);
+                break;
+            case TEAM_B_WINS_THE_GAME:
+                finishGame(Board.TEAM_B);
+                break;
         }
     }
 

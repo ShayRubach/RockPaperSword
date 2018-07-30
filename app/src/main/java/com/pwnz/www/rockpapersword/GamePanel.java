@@ -122,8 +122,6 @@ public class GamePanel extends SurfaceView implements Runnable {
 
             }
             mSurfaceHolder.unlockCanvasAndPost(mCanvas);
-            setRedraw(false);
-
             endOfRenderTime = System.nanoTime();
             deltaTime = frameTimeNs - (endOfRenderTime - lastFrameTime);
 
@@ -222,9 +220,9 @@ public class GamePanel extends SurfaceView implements Runnable {
         boolean bAnimationEnded = soldierB.chooseNextFrame();
 
         //if animation ended, set match off & remove match animation from screen:
-        if(aAnimationEnded && bAnimationEnded){
-            gameClock.resetToFirstFrame();
+        if(aAnimationEnded || bAnimationEnded){
             manager.setMatchOn(false);
+            gameClock.resetToFirstFrame();
         }
 
     }

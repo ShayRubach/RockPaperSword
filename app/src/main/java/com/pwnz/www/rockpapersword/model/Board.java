@@ -10,6 +10,7 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Random;
 
+import com.pwnz.www.rockpapersword.Activities.MainMenuActivity;
 import com.pwnz.www.rockpapersword.R;
 import com.pwnz.www.rockpapersword.controller.GameManager;
 
@@ -95,21 +96,14 @@ public class Board {
 
         for (int i = 0; i < soldiersTypesCount ; i++) {
             //todo: @shay @idan - wrap this with a function (see todo 01)
+
             Soldier soldier = new Soldier();
             soldier.setTile(tile);
             soldier.setVisible(true);
             soldier.setTeam(team);
             soldier.setSoldierType(Soldier.pickUniqueSoldierType(i));
             soldier.spriteId = getMatchSpriteAnimation(soldier.getSoldierType(), soldier.getTeam());
-
-            soldier.spriteSheet = BitmapFactory.decodeResource(manager.getAppResources(), soldier.spriteId);
-            soldier.spriteSheetH = soldier.spriteSheet.getHeight();
-            soldier.spriteSheetW = soldier.spriteSheet.getWidth();
-            soldier.numberOfSpriteFrames = 4;
-            soldier.spriteFrameSrcH = soldier.spriteSheetH / 2;   //2 rows
-            soldier.spriteFrameSrcW = soldier.spriteSheetW / 5;   //5 columns
-
-            soldier.sourceRect = new Rect();
+            soldier.initAnimationDetails(manager.getPanelContext(), soldier.spriteId, 2, 5);
             soldier.destRect = soldier.getTile().getRect();
             soldier.resetToFirstFrame();
 

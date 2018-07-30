@@ -71,7 +71,6 @@ public class Soldier extends AnimationHandler {
 
 
     public void setSoldierAnimationSpriteByType() {
-        //todo: @shay - enhance animations, add highlighted drawables.
 
         switch (getSoldierType()){
             case STONE:
