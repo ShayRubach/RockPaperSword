@@ -129,7 +129,7 @@ public class GameManager {
         }
         //Player has a legit focused soldier and attempted to move to new suggested (arrow) tile
         else if(hasFocusedSoldier && !menuOpen()){
-            foo(event.getX(), event.getY());
+            handleSoldierMove(event.getX(), event.getY());
             setTurnThinkingTimeSleep(900);
         }
 
@@ -156,6 +156,7 @@ public class GameManager {
             panel.resetClock();
 
             panel.resume();
+            MainMenuActivity.getSoundEffects().play(R.raw.move_enemy, SettingsActivity.sfxGeneralVolume, SettingsActivity.sfxGeneralVolume);
         }
 
         //look for another potential match after AI has made a move
@@ -165,7 +166,7 @@ public class GameManager {
         }
     }
 
-    private void foo(float x, float y) {
+    private void handleSoldierMove(float x, float y) {
         panel.pause();
 
         Tile newTile = board.getTileAt(x, y);
