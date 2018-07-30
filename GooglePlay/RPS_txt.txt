@@ -24,24 +24,23 @@ Game Play
 The goal of the game is to eliminate the rival’s King!
 The game starts with 2 groups of players facing each other on a chess-like board, as the opponent’s weapons are concealed and the player sees his own team’s weapons.
 On each turn (which is time limited), the player can choose one of his soldiers by tapping on him and moving him to one of the highlighted tiles. 
-When 2 opponent’s are facing each other after moving, both soldiers are staged into a fight, which results depend on their weapons.
-First team to eliminate the opponent’s team’s King wins the game.
+When 2 opponent’s are facing each other after moving, both soldiers are staged into a fight, which results depend on their weapons. In case of a tie, the player dynamically chooses between one of 3 new weapon offers: Sword, Paper or Rock. First team to eliminate the opponent’s team’s King wins the game.
 
 
 Missing\Final Submission work topics:
-* New types of soldiers(Ashes, Lasso)
-* Tied match logic
-* Sound effects triggered by AI soldier
-* Game play music  
+* New types of soldier (Lasso)
+* Sound effects on win/lose/battle
 * Match related graphics
-* Reveal opponent weapon graphics
+
+
 Tasks Assignment:
 Shay
 * Architecture implementation
 * UI
-* Graphics
+* Custom Designed Graphics
 * Thread Management
 * Testings & QA
+* Refactoring
 
 
 Idan
@@ -49,3 +48,6 @@ Idan
 * UI
 * Debug
 * Testings & QA
+* Refactoring
+* Performance reviews
+* Documentation
