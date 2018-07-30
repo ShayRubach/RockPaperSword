@@ -226,7 +226,7 @@ public class Board {
 
     private void initNewWeaponPaper() {
         newWeaponPaper = new AnimationHandler();
-        newWeaponPaper.initAnimationDetails(manager.getPanelContext(), R.drawable.paper_solo, 1, 1);
+        newWeaponPaper.initAnimationDetails(manager.getPanelContext(), R.drawable.paper_solo_sprite, 3, 5);
         int left = (canvasW/2) + (newWeaponPaper.spriteFrameSrcW/2)*3;
         int right = (canvasW/2) + (newWeaponPaper.spriteFrameSrcW/2)*6;
         int top = 0;
