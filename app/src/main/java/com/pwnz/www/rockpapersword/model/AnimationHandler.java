@@ -19,18 +19,14 @@ public class AnimationHandler {
 
     //Source variables:
     protected Bitmap spriteSheet;
-    protected Bitmap clockSpriteFrame;
     protected int spriteId;
     protected int spriteSheetH, spriteSheetW;
     protected int spriteFrameSrcW,spriteFrameSrcH;
-    protected int spriteFrameSrcPosX,spriteFrameSrcPosY;
     protected int numberOfSpriteFrames;
     protected Rect sourceRect;
 
     //Destination variables:
     protected int canvasW, canvasH;
-    protected int spriteFrameDstW,spriteFrameDstH;
-    protected int spriteFrameDstPosX,spriteFrameDstPosY;
     protected Rect destRect;
 
     protected int clockPadding;

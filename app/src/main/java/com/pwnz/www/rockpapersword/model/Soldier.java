@@ -1,10 +1,8 @@
 package com.pwnz.www.rockpapersword.model;
 
-import android.content.Context;
 import android.content.res.Resources;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
-import android.util.Log;
 
 import com.pwnz.www.rockpapersword.R;
 
@@ -185,10 +183,6 @@ public class Soldier extends AnimationHandler {
 
     public void setAnimationSprite(int animationSprite) {
         this.animationSprite = animationSprite;
-    }
-
-    public int getAnimationSprite() {
-        return animationSprite;
     }
 
     public void highlight() {

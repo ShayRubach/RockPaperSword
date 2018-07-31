@@ -64,6 +64,9 @@ public class GameManager {
 
     }
 
+    /**
+     * shuffle the tiles of all soldiers to create diversity
+     */
     private void shuffleBothTeams() {
         board.shuffleTeams(board.getSoldierTeamA());
         board.shuffleTeams(board.getSoldierTeamB());
@@ -156,6 +159,9 @@ public class GameManager {
         panel.resume();
     }
 
+    /**
+     * handles the AI automatic movement on its turn
+     */
     private void handleAIMovementRequest() {
         panel.pause();
 
@@ -170,6 +176,12 @@ public class GameManager {
         MainMenuActivity.getSoundEffects().play(R.raw.move_enemy, SettingsActivity.sfxGeneralVolume, SettingsActivity.sfxGeneralVolume);
     }
 
+    /**
+     * handles the movement request from a player. validates the new tiles and indicates if potential
+     * match is possible or not.
+     * @param x clicked x pos
+     * @param y clicked y pos
+     */
     private void handlePlayerMovementRequest(float x, float y) {
         panel.pause();
 
@@ -189,6 +201,11 @@ public class GameManager {
         panel.resume();
     }
 
+    /**
+     * highlights and set the focused soldier at any current time
+     * @param x soldier x pos
+     * @param y soldier y pos
+     */
     private void markSelectedSoldier(float x, float y) {
         panel.pause();
         focusedSoldier = board.getClickedSoldier(x, y);
@@ -199,6 +216,11 @@ public class GameManager {
         panel.resume();
     }
 
+    /**
+     * after tie event, both soldiers are given with new weapons. this method updates its view resources.
+     * @param soldier trivial
+     * @param newWeaponChoice trivial
+     */
     private void refreshSoldierType(Soldier soldier, SoldierType newWeaponChoice) {
         soldier.setSoldierType(newWeaponChoice);
         soldier.setSoldierAnimationSpriteByType();
@@ -277,6 +299,11 @@ public class GameManager {
         }
     }
 
+    /**
+     * decides what actions should be taken following the match result
+     * @param matchResult
+     * @param initiator
+     */
     private void handleMatchResult(RPSMatchResult matchResult, Soldier initiator) {
         Tile newTile;
         boolean alreadyEliminated = false;
@@ -358,6 +385,10 @@ public class GameManager {
         }
     }
 
+    /**
+     * updates the finish game flag and set the winner team.
+     * @param team
+     */
     private void finishGame(int team) {
         winningTeam = team;
     }
@@ -489,7 +520,9 @@ public class GameManager {
         }
     }
 
-    //todo: implement this
+    /**
+     * swap turns between player and AI (in case of clock timeout for example)
+     */
     public void swapTurns() {
         if(teamTurn == TEAM_B_TURN) {
             teamTurn = TEAM_A_TURN;
@@ -545,11 +578,4 @@ public class GameManager {
         this.inTie = inTie;
     }
 
-    public SoldierType getNewWeaponChoice() {
-        return newWeaponChoice;
-    }
-
-    public void setNewWeaponChoice(SoldierType newWeaponChoice) {
-        this.newWeaponChoice = newWeaponChoice;
-    }
 }
