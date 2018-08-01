@@ -358,7 +358,7 @@ public class GameManager {
     private void updateMatchFighters(Soldier teamASoldier, Soldier teamBSoldier){
 
 
-        matchFighters = "ashes_vs_king"; return;
+        matchFighters = "king_vs_king"; return;
 
         //todo: turn this on when all animations are ready
         /*

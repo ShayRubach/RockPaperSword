@@ -66,9 +66,9 @@ public class Board {
      */
     private void initMatchAnimationsMap(){
 
-        AnimationHandler ashesVsKing = new AnimationHandler(manager.getPanelContext(), R.drawable.match_sprite_ashes_king, 6, 5, matchAnimationPosition);
+        AnimationHandler ashesVsKing = new AnimationHandler(manager.getPanelContext(), R.drawable.match_sprite_king_king, 6, 5, matchAnimationPosition);
 
-        matchAnimationsMap.put("ashes_vs_king", ashesVsKing);
+        matchAnimationsMap.put("king_vs_king", ashesVsKing);
 
     }
 
