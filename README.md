@@ -40,7 +40,7 @@ This is a simple Rock Paper Scissors remake for the ICQ version (with a twist!).
 <br>Shieldon has a big shield that will cause its facing opponent to die, no matter what weapon he used. After a battle, Shieldon will be gone up to heaven, after completing his task!<br>
 ![shieldon](https://user-images.githubusercontent.com/21342315/40282701-7d78c9ea-5c73-11e8-931f-57b56d94b182.png)<br>
 ***"Ashes"***
-<br>Ashes a "fake soldier" that will ~~reveal the weapon of its facing opponent and vanish~~ die no matter who is he facing. ~~Ashes will not kill the opponent but only leave him revealed..~~<br>
+<br>Ashes is a "fake soldier" that will reveal the weapon of its facing opponent ,vanish and die. No matter who is he facing. Ashes will not kill the opponent but only leave him revealed..<br>
 ![ashes](https://user-images.githubusercontent.com/21342315/40282705-95631574-5c73-11e8-9a24-5e1c437d2977.png)
 
 
