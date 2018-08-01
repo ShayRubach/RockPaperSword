@@ -15,6 +15,7 @@ import android.view.SurfaceView;
 import com.pwnz.www.rockpapersword.Activities.GameActivity;
 import com.pwnz.www.rockpapersword.Activities.MainMenuActivity;
 import com.pwnz.www.rockpapersword.controller.GameManager;
+import com.pwnz.www.rockpapersword.model.AnimationHandler;
 import com.pwnz.www.rockpapersword.model.Board;
 import com.pwnz.www.rockpapersword.model.RPSClock;
 import com.pwnz.www.rockpapersword.model.Soldier;
@@ -204,23 +205,18 @@ public class GamePanel extends SurfaceView implements Runnable {
     }
 
     private void drawMatch() {
-        //todo: possible logic simplification: use 1 animation that holds both players in match with all permutations @shay
 
-        //todo: @shay - replace the values with constants
-        Soldier soldierA = manager.getBoard().getMatchSoldierTeamA().get(0);
-        Soldier soldierB = manager.getBoard().getMatchSoldierTeamB().get(0);
+        AnimationHandler matchAnimation = manager.getBoard().getMatchAnimationsMap().get(manager.getMatchFighters());
 
-        if(soldierA == null || soldierB == null)
-            System.out.println("drawMatch: one of the fighting soldiers is null.");
+        if(matchAnimation== null)
+            System.out.println("drawMatch: match animation handler is null.");
 
-        soldierA.drawAnimation(mCanvas);
-        soldierB.drawAnimation(mCanvas);
+        matchAnimation.drawAnimation(mCanvas);
 
-        boolean aAnimationEnded = soldierA.chooseNextFrame();
-        boolean bAnimationEnded = soldierB.chooseNextFrame();
+        boolean endOfAnimation = matchAnimation.chooseNextFrame();
 
         //if animation ended, set match off & remove match animation from screen:
-        if(aAnimationEnded || bAnimationEnded){
+        if(endOfAnimation){
             manager.setMatchOn(false);
             gameClock.resetToFirstFrame();
         }
@@ -356,7 +352,6 @@ public class GamePanel extends SurfaceView implements Runnable {
         mPlayThread = new Thread(this);
         mPlayThread.start();
     }
-
 
     public void setInMenuScreen(boolean inMenuScreen) {
         isInMenuScreen = inMenuScreen;

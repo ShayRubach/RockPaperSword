@@ -33,6 +33,13 @@ public class AnimationHandler {
     protected int spriteCol = 0;
     protected int spriteRow = 0;
 
+    public AnimationHandler() {}
+
+    //todo: refactor - use this ctor instad of new + initDetails
+    public AnimationHandler(Context context, int spriteId, int rowsCnt, int colsCnt, Rect rect){
+        initAnimationDetails(context, spriteId, rowsCnt, colsCnt);
+        setDestRect(rect);
+    }
 
     public void initAnimationDetails(Context context, int spriteId, int rowsCnt, int colsCnt){
 
@@ -49,7 +56,6 @@ public class AnimationHandler {
         canvasW = context.getResources().getDisplayMetrics().widthPixels;
 
         sourceRect = new Rect();
-        //todo: move the Rect assignment to here insead of outside this method
     }
 
     public void drawAnimation(Canvas canvas){
@@ -97,6 +103,10 @@ public class AnimationHandler {
 
     public Bitmap getSpriteSheet() {
         return spriteSheet;
+    }
+
+    public void setDestRect(Rect destRect) {
+        this.destRect = destRect;
     }
 }
 

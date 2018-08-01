@@ -6,8 +6,11 @@ import android.graphics.BitmapFactory;
 import android.graphics.Rect;
 import android.util.Log;
 import android.util.Pair;
+
+
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.HashMap;
 
 import com.pwnz.www.rockpapersword.R;
 import com.pwnz.www.rockpapersword.controller.GameManager;
@@ -24,14 +27,12 @@ public class Board {
     Tile[][] tiles;
     ArrayList<Soldier> soldierTeamA = new ArrayList<>();
     ArrayList<Soldier> soldierTeamB = new ArrayList<>();
-    ArrayList<Soldier> matchSoldierTeamA = new ArrayList<>();
-    ArrayList<Soldier> matchSoldierTeamB = new ArrayList<>();
 
     ArrayList<Pair<Tile, SoldierMovement>> pathArrows = new ArrayList<>();
     AnimationHandler winAnnouncementAnimation, loseAnnouncementAnimation, judge;
     AnimationHandler openMenuIngameBtn, resumeGameBtn, backToMenuBtn;
     AnimationHandler newWeaponSword, newWeaponRock, newWeaponPaper;
-
+    HashMap<String, AnimationHandler> matchAnimationsMap = new HashMap<>();
 
     int cols, rows;
     int canvasW, canvasH;
@@ -46,6 +47,7 @@ public class Board {
     private GameManager manager;
     private AnimationHandler gameBg;
     private Bitmap revealMark;
+    private Rect matchAnimationPosition;
 
     public Board(int cols, int rows, int canvasW, int canvasH, int brightColor, int darkColor) {
         this.cols = cols;
@@ -60,102 +62,22 @@ public class Board {
     }
 
     /**
-     * Allocate a team of soldiers that will be displayed on the match scenes. According to which team is asked to be allocated,
-     * the sprites will be chosen.
-     * @param team which team to init
-     * @param matchSoldierTeam the list
-     * @param soldiersTypesCount usually maximum types number
+     * initiation of the list holding all of the match animations.
      */
-    private void initSoldierMatchTeam(int team, ArrayList<Soldier> matchSoldierTeam, int soldiersTypesCount) {
+    private void initMatchAnimationsMap(){
 
-        if(matchSoldierTeam == null)
-            return;
+        AnimationHandler ashesVsKing = new AnimationHandler(manager.getPanelContext(), R.drawable.match_sprite_ashes_king, 6, 5, matchAnimationPosition);
 
-        int distanceBetweenAnimationsOffset = (tileW/2);
-        float tileWidthOffset = (float) (tileW * 2.5);
-        float tileHeightOffset = (float) (tileH * 1.5);
+        matchAnimationsMap.put("ashes_vs_king", ashesVsKing);
 
-        Tile tile = new Tile();
-        Rect rect = new Rect();
-        if(team == TEAM_A){
-            rect.left   = (int)((canvasW/2) - tileWidthOffset) + distanceBetweenAnimationsOffset;
-            rect.top    = (int)((canvasH/2) - tileHeightOffset);
-            rect.right  = canvasW/2;
-            rect.bottom = (int)((canvasH/2) + tileHeightOffset);
-        }
-        else{
-            rect.left   =  canvasW/2 - distanceBetweenAnimationsOffset;
-            rect.top    = (int)((canvasH/2) - tileHeightOffset);
-            rect.right  = (int)((canvasW/2) + tileWidthOffset);
-            rect.bottom = (int)((canvasH/2) + tileHeightOffset);
-        }
-
-        tile.setRect(rect);
-
-        for (int i = 0; i < soldiersTypesCount ; i++) {
-            //todo: @shay @idan - wrap this with a function (see todo 01)
-
-            Soldier soldier = new Soldier();
-            soldier.setTile(tile);
-            soldier.setVisible(true);
-            soldier.setTeam(team);
-            soldier.setSoldierType(Soldier.pickUniqueSoldierType(i));
-            soldier.spriteId = getMatchSpriteAnimation(soldier.getSoldierType(), soldier.getTeam());
-            soldier.initAnimationDetails(manager.getPanelContext(), soldier.spriteId, 2, 5);
-            soldier.destRect = soldier.getTile().getRect();
-            soldier.resetToFirstFrame();
-
-            matchSoldierTeam.add(soldier);
-        }
     }
 
-    private int getMatchSpriteAnimation(SoldierType soldierType, int team) {
-
-        if(soldierType == null){
-            System.out.println("SoldierType is null");
-            return -1;
-        }
-
-        switch (soldierType){
-            case ASHES:
-                if(team == TEAM_A)
-                    return R.drawable.samurai_hit_sprite;
-                else
-                    return R.drawable.samurai_die_sprite;
-            case SWORDMASTER:
-                if(team == TEAM_A)
-                    return R.drawable.samurai_hit_sprite;
-                else
-                    return R.drawable.samurai_die_sprite;
-            case SHIELDON:
-                if(team == TEAM_A)
-                    return R.drawable.samurai_hit_sprite;
-                else
-                    return R.drawable.samurai_die_sprite;
-            case PEPPER:
-                if(team == TEAM_A)
-                    return R.drawable.samurai_hit_sprite;
-                else
-                    return R.drawable.samurai_die_sprite;
-            case STONE:
-                if(team == TEAM_A)
-                    return R.drawable.samurai_hit_sprite;
-                else
-                    return R.drawable.samurai_die_sprite;
-            case KING:
-                if(team == TEAM_A)
-                    return R.drawable.samurai_die_sprite;
-                else
-                    return R.drawable.samurai_die_sprite;
-            case LASSO:
-                if(team == TEAM_A)
-                    return R.drawable.samurai_die_sprite;
-                else
-                    return R.drawable.samurai_die_sprite;
-        }
-
-
-        return R.drawable.soldier_shieldon;
+    private void initMatchAnimationPosition() {
+        matchAnimationPosition = new Rect();
+        matchAnimationPosition.left   = canvasW/4;
+        matchAnimationPosition.top    = canvasH/3;
+        matchAnimationPosition.right  = matchAnimationPosition.left * 3;
+        matchAnimationPosition.bottom = matchAnimationPosition.top  * 2;
     }
 
     private void allocateSoldierTeam(ArrayList<Soldier> soldierTeam, int size) {
@@ -194,12 +116,12 @@ public class Board {
         initTiles(boardPadding, tileW, tileH);
         initSoldiers(soldierTeamA, TEAM_A, 0);
         initSoldiers(soldierTeamB, TEAM_B, 4);
-        initSoldierMatchTeam(TEAM_A, matchSoldierTeamA, SOLDIERS_TYPES_COUNT);
-        initSoldierMatchTeam(TEAM_B, matchSoldierTeamB, SOLDIERS_TYPES_COUNT);
         initJudge(R.drawable.judge_nutral_sprite);
         initWinningTeamAnnouncementAnimation();
         initInGameMenu();
         initNewWeaponsChoiceOnTie();
+        initMatchAnimationPosition();
+        initMatchAnimationsMap();
         setRevealMark(BitmapFactory.decodeResource(manager.getAppResources(), R.drawable.reveal_mark));
     }
 
@@ -623,15 +545,6 @@ public class Board {
     public ArrayList<Pair<Tile, SoldierMovement>> getPathArrows() {
         return pathArrows;
     }
-
-    public ArrayList<Soldier> getMatchSoldierTeamA() {
-        return matchSoldierTeamA;
-    }
-
-    public ArrayList<Soldier> getMatchSoldierTeamB() {
-        return matchSoldierTeamB;
-    }
-
     public AnimationHandler getGameBg() {
         return gameBg;
     }
@@ -718,5 +631,9 @@ public class Board {
 
     public AnimationHandler getNewWeaponPaper() {
         return newWeaponPaper;
+    }
+
+    public HashMap<String, AnimationHandler> getMatchAnimationsMap() {
+        return matchAnimationsMap;
     }
 }
