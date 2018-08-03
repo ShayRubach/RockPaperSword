@@ -48,7 +48,7 @@ public class MainMenuActivity extends AppCompatActivity implements View.OnClickL
         mAboutImage.setOnClickListener(this);
 
         if(!isMusicPlaying){
-            loadSoundAndPlay(this, SettingsActivity.sfxGeneralVolume, R.raw.bp_music_open_campfire);
+            loadSoundAndPlay(this, SettingsActivity.bgGeneralVolume, R.raw.bp_music_open_campfire);
         }
 
         if (mSoundEffects == null) {

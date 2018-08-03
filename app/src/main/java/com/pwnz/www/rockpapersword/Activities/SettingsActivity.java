@@ -21,10 +21,11 @@ public class SettingsActivity extends AppCompatActivity {
     private SeekBar mBgMusic, mSfx;
     private ImageView bgVolumeLogo, sfxVolumeLogo;
     private Button mBtnBackToMainMenu;
-    public static float sfxGeneralVolume = 50;
 
+    private static final float DEFAULT_VOLUME_VALUE = 30;
+    public static float sfxGeneralVolume = DEFAULT_VOLUME_VALUE;
+    public static float bgGeneralVolume = DEFAULT_VOLUME_VALUE;
 
-    private final int DEFAULT_VOLUME_VALUE = 30;
     private final int MUTE = 0;
     private static final String MUTE_MSG = "Muted";
     private final int mMuteLogo = android.R.drawable.ic_lock_silent_mode;
@@ -45,14 +46,14 @@ public class SettingsActivity extends AppCompatActivity {
         bgVolumeLogo = findViewById(R.id.img_sound_on_or_off);
         sfxVolumeLogo = findViewById(R.id.img_sfx_on_or_off);
 
-        mBgMusic.setProgress(DEFAULT_VOLUME_VALUE);
-        mSfx.setProgress(DEFAULT_VOLUME_VALUE);
+        mBgMusic.setProgress((int) DEFAULT_VOLUME_VALUE);
+        mSfx.setProgress((int) DEFAULT_VOLUME_VALUE);
 
         mBgMusic.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
             @Override
             public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
-                float output = progress / MAX_VOLUME;
-                MainMenuActivity.mediaPlayer.setVolume(output, output);
+                bgGeneralVolume  = progress / MAX_VOLUME;
+                MainMenuActivity.mediaPlayer.setVolume(bgGeneralVolume , bgGeneralVolume);
 
                 if(progress == MUTE){
                     mute(bgVolumeLogo);
@@ -71,8 +72,7 @@ public class SettingsActivity extends AppCompatActivity {
         mSfx.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
             @Override
             public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
-                sfxGeneralVolume = progress / MAX_VOLUME;
-
+                sfxGeneralVolume  = progress / MAX_VOLUME;
                 MainMenuActivity.getSoundEffects().play(sfxVol, sfxGeneralVolume, sfxGeneralVolume);
 
                 if(progress == MUTE){
