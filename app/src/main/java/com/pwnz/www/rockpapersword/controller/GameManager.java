@@ -298,7 +298,6 @@ public class GameManager {
         boolean alreadyEliminated = false;
         switch (matchResult){
             case TIE:
-                Log.d("TIE_DBG", "calling rematch.\n");
                 setInTie(true);
                 initiator.setRevealed(true);
                 initiator.setSoldierBitmap(initiator.getSoldierRevealedBitmap());
@@ -309,12 +308,11 @@ public class GameManager {
 
             case TEAM_A_WON_THE_MATCH:
                 newTile = opponent.getTile();
-                Log.d("MEGA_DBG", "moving " + initiator + "\nto" + newTile);
                 eliminateSoldier(opponent);
                 alreadyEliminated = true;
                 moveSoldier(initiator, newTile);
+                MainMenuActivity.getSoundEffects().play(R.raw.move_enemy, SettingsActivity.sfxGeneralVolume, SettingsActivity.sfxGeneralVolume);
             case REVEAL_TEAM_A:
-                Log.d("MEGA_DBG", "revealing A\n");
                 initiator.setRevealed(true);
                 initiator.setSoldierBitmap(initiator.getSoldierRevealedBitmap());
                 if(!alreadyEliminated)
@@ -326,9 +324,8 @@ public class GameManager {
                 eliminateSoldier(initiator);
                 alreadyEliminated = true;
                 moveSoldier(opponent, newTile);
-                Log.d("MEGA_DBG", "moving " + opponent + "\nto\n" + newTile);
+                MainMenuActivity.getSoundEffects().play(R.raw.move_self, SettingsActivity.sfxGeneralVolume, SettingsActivity.sfxGeneralVolume);
             case REVEAL_TEAM_B:
-                Log.d("MEGA_DBG", "revealing B\n");
                 opponent.setRevealed(true);
                 if(!alreadyEliminated)
                     eliminateSoldier(initiator);
@@ -447,11 +444,9 @@ public class GameManager {
      * @return the result of the match
      */
     private RPSMatchResult match(Soldier potentialInitiator, Soldier opponent) {
-        Log.d("MEGA_DBG","\n match:  " +  potentialInitiator + "\nVS.\n" + opponent + "\n");
-        switch (potentialInitiator.getSoldierType()){
-            //todo: impl this later. LASSO == STONE at the moment - @shay
 
-            case LASSO:
+        switch (potentialInitiator.getSoldierType()){
+
             case STONE:
                 switch (opponent.getSoldierType()){
                     case KING:          return RPSMatchResult.TEAM_A_WINS_THE_GAME;
@@ -499,7 +494,7 @@ public class GameManager {
             case KING:
                 switch (opponent.getSoldierType()){
                     //todo: solve king vs king
-                    case KING:          return RPSMatchResult.TEAM_A_WINS_THE_GAME;
+                    case KING:          return RPSMatchResult.TEAM_B_WINS_THE_GAME;
                     case ASHES:         return RPSMatchResult.REVEAL_TEAM_A;
                     default:            return RPSMatchResult.TEAM_B_WINS_THE_GAME;
                 }
@@ -515,17 +510,13 @@ public class GameManager {
     private void playAsAI() {
         AISoldier = board.getRandomSoldier();
         Tile tile = board.getTraversalTile();
-
         moveSoldier(AISoldier, tile);
-
-        //todo: add movement sound FX
-        //MainMenuActivity.getSoundEffects().play(R.raw.move_enemy, SettingsActivity.sfxGeneralVolume, SettingsActivity.sfxGeneralVolume);
+        MainMenuActivity.getSoundEffects().play(R.raw.move_enemy, SettingsActivity.sfxGeneralVolume, SettingsActivity.sfxGeneralVolume);
         clearHighlights();
         hasFocusedSoldier = false;
     }
 
     private void moveSoldier(Soldier focusedSoldier, Tile tile) {
-//        Log.d("MEGA_DBG", "MOVING " + focusedSoldier + " FROM " + focusedSoldier.getTile() + " TO " + tile);
         focusedSoldier.getTile().setOccupied(false);
         focusedSoldier.getTile().setCurrSoldier(null);
         focusedSoldier.setTile(tile);

@@ -238,7 +238,7 @@ public class Board {
      * Initiation of the win/lose announcement animation.
      */
     private void initWinningTeamAnnouncementAnimation() {
-        //todo 01: @shay @idan - handle code dup. create an initFunction on AnimationHandler for all these values and use it on RPSclock too.
+
         winAnnouncementAnimation = new AnimationHandler();
         loseAnnouncementAnimation = new AnimationHandler();
 
@@ -248,7 +248,6 @@ public class Board {
         loseAnnouncementAnimation.destRect = new Rect(0, 0, canvasW, canvasH);
         loseAnnouncementAnimation.resetToFirstFrame();
 
-        winAnnouncementAnimation.sourceRect = new Rect();
         winAnnouncementAnimation.destRect = new Rect(0, 0, canvasW, canvasH);
         winAnnouncementAnimation.resetToFirstFrame();
     }

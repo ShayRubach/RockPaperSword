@@ -15,8 +15,6 @@ public class Soldier extends AnimationHandler {
     private boolean isVisible;
     private boolean isHighlighted = false;
     private SoldierType soldierType;
-    //todo: change this to non-instantiated objects. only hold reference to premade bitmap list.
-    //todo: remove revealedSprites and bitmaps - not used
     private int team;
     private int tileOffset;
     private boolean isRevealed;
