@@ -137,22 +137,17 @@ public class GameManager {
     }
 
     private void handleTie(float x, float y) {
-        //todo: remove debug prints eventually.
-        Log.d("TIE_DBG", "handling click after tie.\n");
-        Log.d("TIE_DBG", "BEFORE REFRESHING WEAPONS.\n");
-        Log.d("TIE_DBG", "potential = " + potentialInitiator + "\n");
-        Log.d("TIE_DBG", "opponent  = " + opponent + "\n");
+
         panel.pause();
-        Log.d("TIE_DBG", "picking new weapon..\n");
         newWeaponChoice = board.getNewPickedWeapon(x, y);
-        Log.d("TIE_DBG", "picked = " + newWeaponChoice + "\n");
+
+        //if user clicks outside the new weapon choices area, do nothing.
+        if(newWeaponChoice == null){
+            return;
+        }
 
         refreshSoldierType(opponent, newWeaponChoice);
         refreshSoldierType(potentialInitiator, randWeapon(newWeaponChoice));
-
-        Log.d("TIE_DBG", "AFTER REFRESHING WEAPONS.\n");
-        Log.d("TIE_DBG", "potential = " + potentialInitiator + "\n");
-        Log.d("TIE_DBG", "opponent  = " + opponent + "\n");
 
         possibleMatch = true;   //this will proc another fight
         setInTie(false);
@@ -223,8 +218,7 @@ public class GameManager {
      */
     private void refreshSoldierType(Soldier soldier, SoldierType newWeaponChoice) {
         soldier.setSoldierType(newWeaponChoice);
-        soldier.setSoldierAnimationSpriteByType();
-        soldier.initBitmapsByType(getAppResources());
+        soldier.getBitmapsByType();
         soldier.setSoldierBitmap(soldier.getSoldierRevealedBitmap());
     }
 
@@ -259,7 +253,6 @@ public class GameManager {
      * @return none
      */
     private void lookForPotentialMatch(Soldier initiator) {
-        Log.d("TIE_DBG", "lookForPotentialMatch called");
         RPSMatchResult matchResult;
 
         if(initiator == null) {
@@ -278,18 +271,13 @@ public class GameManager {
                 opponent = temp;
             }
 
-            Log.d("TIE_DBG", "POT = " + initiator + "\n");
-            Log.d("TIE_DBG", "VS. \n");
-            Log.d("TIE_DBG", "OPP =" + opponent + "\n");
-
             panel.pause();
             panel.stopClock();
             setMatchOn(true);
 
+            //todo: this currently returns constant result due to unimplemented match animations
             updateMatchFighters(initiator, opponent);
             matchResult = match(initiator, opponent);
-
-            Log.d("MEGA_DBG","matchResult: " + matchResult + "\n");
 
             handleMatchResult(matchResult, initiator);
 
@@ -357,10 +345,6 @@ public class GameManager {
 
     private void updateMatchFighters(Soldier teamASoldier, Soldier teamBSoldier){
 
-
-        matchFighters = "king_vs_king"; return;
-
-        //todo: turn this on when all animations are ready
         /*
         switch (teamASoldier.getSoldierType()){
             case SWORDMASTER:
@@ -419,27 +403,12 @@ public class GameManager {
                 }
         }
 
-        //default test:
-        matchFighters = "ashes_vs_king"; return;
-
         */
-    }
+        //default test:
+        matchFighters = "ashes_vs_ashes";
+        return;
 
-    /**
-     * Go to the list that holds all of the soldiers objects who are used in drawMatch(), look
-     * for the types to be displayed in match, and put them on the beginning of the list for a
-     * fast get() on the UI thread later.
-     * @param soldier   the soldier reference from the board from the SoldierType that
-     *                  should be on the match()
-     * @param list      holds the pre-made soldiers that used in drawMatch.
-     * @param pairIndex the index to be swapped to.
-     */
-    private void findAndSwap(Soldier soldier, ArrayList<Soldier> list, int pairIndex) {
-        for (int i = 0; i < list.size() && !list.isEmpty(); i++) {
-            if(list.get(i).getSoldierType() == soldier.getSoldierType()){
-                Collections.swap(list, i,pairIndex);
-            }
-        }
+
     }
 
     /**

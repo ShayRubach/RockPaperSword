@@ -41,13 +41,13 @@ public class Board {
     public static final int TILE_OFFSET_PERCENTAGE = 6 ;
     public static final int TEAM_A = 0;
     public static final int TEAM_B = 1;
-    public static final int SOLDIERS_TYPES_COUNT = 7;
     private static final int DEFAULT_SHUFFLE_TIMES = 2;
 
     private GameManager manager;
     private AnimationHandler gameBg;
     private Bitmap revealMark;
     private Rect matchAnimationPosition;
+    private GameStorage storage;
 
     public Board(int cols, int rows, int canvasW, int canvasH, int brightColor, int darkColor) {
         this.cols = cols;
@@ -62,16 +62,17 @@ public class Board {
     }
 
     /**
-     * initiation of the list holding all of the match animations.
+     * initiation of the list holding all of the match animation bitmaps. currently it causes
+     * OutOfMemory exception when instantiating 10+ AnimationHandlers (decoding bitmaps inside).
+     * this is a bug and due to that the returned animation bitmap is constant.
      */
     private void initMatchAnimationsMap(){
-
-        AnimationHandler ashesVsKing = new AnimationHandler(manager.getPanelContext(), R.drawable.match_sprite_king_king, 6, 5, matchAnimationPosition);
-
-        matchAnimationsMap.put("king_vs_king", ashesVsKing);
-
+        matchAnimationsMap.put("ashes_vs_ashes", new AnimationHandler(manager.getPanelContext(), R.drawable.match_sprite_ashes_ashes_min, 6, 5, matchAnimationPosition));
     }
 
+    /**
+     * This Rect holds the position in which the match animation should appear in.
+     */
     private void initMatchAnimationPosition() {
         matchAnimationPosition = new Rect();
         matchAnimationPosition.left   = canvasW/4;
@@ -111,6 +112,7 @@ public class Board {
 
         //this will give us a clean pad from the top of the screen which the board will not be drawn at
         int boardPadding = boardPaddingFactor * tileH;
+        storage = new GameStorage(manager.getAppResources());
 
         initBg(canvasH, canvasW, R.drawable.game_bg);
         initTiles(boardPadding, tileW, tileH);
@@ -289,24 +291,20 @@ public class Board {
     }
 
     private void initSoldiers(ArrayList<Soldier> soldiersTeam, int team, int SOLDIERS_START_ROW) {
-        Soldier currSoldier;
-        //todo: let every soldier hold reference to already made Bitmap (3 kinds) by type. no need to individually hold a new one.
-        for (int i = 0, j = SOLDIERS_START_ROW, k = 0; i < soldiersTeam.size() ; i++, k++) {
-            currSoldier = soldiersTeam.get(i);
-            currSoldier.setTeam(team);
-            currSoldier.setSoldierType(pickAvailableSoldierType());
-            currSoldier.setSoldierAnimationSpriteByType();
-            currSoldier.setSoldierHighlightedBitmap(BitmapFactory.decodeResource(manager.getAppResources(), currSoldier.getHighlightedSpriteSource()));
-            currSoldier.setSoldierRevealedBitmap(BitmapFactory.decodeResource(manager.getAppResources(), currSoldier.getRevealedSpriteSource()));
-            currSoldier.setSoldierNonHighlightedBitmap(BitmapFactory.decodeResource(manager.getAppResources(), currSoldier.getNonHighlightedSpriteSource()));
-            currSoldier.setSoldierBitmap(currSoldier.getSoldierNonHighlightedBitmap());
 
-            currSoldier.setRevealed(false);
-            currSoldier.setVisible(true);
+        Soldier soldier;
+        for (int i = 0, j = SOLDIERS_START_ROW, k = 0; i < soldiersTeam.size() ; i++, k++) {
+            soldier = soldiersTeam.get(i);
+            soldier.setTeam(team);
+            soldier.setSoldierType(pickAvailableSoldierType());
+            soldier.getBitmapsByType();
+
+            soldier.setRevealed(false);
+            soldier.setVisible(true);
             tiles[k % cols][j].setOccupied(true);
-            tiles[k % cols][j].setCurrSoldier(currSoldier);
-            currSoldier.setTile(tiles[k % cols][j]);
-            currSoldier.setTileOffset(tileW / TILE_OFFSET_PERCENTAGE);
+            tiles[k % cols][j].setCurrSoldier(soldier);
+            soldier.setTile(tiles[k % cols][j]);
+            soldier.setTileOffset(tileW / TILE_OFFSET_PERCENTAGE);
 
             //stop over the the next tile row
             if(i == (soldiersTeam.size()-1) / 2)

@@ -42,10 +42,12 @@ public class AnimationHandler {
     }
 
     public void initAnimationDetails(Context context, int spriteId, int rowsCnt, int colsCnt){
+        BitmapFactory.Options options = new BitmapFactory.Options();
+        options.inPurgeable = true;
 
         this.spriteId = spriteId;
 
-        spriteSheet = BitmapFactory.decodeResource(context.getResources(), spriteId);
+        spriteSheet = BitmapFactory.decodeResource(context.getResources(), spriteId, options);
         spriteSheetH = spriteSheet.getHeight();
         spriteSheetW = spriteSheet.getWidth();
         numberOfSpriteFrames = 4;

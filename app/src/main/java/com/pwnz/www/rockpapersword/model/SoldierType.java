@@ -10,7 +10,8 @@ public enum SoldierType {
     KING,
     LASSO,
     SHIELDON,
-    ASHES
+    ASHES,
+    DEAULT
 }
 
 
