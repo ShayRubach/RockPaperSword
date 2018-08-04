@@ -190,8 +190,6 @@ public class GamePanel extends SurfaceView implements Runnable {
             endOfFrame = manager.getBoard().getWinAnnouncementAnimation().chooseNextFrame();
         }
         //sleep a bit between each frame to slow animation down:
-
-
         if(endOfFrame){
             try {
                 if(deltaTime > 0 )
@@ -200,15 +198,6 @@ public class GamePanel extends SurfaceView implements Runnable {
                 e.printStackTrace();
             }
         }
-        /*
-        //sleep a bit between each frame to slow animation down:
-        try {
-            if(deltaTime > 0 )
-                mPlayThread.sleep(150);
-        } catch (InterruptedException e) {
-            e.printStackTrace();
-        }
-        */
 
     }
 

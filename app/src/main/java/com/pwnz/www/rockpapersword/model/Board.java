@@ -305,12 +305,13 @@ public class Board {
         loseAnnouncementAnimation = new AnimationHandler();
 
         winAnnouncementAnimation.initAnimationDetails(manager.getPanelContext(), R.drawable.win_anim, 3, 6);
-        loseAnnouncementAnimation.initAnimationDetails(manager.getPanelContext(), R.drawable.lose_anim, 2, 5);
+        loseAnnouncementAnimation.initAnimationDetails(manager.getPanelContext(), R.drawable.lose_anim, 3, 6);
 
-        loseAnnouncementAnimation.destRect = new Rect(0, 0, canvasW, canvasH);
+        Rect rect = new Rect(0, canvasH/4, canvasW, 3*(canvasH/4));
+        loseAnnouncementAnimation.destRect = rect;
         loseAnnouncementAnimation.resetToFirstFrame();
 
-        winAnnouncementAnimation.destRect = new Rect(0, canvasH/4, canvasW, 3*(canvasH/4));
+        winAnnouncementAnimation.destRect = rect;
         winAnnouncementAnimation.resetToFirstFrame();
     }
 
