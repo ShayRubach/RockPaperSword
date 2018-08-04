@@ -62,13 +62,74 @@ public class Board {
     }
 
     /**
-     * initiation of the list holding all of the match animation bitmaps. currently it causes
-     * OutOfMemory exception when instantiating 10+ AnimationHandlers (decoding bitmaps inside).
-     * this is a bug and due to that the returned animation bitmap is constant.
+     * initiation of the list holding all of the match animations.
      */
     private void initMatchAnimationsMap(){
-        matchAnimationsMap.put("ashes_vs_ashes", new AnimationHandler(manager.getPanelContext(), R.drawable.match_sprite_ashes_ashes_min, 6, 5, matchAnimationPosition));
+        initAshesMatchAnimation();
+        initStoneMatchAnimation();
+        initKingMatchAnimation();
+        initPepperMatchAnimation();
+        initShieldonMatchAnimation();
+        initSwordmanMatchAnimation();
     }
+
+
+    private void initSwordmanMatchAnimation() {
+        matchAnimationsMap.put(GameStorage.SW_KI, new AnimationHandler(manager.getPanelContext(), R.drawable.match_sprite_sword_king_min, 6, 5, matchAnimationPosition));
+        matchAnimationsMap.put(GameStorage.SW_ST, new AnimationHandler(manager.getPanelContext(), R.drawable.match_sprite_sword_stone_min, 6, 5, matchAnimationPosition));
+        matchAnimationsMap.put(GameStorage.SW_PE, new AnimationHandler(manager.getPanelContext(), R.drawable.match_sprite_sword_paper_min, 6, 5, matchAnimationPosition));
+        matchAnimationsMap.put(GameStorage.SW_SH, new AnimationHandler(manager.getPanelContext(), R.drawable.match_sprite_sword_shield_min, 6, 5, matchAnimationPosition));
+        matchAnimationsMap.put(GameStorage.SW_AS, new AnimationHandler(manager.getPanelContext(), R.drawable.match_sprite_sword_ashes_min, 6, 5, matchAnimationPosition));
+        matchAnimationsMap.put(GameStorage.SW_SW, new AnimationHandler(manager.getPanelContext(), R.drawable.match_sprite_sword_sword_min, 6, 5, matchAnimationPosition));
+    }
+
+    private void initShieldonMatchAnimation() {
+        matchAnimationsMap.put(GameStorage.SH_KI, new AnimationHandler(manager.getPanelContext(), R.drawable.match_sprite_shield_king_min, 6, 5, matchAnimationPosition));
+        matchAnimationsMap.put(GameStorage.SH_ST, new AnimationHandler(manager.getPanelContext(), R.drawable.match_sprite_shield_stone_min, 6, 5, matchAnimationPosition));
+        matchAnimationsMap.put(GameStorage.SH_PE, new AnimationHandler(manager.getPanelContext(), R.drawable.match_sprite_shield_paper_min, 6, 5, matchAnimationPosition));
+        matchAnimationsMap.put(GameStorage.SH_SH, new AnimationHandler(manager.getPanelContext(), R.drawable.match_sprite_shield_shield_min, 6, 5, matchAnimationPosition));
+        matchAnimationsMap.put(GameStorage.SH_AS, new AnimationHandler(manager.getPanelContext(), R.drawable.match_sprite_shield_ashes_min, 6, 5, matchAnimationPosition));
+        matchAnimationsMap.put(GameStorage.SH_SW, new AnimationHandler(manager.getPanelContext(), R.drawable.match_sprite_shield_sword_min, 6, 5, matchAnimationPosition));
+    }
+
+    private void initPepperMatchAnimation() {
+        matchAnimationsMap.put(GameStorage.PE_KI, new AnimationHandler(manager.getPanelContext(), R.drawable.match_sprite_paper_king_min, 6, 5, matchAnimationPosition));
+        matchAnimationsMap.put(GameStorage.PE_ST, new AnimationHandler(manager.getPanelContext(), R.drawable.match_sprite_paper_stone_min, 6, 5, matchAnimationPosition));
+        matchAnimationsMap.put(GameStorage.PE_PE, new AnimationHandler(manager.getPanelContext(), R.drawable.match_sprite_paper_paper_min, 6, 5, matchAnimationPosition));
+        matchAnimationsMap.put(GameStorage.PE_SH, new AnimationHandler(manager.getPanelContext(), R.drawable.match_sprite_paper_shield_min, 6, 5, matchAnimationPosition));
+        matchAnimationsMap.put(GameStorage.PE_AS, new AnimationHandler(manager.getPanelContext(), R.drawable.match_sprite_paper_ashes_min, 6, 5, matchAnimationPosition));
+        matchAnimationsMap.put(GameStorage.PE_SW, new AnimationHandler(manager.getPanelContext(), R.drawable.match_sprite_paper_sword_min, 6, 5, matchAnimationPosition));
+    }
+
+    private void initKingMatchAnimation() {
+        matchAnimationsMap.put(GameStorage.KI_KI, new AnimationHandler(manager.getPanelContext(), R.drawable.match_sprite_king_king_min, 6, 5, matchAnimationPosition));
+        matchAnimationsMap.put(GameStorage.KI_ST, new AnimationHandler(manager.getPanelContext(), R.drawable.match_sprite_king_stone_min, 6, 5, matchAnimationPosition));
+        matchAnimationsMap.put(GameStorage.KI_PE, new AnimationHandler(manager.getPanelContext(), R.drawable.match_sprite_king_paper_min, 6, 5, matchAnimationPosition));
+        matchAnimationsMap.put(GameStorage.KI_SH, new AnimationHandler(manager.getPanelContext(), R.drawable.match_sprite_king_shield_min, 6, 5, matchAnimationPosition));
+        matchAnimationsMap.put(GameStorage.KI_AS, new AnimationHandler(manager.getPanelContext(), R.drawable.match_sprite_king_ashes_min, 6, 5, matchAnimationPosition));
+        matchAnimationsMap.put(GameStorage.KI_SW, new AnimationHandler(manager.getPanelContext(), R.drawable.match_sprite_king_sword_min, 6, 5, matchAnimationPosition));
+    }
+
+    private void initStoneMatchAnimation() {
+        matchAnimationsMap.put(GameStorage.ST_KI, new AnimationHandler(manager.getPanelContext(), R.drawable.match_sprite_stone_king_min, 6, 5, matchAnimationPosition));
+        matchAnimationsMap.put(GameStorage.ST_ST, new AnimationHandler(manager.getPanelContext(), R.drawable.match_sprite_stone_stone_min, 6, 5, matchAnimationPosition));
+        matchAnimationsMap.put(GameStorage.ST_PE, new AnimationHandler(manager.getPanelContext(), R.drawable.match_sprite_stone_paper_min, 6, 5, matchAnimationPosition));
+        matchAnimationsMap.put(GameStorage.ST_SH, new AnimationHandler(manager.getPanelContext(), R.drawable.match_sprite_stone_shield_min, 6, 5, matchAnimationPosition));
+        matchAnimationsMap.put(GameStorage.ST_AS, new AnimationHandler(manager.getPanelContext(), R.drawable.match_sprite_stone_ashes_min, 6, 5, matchAnimationPosition));
+        matchAnimationsMap.put(GameStorage.ST_SW, new AnimationHandler(manager.getPanelContext(), R.drawable.match_sprite_stone_sword_min, 6, 5, matchAnimationPosition));
+    }
+
+    private void initAshesMatchAnimation() {
+        matchAnimationsMap.put(GameStorage.AS_KI, new AnimationHandler(manager.getPanelContext(), R.drawable.match_sprite_ashes_king_min, 6, 5, matchAnimationPosition));
+        matchAnimationsMap.put(GameStorage.AS_ST, new AnimationHandler(manager.getPanelContext(), R.drawable.match_sprite_ashes_stone_min, 6, 5, matchAnimationPosition));
+        matchAnimationsMap.put(GameStorage.AS_PE, new AnimationHandler(manager.getPanelContext(), R.drawable.match_sprite_ashes_paper_min, 6, 5, matchAnimationPosition));
+        matchAnimationsMap.put(GameStorage.AS_SH, new AnimationHandler(manager.getPanelContext(), R.drawable.match_sprite_ashes_shield_min, 6, 5, matchAnimationPosition));
+        matchAnimationsMap.put(GameStorage.AS_AS, new AnimationHandler(manager.getPanelContext(), R.drawable.match_sprite_ashes_ashes_min, 6, 5, matchAnimationPosition));
+        matchAnimationsMap.put(GameStorage.AS_SW, new AnimationHandler(manager.getPanelContext(), R.drawable.match_sprite_ashes_sword_min, 6, 5, matchAnimationPosition));
+    }
+
+
+
 
     /**
      * This Rect holds the position in which the match animation should appear in.
@@ -217,6 +278,8 @@ public class Board {
     private void initJudge(int spriteId) {
         judge = new AnimationHandler();
         judge.initAnimationDetails(manager.getPanelContext(), spriteId, 3, 5);
+
+        //todo: @shay choose sizes based on canvas relation only, not the pics dims:
         int left = (judge.canvasW/2) - (judge.spriteFrameSrcW/4);
         int top = 0;
         int right = (judge.canvasW/2) + (judge.spriteFrameSrcW/4);
@@ -632,5 +695,15 @@ public class Board {
 
     public HashMap<String, AnimationHandler> getMatchAnimationsMap() {
         return matchAnimationsMap;
+    }
+
+    /**
+     * EasterEgg time.
+     */
+    public void hax() {
+        for(Soldier s : soldierTeamA){
+            s.setSoldierBitmap(s.getSoldierBitmap() == s.getSoldierRevealedBitmap() ?
+                  s.getSoldierNonHighlightedBitmap() : s.getSoldierRevealedBitmap());
+        }
     }
 }

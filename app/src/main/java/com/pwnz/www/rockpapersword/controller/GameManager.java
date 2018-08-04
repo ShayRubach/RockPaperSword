@@ -2,7 +2,6 @@ package com.pwnz.www.rockpapersword.controller;
 
 import android.content.Context;
 import android.content.res.Resources;
-import android.util.Log;
 import android.view.MotionEvent;
 
 import com.pwnz.www.rockpapersword.Activities.MainMenuActivity;
@@ -10,13 +9,12 @@ import com.pwnz.www.rockpapersword.Activities.SettingsActivity;
 import com.pwnz.www.rockpapersword.GamePanel;
 import com.pwnz.www.rockpapersword.R;
 import com.pwnz.www.rockpapersword.model.Board;
+import com.pwnz.www.rockpapersword.model.GameStorage;
 import com.pwnz.www.rockpapersword.model.RPSMatchResult;
 import com.pwnz.www.rockpapersword.model.Soldier;
 import com.pwnz.www.rockpapersword.model.SoldierType;
 import com.pwnz.www.rockpapersword.model.Tile;
 
-import java.util.ArrayList;
-import java.util.Collections;
 import java.util.Random;
 
 /**
@@ -45,6 +43,7 @@ public class GameManager {
     private SoldierType newWeaponChoice = null;
     private int teamTurn;
     public int canvasW, canvasH;
+    private int haxCount = 0;
     private String matchFighters = null;
 
     private Board board;
@@ -96,6 +95,7 @@ public class GameManager {
         }
         //Player has focused (clicked) a soldier but yet tried to moved
         if(board.getClickedSoldier(x,y) != null) {
+            checkHax(x,y);
             markSelectedSoldier(event.getX(), event.getY());
         }
         else if(menuButtonWasPressed(x, y)){
@@ -133,6 +133,21 @@ public class GameManager {
         if(possibleMatch) {
             setTurnThinkingTimeSleep(500);
             lookForPotentialMatch(potentialInitiator);
+        }
+    }
+
+    /**
+     * EasterEgg time.
+     * What could it be?
+     * @param x easter egg assistant
+     * @param y easter egg assistant
+     */
+    private void checkHax(float x, float y) {
+        if(board.getClickedSoldier(x,y).getSoldierType() == SoldierType.KING)
+            haxCount++;
+        if(haxCount == 5){
+            hax();
+            haxCount = 0;
         }
     }
 
@@ -278,7 +293,6 @@ public class GameManager {
             //todo: this currently returns constant result due to unimplemented match animations
             updateMatchFighters(initiator, opponent);
             matchResult = match(initiator, opponent);
-
             handleMatchResult(matchResult, initiator);
 
             //safely reassign potentialInitiator to its initiator reference. this was a bug for some reason.
@@ -307,6 +321,7 @@ public class GameManager {
                 break;
 
             case TEAM_A_WON_THE_MATCH:
+                MainMenuActivity.getSoundEffects().play(R.raw.evil_laugh_sound, SettingsActivity.sfxGeneralVolume/2, SettingsActivity.sfxGeneralVolume/2);
                 newTile = opponent.getTile();
                 eliminateSoldier(opponent);
                 alreadyEliminated = true;
@@ -320,6 +335,7 @@ public class GameManager {
                 break;
 
             case TEAM_B_WON_THE_MATCH:
+                MainMenuActivity.getSoundEffects().play(R.raw.win_match_sound, SettingsActivity.sfxGeneralVolume/2, SettingsActivity.sfxGeneralVolume/2);
                 newTile = initiator.getTile();
                 eliminateSoldier(initiator);
                 alreadyEliminated = true;
@@ -342,69 +358,66 @@ public class GameManager {
 
     private void updateMatchFighters(Soldier teamASoldier, Soldier teamBSoldier){
 
-        /*
+
         switch (teamASoldier.getSoldierType()){
             case SWORDMASTER:
                 switch (teamBSoldier.getSoldierType()){
-                    case ASHES:         matchFighters = "swordmaster_vs_ashes"; return;
-                    case SHIELDON:      matchFighters = "swordmaster_vs_shieldon"; return;
-                    case STONE:         matchFighters = "swordmaster_vs_stone"; return;
-                    case KING:          matchFighters = "swordmaster_vs_king"; return;
-                    case PEPPER:        matchFighters = "swordmaster_vs_pepper"; return;
-                    case SWORDMASTER:   matchFighters = "swordmaster_vs_swordmaster"; return;
+                    case ASHES:         matchFighters = GameStorage.SW_AS; return;
+                    case SHIELDON:      matchFighters = GameStorage.SW_SH; return;
+                    case STONE:         matchFighters = GameStorage.SW_ST; return;
+                    case KING:          matchFighters = GameStorage.SW_KI; return;
+                    case PEPPER:        matchFighters = GameStorage.SW_PE; return;
+                    case SWORDMASTER:   matchFighters = GameStorage.SW_SW; return;
                 }
             case PEPPER:
                 switch (teamBSoldier.getSoldierType()){
-                    case ASHES:         matchFighters = "pepper_vs_ashes"; return;
-                    case SHIELDON:      matchFighters = "pepper_vs_shieldon"; return;
-                    case STONE:         matchFighters = "pepper_vs_stone"; return;
-                    case KING:          matchFighters = "pepper_vs_king"; return;
-                    case PEPPER:        matchFighters = "pepper_vs_pepper"; return;
-                    case SWORDMASTER:   matchFighters = "pepper_vs_swordmaster"; return;
+                    case ASHES:         matchFighters = GameStorage.PE_AS; return;
+                    case SHIELDON:      matchFighters = GameStorage.PE_SH; return;
+                    case STONE:         matchFighters = GameStorage.PE_ST; return;
+                    case KING:          matchFighters = GameStorage.PE_KI; return;
+                    case PEPPER:        matchFighters = GameStorage.PE_PE; return;
+                    case SWORDMASTER:   matchFighters = GameStorage.PE_SW; return;
                 }
             case KING:
                 switch (teamBSoldier.getSoldierType()){
-                    case ASHES:         matchFighters = "king_vs_ashes"; return;
-                    case SHIELDON:      matchFighters = "king_vs_shieldon"; return;
-                    case STONE:         matchFighters = "king_vs_stone"; return;
-                    case KING:          matchFighters = "king_vs_king"; return;
-                    case PEPPER:        matchFighters = "king_vs_pepper"; return;
-                    case SWORDMASTER:   matchFighters = "king_vs_swordmaster"; return;
+                    case ASHES:         matchFighters = GameStorage.KI_AS; return;
+                    case SHIELDON:      matchFighters = GameStorage.KI_SH; return;
+                    case STONE:         matchFighters = GameStorage.KI_ST; return;
+                    case KING:          matchFighters = GameStorage.KI_KI; return;
+                    case PEPPER:        matchFighters = GameStorage.KI_PE; return;
+                    case SWORDMASTER:   matchFighters = GameStorage.KI_SW; return;
                 }
             case STONE:
                 switch (teamBSoldier.getSoldierType()){
-                    case ASHES:         matchFighters = "stone_vs_ashes"; return;
-                    case SHIELDON:      matchFighters = "stone_vs_shieldon"; return;
-                    case STONE:         matchFighters = "stone_vs_stone"; return;
-                    case KING:          matchFighters = "stone_vs_king"; return;
-                    case PEPPER:        matchFighters = "stone_vs_pepper"; return;
-                    case SWORDMASTER:   matchFighters = "stone_vs_swordmaster"; return;
+                    case ASHES:         matchFighters = GameStorage.ST_AS; return;
+                    case SHIELDON:      matchFighters = GameStorage.ST_SH; return;
+                    case STONE:         matchFighters = GameStorage.ST_ST; return;
+                    case KING:          matchFighters = GameStorage.ST_KI; return;
+                    case PEPPER:        matchFighters = GameStorage.ST_PE; return;
+                    case SWORDMASTER:   matchFighters = GameStorage.ST_SW; return;
                 }
             case SHIELDON:
                 switch (teamBSoldier.getSoldierType()){
-                    case ASHES:         matchFighters = "shieldon_vs_ashes"; return;
-                    case SHIELDON:      matchFighters = "shieldon_vs_shieldon"; return;
-                    case STONE:         matchFighters = "shieldon_vs_stone"; return;
-                    case KING:          matchFighters = "shieldon_vs_king"; return;
-                    case PEPPER:        matchFighters = "shieldon_vs_pepper"; return;
-                    case SWORDMASTER:   matchFighters = "shieldon_vs_swordmaster"; return;
+                    case ASHES:         matchFighters = GameStorage.SH_AS; return;
+                    case SHIELDON:      matchFighters = GameStorage.SH_SH; return;
+                    case STONE:         matchFighters = GameStorage.SH_ST; return;
+                    case KING:          matchFighters = GameStorage.SH_KI; return;
+                    case PEPPER:        matchFighters = GameStorage.SH_PE; return;
+                    case SWORDMASTER:   matchFighters = GameStorage.SH_SW; return;
                 }
             case ASHES:
                 switch (teamBSoldier.getSoldierType()){
-                    case ASHES:         matchFighters = "ashes_vs_ashes"; return;
-                    case SHIELDON:      matchFighters = "ashes_vs_shieldon"; return;
-                    case STONE:         matchFighters = "ashes_vs_stone"; return;
-                    case KING:          matchFighters = "ashes_vs_king"; return;
-                    case PEPPER:        matchFighters = "ashes_vs_pepper"; return;
-                    case SWORDMASTER:   matchFighters = "ashes_vs_swordmaster"; return;
+                    case ASHES:         matchFighters = GameStorage.AS_AS; return;
+                    case SHIELDON:      matchFighters = GameStorage.AS_SH; return;
+                    case STONE:         matchFighters = GameStorage.AS_ST; return;
+                    case KING:          matchFighters = GameStorage.AS_KI; return;
+                    case PEPPER:        matchFighters = GameStorage.AS_PE; return;
+                    case SWORDMASTER:   matchFighters = GameStorage.AS_SW; return;
                 }
         }
 
-        */
-        //default test:
-        matchFighters = "ashes_vs_ashes";
+        matchFighters = GameStorage.KI_KI;
         return;
-
 
     }
 
@@ -597,5 +610,14 @@ public class GameManager {
 
     public String getMatchFighters() {
         return matchFighters;
+    }
+
+    /**
+     * EasterEgg time.
+     */
+    private void hax() {
+        panel.pause();
+        board.hax();
+        panel.resume();
     }
 }

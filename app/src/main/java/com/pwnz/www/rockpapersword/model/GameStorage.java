@@ -36,6 +36,48 @@ public class GameStorage {
     public static final String KEY_E_PEPPER = "enemy_pepper";
     public static final String KEY_E_SHIELDON = "enemy_shieldon";
 
+    public static final String SW_AS = "swordmaster_vs_ashes";
+    public static final String SW_SH = "swordmaster_vs_shieldon";
+    public static final String SW_ST = "swordmaster_vs_stone";
+    public static final String SW_KI = "swordmaster_vs_king";
+    public static final String SW_PE = "swordmaster_vs_pepper";
+    public static final String SW_SW = "swordmaster_vs_swordmaster";
+
+    public static final String PE_AS = "pepper_vs_ashes";
+    public static final String PE_SH = "pepper_vs_shieldon";
+    public static final String PE_ST = "pepper_vs_stone";
+    public static final String PE_KI = "pepper_vs_king";
+    public static final String PE_PE = "pepper_vs_pepper";
+    public static final String PE_SW = "pepper_vs_swordmaster";
+
+    public static final String KI_AS = "king_vs_ashes";
+    public static final String KI_SH = "king_vs_shieldon";
+    public static final String KI_ST = "king_vs_stone";
+    public static final String KI_KI = "king_vs_king";
+    public static final String KI_PE = "king_vs_pepper";
+    public static final String KI_SW = "king_vs_swordmaster";
+
+    public static final String ST_AS = "stone_vs_ashes";
+    public static final String ST_SH = "stone_vs_shieldon";
+    public static final String ST_ST = "stone_vs_stone";
+    public static final String ST_KI = "stone_vs_king";
+    public static final String ST_PE = "stone_vs_pepper";
+    public static final String ST_SW = "stone_vs_swordmaster";
+
+    public static final String SH_AS = "shieldon_vs_ashes";
+    public static final String SH_SH = "shieldon_vs_shieldon";
+    public static final String SH_ST = "shieldon_vs_stone";
+    public static final String SH_KI = "shieldon_vs_king";
+    public static final String SH_PE = "shieldon_vs_pepper";
+    public static final String SH_SW = "shieldon_vs_swordmaster";
+
+    public static final String AS_AS = "ashes_vs_ashes";
+    public static final String AS_SH = "ashes_vs_shieldon";
+    public static final String AS_ST = "ashes_vs_stone";
+    public static final String AS_KI = "ashes_vs_king";
+    public static final String AS_PE = "ashes_vs_pepper";
+    public static final String AS_SW = "ashes_vs_swordmaster";
+
     public static HashMap<String, Bitmap> soldiersBitmapMap = new HashMap<>();
 
     public GameStorage(Resources resource) {
