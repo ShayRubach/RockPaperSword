@@ -147,7 +147,6 @@ public class GamePanel extends SurfaceView implements Runnable {
     }
 
     private void drawTieOptions() {
-        //Log.d("TIE_DBG","drawing tie options\n");
         manager.getBoard().getNewWeaponPaper().drawAnimation(mCanvas);
         manager.getBoard().getNewWeaponRock().drawAnimation(mCanvas);
         manager.getBoard().getNewWeaponSword().drawAnimation(mCanvas);

@@ -336,7 +336,6 @@ public class Board {
     }
 
     public void eliminateSoldier(Soldier soldier){
-        Log.d("MEGA_DBG","\n eliminating: \n" + soldier);
         ArrayList<Soldier> removeFrom = soldier.getTeam() == Board.TEAM_A ? soldierTeamA : soldierTeamB;
         synchronized (removeFrom){
             soldier.setVisible(false);
@@ -516,8 +515,6 @@ public class Board {
             newX = xyPos[0]-1;
             newY = xyPos[1];
             if(isValidOpponent(newX, newY, initiator)) {
-                Log.d("MEGA_DBG", "getFirstSurroundingOpponent: FOUND LEFT.\n");
-                Log.d("MEGA_DBG", getTiles()[newX][newY].getCurrSoldier().toString());
                 return getTiles()[newX][newY].getCurrSoldier();
             }
         }
@@ -526,8 +523,6 @@ public class Board {
             newX = xyPos[0]+1;
             newY = xyPos[1];
             if (isValidOpponent(newX, newY, initiator)){
-                Log.d("MEGA_DBG", "getFirstSurroundingOpponent: FOUND RIGHT.\n");
-                Log.d("MEGA_DBG", getTiles()[newX][newY].getCurrSoldier().toString());
                 return getTiles()[newX][newY].getCurrSoldier();
             }
 
@@ -537,8 +532,6 @@ public class Board {
             newX = xyPos[0];
             newY = xyPos[1]-1;
             if (isValidOpponent(newX, newY, initiator)) {
-                Log.d("MEGA_DBG", "getFirstSurroundingOpponent: FOUND TOP.\n");
-                Log.d("MEGA_DBG", getTiles()[newX][newY].getCurrSoldier().toString());
                 return getTiles()[newX][newY].getCurrSoldier();
             }
         }
@@ -547,12 +540,9 @@ public class Board {
             newX = xyPos[0];
             newY = xyPos[1]+1;
             if (isValidOpponent(newX, newY, initiator)) {
-                Log.d("MEGA_DBG", "getFirstSurroundingOpponent: FOUND BOTTOM.\n");
-                Log.d("MEGA_DBG", getTiles()[newX][newY].getCurrSoldier().toString());
                 return getTiles()[newX][newY].getCurrSoldier();
             }
         }
-        Log.d("MEGA_DBG", "getFirstSurroundingOpponent: FOUND NO ONE.\n");
         return null;
     }
 
@@ -662,7 +652,6 @@ public class Board {
     }
 
     public boolean backToMenuWasPressed(float x, float y) {
-        Log.d("MENU_DBG", "menuButtonWasPressed called with {"+x+","+y+"}");
         return isInside(getBackToMenuBtn().getDestRect(), x, y);
     }
 
