@@ -228,8 +228,8 @@ public class Board {
     private void initNewWeaponSword() {
         newWeaponSword = new AnimationHandler();
         newWeaponSword.initAnimationDetails(manager.getPanelContext(), R.drawable.sword_solo_sprite, 3, 5);
-        int left = (canvasW/2) - (newWeaponSword.spriteFrameSrcW/2);
-        int right = (canvasW/2) + (newWeaponSword.spriteFrameSrcW/2);
+        int left = (canvasW/2) - tileW; // - (newWeaponSword.spriteFrameSrcW/2)*6;
+        int right = (canvasW/2) +tileW; // - (newWeaponSword.spriteFrameSrcW/2)*3;
         int top = 0;
         int bot = (int) ((canvasH/10) * 1.5);
 
@@ -279,11 +279,10 @@ public class Board {
         judge = new AnimationHandler();
         judge.initAnimationDetails(manager.getPanelContext(), spriteId, 3, 5);
 
-        //todo: @shay choose sizes based on canvas relation only, not the pics dims:
-        int left = (judge.canvasW/2) - (judge.spriteFrameSrcW/4);
+        int left = (canvasW/2) - tileW;
         int top = 0;
-        int right = (judge.canvasW/2) + (judge.spriteFrameSrcW/4);
-        int bot = judge.spriteFrameSrcH / 2;
+        int right = (judge.canvasW/2) + tileW;
+        int bot = tileH * 2;
 
         judge.destRect = new Rect(left, top, right, bot);
         judge.resetToFirstFrame();
