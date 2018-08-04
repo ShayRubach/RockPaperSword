@@ -1,5 +1,6 @@
 
 
+
 Rock Paper Sword
 ==
 
@@ -47,7 +48,5 @@ This is a simple Rock Paper Scissors remake for the ICQ version (with a twist!).
 <br><br>
 Here are some screen shots of the game:
 -     
- ![rps_mm](https://user-images.githubusercontent.com/21342315/43094503-6bf685b4-8eb3-11e8-9f12-d71e83167329.png)![rps_gplay](https://user-images.githubusercontent.com/21342315/43094537-88245f22-8eb3-11e8-9cca-83c96866c9e3.png)![rps_gplay_match](https://user-images.githubusercontent.com/21342315/43094576-a1d49cc0-8eb3-11e8-9883-0993af930878.png)
-
-
-<br><br>
+ ![rps_mm](https://user-images.githubusercontent.com/21342315/43094503-6bf685b4-8eb3-11e8-9f12-d71e83167329.png)![rps_gameplay1](https://user-images.githubusercontent.com/21342315/43666292-85dcd49c-9773-11e8-9221-8ed2f43db534.png) ![rps_gameplay2](https://user-images.githubusercontent.com/21342315/43666313-a11ba698-9773-11e8-8194-e2b059c91fc1.png) ![rps_tie](https://user-images.githubusercontent.com/21342315/43666321-a90377c8-9773-11e8-9c1c-5b1ebf2bdbc0.png) 
+ <br><br>
