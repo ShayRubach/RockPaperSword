@@ -179,16 +179,28 @@ public class GamePanel extends SurfaceView implements Runnable {
      * @return none
      */
     private void drawWinnerAnnouncement(int winningTeam) {
+        boolean endOfFrame = false;
 
         if(winningTeam == manager.getBoard().TEAM_A){
             manager.getBoard().getLoseAnnouncementAnimation().drawAnimation(mCanvas);
-            manager.getBoard().getLoseAnnouncementAnimation().chooseNextFrame();
+            endOfFrame = manager.getBoard().getLoseAnnouncementAnimation().chooseNextFrame();
         }
         else{
             manager.getBoard().getWinAnnouncementAnimation().drawAnimation(mCanvas);
-            manager.getBoard().getWinAnnouncementAnimation().chooseNextFrame();
+            endOfFrame = manager.getBoard().getWinAnnouncementAnimation().chooseNextFrame();
         }
+        //sleep a bit between each frame to slow animation down:
 
+
+        if(endOfFrame){
+            try {
+                if(deltaTime > 0 )
+                    mPlayThread.sleep(1);
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            }
+        }
+        /*
         //sleep a bit between each frame to slow animation down:
         try {
             if(deltaTime > 0 )
@@ -196,6 +208,7 @@ public class GamePanel extends SurfaceView implements Runnable {
         } catch (InterruptedException e) {
             e.printStackTrace();
         }
+        */
 
     }
 
