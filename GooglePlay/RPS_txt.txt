@@ -29,8 +29,7 @@ When 2 opponent’s are facing each other after moving, both soldiers are staged
 
 Missing\Final Submission work topics:
 * New types of soldier (Lasso)
-* Sound effects on win/lose/battle
-* Match related graphics
+* Sound effects on win/lose game
 
 
 Tasks Assignment:
