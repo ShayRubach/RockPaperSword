@@ -50,3 +50,5 @@ Here are some screen shots of the game:
 -     
  ![rps_mm](https://user-images.githubusercontent.com/21342315/43094503-6bf685b4-8eb3-11e8-9f12-d71e83167329.png)![rps_gameplay1](https://user-images.githubusercontent.com/21342315/43666292-85dcd49c-9773-11e8-9221-8ed2f43db534.png) ![rps_gameplay2](https://user-images.githubusercontent.com/21342315/43666313-a11ba698-9773-11e8-8194-e2b059c91fc1.png) ![rps_tie](https://user-images.githubusercontent.com/21342315/43666321-a90377c8-9773-11e8-9c1c-5b1ebf2bdbc0.png) 
  <br><br>
+
+ 
